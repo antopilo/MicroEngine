@@ -1,0 +1,3 @@
+﻿  Window.cpp
+F:\Desktop\OpenGL-Renderer\glfw-test\src\Window.cpp(68): warning C4715: 'Engine::Window::Initialize': not all control paths return a value
+  glfw-test.vcxproj -> F:\Desktop\OpenGL-Renderer\Debug\glfw-test.exe
