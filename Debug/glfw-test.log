@@ -1,0 +1,10 @@
+﻿  Entry.h
+F:\Desktop\OpenGL-Renderer\glfw-test\src\Application.h(19,3): warning C4091: 'static ': ignored on left of 'Engine::Application' when no variable is declared
+  Application.cpp
+F:\Desktop\OpenGL-Renderer\glfw-test\src\Application.h(19,3): warning C4091: 'static ': ignored on left of 'Engine::Application' when no variable is declared
+  ImGuiLayer.cpp
+  Generating Code...
+LINK : warning LNK4098: defaultlib 'MSVCRT' conflicts with use of other libs; use /NODEFAULTLIB:library
+LINK : warning LNK4098: defaultlib 'LIBCMT' conflicts with use of other libs; use /NODEFAULTLIB:library
+glew32s.lib(glew.obj) : warning LNK4099: PDB 'vc120.pdb' was not found with 'glew32s.lib(glew.obj)' or at 'F:\Desktop\OpenGL-Renderer\Debug\vc120.pdb'; linking object as if no debug info
+  glfw-test.vcxproj -> F:\Desktop\OpenGL-Renderer\Debug\glfw-test.exe
