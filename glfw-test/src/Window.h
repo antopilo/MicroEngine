@@ -32,8 +32,7 @@ namespace Engine {
 		void Update();
 		int Close();
 
-		// TODO: Remove param until scene are dones
-		void Draw(const VertexArray& va, const IndexBuffer& ib, const Shader& shader);
+		void Draw();
 
 		bool WindowShouldClose() {
 			return glfwWindowShouldClose(instance);

@@ -9,6 +9,8 @@
 #define ASSERT(x) if (!(x)) assert(false)
 #define INT2VOIDP(i) (void*)(uintptr_t)(i)
 
+
+
 void inline GLClearError()
 {
     while (glGetError() != GL_NO_ERROR);
@@ -50,6 +52,8 @@ bool inline GLCheckError()
     }
     return true;
 }
+
+
 
 
 #ifdef DEBUG

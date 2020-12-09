@@ -1,14 +1,32 @@
 #pragma once
 #include <GL/glew.h>
-#include "VertexArray.h"
-#include "IndexBuffer.h"
 #include "Shader.h"
 
 namespace Engine {
+	class Texture;
+	class Camera;
+	class Shader;
+
+	struct Renderer2DData;
+	
 	class Renderer {
 	public:
-		static void Draw(const VertexArray& va, const IndexBuffer& ib, const Shader& shader);
+		static Shader* TextureShader;
+		static void Init();
+
+		static void Draw();
+
+		static void BeginScene(glm::mat4 camera);
+
+		static void DrawQuad(const glm::vec2& position, const glm::vec2& size, const glm::vec4& color);
+		static void DrawQuad(const glm::vec2& position, const glm::vec2& size, const Texture& texture);
+
+		static void EndScene();
+
 		static void Clear();
+
+	private:
+		static Renderer2DData s_Data;
 	};
 }
 

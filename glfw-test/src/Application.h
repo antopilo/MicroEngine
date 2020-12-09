@@ -1,6 +1,7 @@
 #pragma once
 #include "Window.h"
 #include "ImGui/ImGuiLayer.h"
+#include "Scene/Scene.h"
 
 namespace Engine {
 
@@ -8,15 +9,24 @@ namespace Engine {
 	{
 	private:
 		bool m_Running = true;
-		ImGuiLayer* m_ImGuiLayer;
+
 		static Application* s_Instance;
+		
+		Engine::Window* m_Window;
+
+		ImGuiLayer* m_ImGuiLayer;
+		Scene* m_Scene;
 
 	public:
-		Engine::Window* m_Window;
 
 		void Init();
 		void Run();
 		int Close();
+
+		//Scene* GetScene();
+
+		// Todo: serialization of scene.
+		//void LoadScene(const std::string& path);
 
 		static Application& Get() { return *s_Instance; }
 

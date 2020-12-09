@@ -8,6 +8,9 @@
 #include <imgui\imgui_impl_opengl3.h>
 
 namespace Engine {
+
+
+
 	Window::Window(int width, int height, std::string title) {
 		m_Width = width;
 		m_Height = height;
@@ -80,9 +83,13 @@ namespace Engine {
 
 	}
 
-	void Window::Draw(const VertexArray& va, const IndexBuffer& ib, const Shader& shader) {
-		Renderer::Clear();
+	void Window::Draw() {
 
+
+
+		//Renderer::BeginScene();
+
+		// Draw imgui.
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
@@ -107,6 +114,13 @@ namespace Engine {
 			ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 			ImGui::End();
 		}
+
+		{
+			ImGui::Begin("Etienne");
+			ImGui::Text("Je suis laid!");
+			ImGui::End();
+		}
+
 		if (true)
 		{
 			ImGui::Begin("Another Window", &show_another_window);   // Pass a pointer to our bool variable (the window will have a closing button that will clear the bool when clicked)
@@ -120,8 +134,12 @@ namespace Engine {
 		ImGui::Render();
 		//ImGui::ShowDemoWindow(&true);
 
-		
-		Renderer::Draw(va, ib, shader);
+
+		//Renderer::DrawQuad({ 0.0f, 0.0f }, { 1.0f, 1.0f }, {0.0f, 0.0f, 1.0f});
+
+
+		Renderer::EndScene();
+		Renderer::Draw();
 
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 		

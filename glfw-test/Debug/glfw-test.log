@@ -1,3 +1,19 @@
-﻿  Window.cpp
-F:\Desktop\OpenGL-Renderer\glfw-test\src\Window.cpp(68): warning C4715: 'Engine::Window::Initialize': not all control paths return a value
-  glfw-test.vcxproj -> F:\Desktop\OpenGL-Renderer\Debug\glfw-test.exe
+﻿  Entry.h
+  Application.cpp
+  ImGuiLayer.cpp
+  IndexBuffer.cpp
+  Renderer.cpp
+  Shader.cpp
+  Texture.cpp
+  VertexArray.cpp
+  VertexBuffer.cpp
+  Entity.cpp
+  Scene.cpp
+  Window.cpp
+  Generating Code...
+F:\Desktop\repos\MicroEngine\glfw-test\src\Window.cpp(71): warning C4715: 'Engine::Window::Initialize': not all control paths return a value
+LINK : warning LNK4098: defaultlib 'MSVCRT' conflicts with use of other libs; use /NODEFAULTLIB:library
+LINK : warning LNK4098: defaultlib 'LIBCMT' conflicts with use of other libs; use /NODEFAULTLIB:library
+Renderer.obj : error LNK2001: unresolved external symbol "public: static class Engine::Shader * Engine::Renderer::TextureShader" (?TextureShader@Renderer@Engine@@2PAVShader@2@A)
+Scene.obj : error LNK2019: unresolved external symbol "public: __thiscall Engine::Camera::Camera(void)" (??0Camera@Engine@@QAE@XZ) referenced in function "public: __thiscall Engine::Scene::Scene(void)" (??0Scene@Engine@@QAE@XZ)
+F:\Desktop\repos\MicroEngine\Debug\glfw-test.exe : fatal error LNK1120: 2 unresolved externals

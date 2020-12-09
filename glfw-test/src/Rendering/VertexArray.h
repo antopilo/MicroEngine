@@ -1,20 +1,23 @@
 #pragma once
 #include "VertexBuffer.h"
 
-class VertexBufferLayout;
+namespace Engine {
+	class VertexBufferLayout;
 
-class VertexArray {
+	class VertexArray {
 
-private:
-	unsigned int m_RendererID;
+	private:
+		unsigned int m_RendererID;
 
-public:
-	VertexArray();
-	~VertexArray();
+	public:
+		VertexArray();
+		~VertexArray();
 
-	void AddBuffer(const VertexBuffer& vb, const VertexBufferLayout& layout);
+		void AddBuffer(const VertexBuffer& vb, const VertexBufferLayout& layout);
 
-	void Bind() const;
+		void Bind() const;
 
-	void Unbind() const;
-};
+		void Unbind() const;
+	};
+
+}
