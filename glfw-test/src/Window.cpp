@@ -1,6 +1,6 @@
 #include "Window.h"
 #include "Rendering/Debug.h"
-
+#include "Scene/Camera.h"
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 #include <imgui\imgui.h>
@@ -14,7 +14,7 @@ namespace Engine {
 	Window::Window(int width, int height, std::string title) {
 		m_Width = width;
 		m_Height = height;
-
+		m_Cam = new Camera();
 		m_Title = title;
 
 		if (Initialize() == -1) {
@@ -83,11 +83,11 @@ namespace Engine {
 
 	}
 
-	void Window::Draw() {
+	void Window::Draw(Timestep ts) {
 
-
-
-		//Renderer::BeginScene();
+		m_Cam->Update(ts);
+		
+		Renderer::BeginScene(m_Cam->GetPerspective(), m_Cam->GetTransform());
 
 		// Draw imgui.
 		ImGui_ImplOpenGL3_NewFrame();

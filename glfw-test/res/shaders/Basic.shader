@@ -12,10 +12,12 @@ out vec4 v_TexColor;
 out float v_TexId;
 
 uniform mat4 u_MVP;
+uniform mat4 u_Projection;
+uniform mat4 u_View;
 
 void main()
 {
-    gl_Position = position * u_MVP;
+    gl_Position = u_Projection * u_View * vec4(position);
     v_TexCoord = texCoord;
     v_TexColor = color;
     v_TexId = textureId;

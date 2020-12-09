@@ -14,16 +14,22 @@ namespace Engine {
 	void Application::Run() {
 
 		while (!m_Window->WindowShouldClose()) {
-			m_Window->Update();
-
+			float time = (float)glfwGetTime();
+			Timestep timestep = time - m_LastFrameTime;
+			m_LastFrameTime = time;
 
 			// TODO: Remove params
-			m_Window->Draw();
+			m_Window->Draw(timestep);
 		}
 	}
 
 	int Application::Close() {
 		return m_Window->Close();
+	}
+
+	Application::Application()
+	{
+		s_Instance = this;
 	}
 
 	Window* Application::GetWindow()

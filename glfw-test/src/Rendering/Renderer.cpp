@@ -9,7 +9,7 @@
 #include "VertexBufferLayout.h"
 #include "VertexBuffer.h"
 #include "IndexBuffer.h"
-#include "Shader.h"
+
 namespace Engine {
 
 	struct Renderer2DData
@@ -36,21 +36,22 @@ namespace Engine {
 		//Renderer2D::Statistics Stats;
 	};
 
-	Shader* TextureShader;
 	glm::mat4 Projection;
 	static Renderer2DData* s_Data;
 
 	float positions[] = {
-		-0.5f, -0.5f, /* text corrds */ 0.0f, 0.0f, /* color */	1.0f, 1.0f, 1.0f, 1.0f,   1.0f, /* textureID */ 1.0f,
-		0.5f,  -0.5f, /* text corrds */ 1.0f, 0.0f, /* color */	1.0f, 1.0f, 1.0f, 1.0f,   1.0f, /* textureID */ 1.0f,
-		0.5f,   0.5f, /* text corrds */ 1.0f, 1.0f, /* color */	1.0f, 1.0f, 1.0f, 1.0f,   1.0f, /* textureID */ 1.0f,
-		-0.5f,  0.5f, /* text corrds */ 0.0f, 1.0f, /* color */	1.0f, 1.0f, 1.0f, 1.0f,   1.0f, /* textureID */ 1.0f,
+		-0.5f, -0.5f, /* text corrds */ 0.0f, 0.0f, /* color */	1.0f, 1.0f, 1.0f, 1.0f,   1.0f, /* textureID */ 0.0f,
+		0.5f,  -0.5f, /* text corrds */ 1.0f, 0.0f, /* color */	1.0f, 1.0f, 1.0f, 1.0f,   1.0f, /* textureID */ 0.0f,
+		0.5f,   0.5f, /* text corrds */ 1.0f, 1.0f, /* color */	1.0f, 1.0f, 1.0f, 1.0f,   1.0f, /* textureID */ 0.0f,
+		-0.5f,  0.5f, /* text corrds */ 0.0f, 1.0f, /* color */	1.0f, 1.0f, 1.0f, 1.0f,   1.0f, /* textureID */ 0.0f,
 	};
 
 	unsigned int indices[] = {
 		0, 1, 2,
 		2, 3, 0
 	};
+
+	Shader* Renderer::TextureShader;
 
 	VertexArray* m_VertexArray;
 	VertexBuffer* m_VertexBuffer;
@@ -59,15 +60,13 @@ namespace Engine {
 	void Renderer::Init() {
 		m_VertexArray = new VertexArray();
 		
-		m_VertexBuffer = new VertexBuffer(positions, 4 * 11 * sizeof(float));
+		VertexBuffer* m_VertexBuffer = new VertexBuffer(positions, 4 * sizeof(QuadVertex));
 
 		VertexBufferLayout layout;
 		layout.Push<QuadVertex>(1);
 		
 		m_VertexArray->AddBuffer(*m_VertexBuffer, layout);
 		m_IndexBuffer =  new IndexBuffer(indices, 6);
-
-		Projection = glm::ortho(-8.0f, 8.0f, -4.5f, 4.5f, -1.0f, 1.0f);
 
 		Shader* shader = new Shader("res/shaders/Basic.shader");
 		shader->Bind();
@@ -76,27 +75,28 @@ namespace Engine {
 		texture->Bind();
 
 		TextureShader = shader;
-		TextureShader->SetUniformMat4f("u_MVP", Projection);
+		//TextureShader->SetUniformMat4f("u_MVP", Projection);
 
 		int samplers[2] = { 0, 1 };
 		TextureShader->SetUniform1iv("u_Textures", 2, samplers);
 	}
 
-	void Renderer::BeginScene(glm::mat4 camera) {
+	void Renderer::BeginScene(glm::mat4 camera, glm::mat4 transform) {
 		Clear();
 
 		TextureShader->Bind();
-		TextureShader->SetUniformMat4f("u_MVP", camera);
+		TextureShader->SetUniformMat4f("u_Projection", camera);
+		TextureShader->SetUniformMat4f("u_View", transform);
 	}
 
 	void Renderer::DrawQuad(const glm::vec2& position, const glm::vec2& size, const glm::vec4& color)
 	{
-		TextureShader->SetUniformMat4f("u_MVP", Projection);
+		//TextureShader->SetUniformMat4f("u_MVP", Projection);
 	}
 
 	void Renderer::DrawQuad(const glm::vec2& position, const glm::vec2& size, const Texture& texture)
 	{
-		TextureShader->SetUniformMat4f("u_MVP", Projection);
+		//TextureShader->SetUniformMat4f("u_MVP", Projection);
 	}
 
 	void Renderer::EndScene() {
@@ -109,11 +109,17 @@ namespace Engine {
 	}
 
 	void Renderer::Draw() {
+
+		int count = (sizeof(positions) / sizeof(*positions));
+
+		m_VertexBuffer = new VertexBuffer(positions, 4 * 10 * sizeof(float));
+		m_IndexBuffer = new IndexBuffer(indices, 6);
+
 		TextureShader->Bind();
 		m_VertexBuffer->Bind();
 		m_IndexBuffer->Bind();
 
-		GLCall(glDrawElements(GL_TRIANGLES, m_IndexBuffer->GetCount(), GL_UNSIGNED_INT, nullptr));
+		GLCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));
 	}
 
 	void Renderer::Clear() {

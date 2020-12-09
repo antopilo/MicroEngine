@@ -1,13 +1,11 @@
 #pragma once
-#include "../Rendering/Renderer.h"
 #include "../Core/Timestep.h"
 #include "entt/entt.hpp"
-#include "Entities/Components.h"
-#include "Camera.h"
 
 namespace Engine
 {
 	class Entity;
+	class Camera;
 
 	class Scene {
 

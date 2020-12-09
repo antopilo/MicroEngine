@@ -1,8 +1,7 @@
 #pragma once
 #include "Shader.h"
-#include <GL\glew.h>
-#include "Renderer.h"
 #include "Debug.h"
+
 
 namespace Engine {
 	// TODO: Register all uniform when creating shader.

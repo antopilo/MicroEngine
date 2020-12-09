@@ -147,6 +147,7 @@
   <ItemGroup>
     <ClCompile Include="Entry.h" />
     <ClCompile Include="src\Application.cpp" />
+    <ClCompile Include="src\Core\Input.cpp" />
     <ClCompile Include="src\ImGui\ImGuiLayer.cpp" />
     <ClCompile Include="src\Rendering\IndexBuffer.cpp" />
     <ClCompile Include="src\Rendering\Renderer.cpp" />
@@ -169,6 +170,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Application.h" />
+    <ClInclude Include="src\Core\Input.h" />
     <ClInclude Include="src\Core\Layer.h" />
     <ClInclude Include="src\Core\Timestep.h" />
     <ClInclude Include="src\ImGui\ImGuiLayer.h" />

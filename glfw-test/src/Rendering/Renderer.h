@@ -5,7 +5,6 @@
 namespace Engine {
 	class Texture;
 	class Camera;
-	class Shader;
 
 	struct Renderer2DData;
 	
@@ -16,7 +15,7 @@ namespace Engine {
 
 		static void Draw();
 
-		static void BeginScene(glm::mat4 camera);
+		static void BeginScene(glm::mat4 camera, glm::mat4 transform);
 
 		static void DrawQuad(const glm::vec2& position, const glm::vec2& size, const glm::vec4& color);
 		static void DrawQuad(const glm::vec2& position, const glm::vec2& size, const Texture& texture);

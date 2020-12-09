@@ -13,7 +13,7 @@
 #include "Rendering/Shader.h"
 #include "Rendering/Renderer.h"
 #include "Rendering/Texture.h"
-
+#include "Core/Timestep.h"
 namespace Engine {
 
 	class Window 
@@ -22,7 +22,7 @@ namespace Engine {
 		int m_Width;
 		int m_Height;
 		std::string m_Title;
-
+		Camera* m_Cam;
 		GLFWwindow* instance;
 
 	public:
@@ -32,7 +32,7 @@ namespace Engine {
 		void Update();
 		int Close();
 
-		void Draw();
+		void Draw(Timestep ts);
 
 		bool WindowShouldClose() {
 			return glfwWindowShouldClose(instance);

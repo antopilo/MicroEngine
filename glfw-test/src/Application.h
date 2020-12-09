@@ -9,10 +9,10 @@ namespace Engine {
 	{
 	private:
 		bool m_Running = true;
-
+		float m_LastFrameTime = 0.0f;
 		static Application* s_Instance;
 		
-		Engine::Window* m_Window;
+		Window* m_Window;
 
 		ImGuiLayer* m_ImGuiLayer;
 		Scene* m_Scene;
@@ -23,6 +23,7 @@ namespace Engine {
 		void Run();
 		int Close();
 
+		Application();
 		//Scene* GetScene();
 
 		// Todo: serialization of scene.

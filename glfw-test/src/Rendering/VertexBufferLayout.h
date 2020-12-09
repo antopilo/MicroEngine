@@ -42,7 +42,11 @@ namespace Engine {
 		template<>
 		void Push<QuadVertex>(unsigned int count)
 		{
-			Push<float>(11);
+			Push<float>(2);
+			Push<float>(4);
+			Push<float>(2);
+			Push<float>(1);
+			Push<float>(1);
 		}
 
 		template<>
