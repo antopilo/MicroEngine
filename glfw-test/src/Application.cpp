@@ -18,6 +18,7 @@ namespace Engine {
 			Timestep timestep = time - m_LastFrameTime;
 			m_LastFrameTime = time;
 
+			m_Window->Update(timestep);
 			// TODO: Remove params
 			m_Window->Draw(timestep);
 		}

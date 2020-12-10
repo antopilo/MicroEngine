@@ -18,6 +18,8 @@ namespace Engine {
 		static float GetMouseY();
 		static std::pair<float, float> GetMousePosition();
 
+		static bool Init();
+
 		Input* Get() { return s_Instance; }
 
 	private:

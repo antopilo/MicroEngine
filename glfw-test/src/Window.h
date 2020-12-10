@@ -14,6 +14,7 @@
 #include "Rendering/Renderer.h"
 #include "Rendering/Texture.h"
 #include "Core/Timestep.h"
+#include "Scene/Scene.h"
 namespace Engine {
 
 	class Window 
@@ -25,12 +26,14 @@ namespace Engine {
 		Camera* m_Cam;
 		GLFWwindow* instance;
 
+		Scene* m_Scene;
+
 	public:
 
 		Window(int width, int height, std::string title);
 
 		int Initialize();
-		void Update();
+		void Update(Timestep ts);
 		int Close();
 
 		void Draw(Timestep ts);

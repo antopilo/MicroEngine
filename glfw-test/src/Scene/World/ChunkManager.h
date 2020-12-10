@@ -1,6 +1,6 @@
 #pragma once
 #include <unordered_map>
-#include "Chunk.h"
+#include "Chunks/Chunk.h"
 
 namespace Engine {
 	class ChunkManager

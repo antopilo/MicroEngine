@@ -13,6 +13,7 @@ namespace Engine
 		int m_ViewportWidth = 0;
 		int m_ViewportHeight = 0;
 		entt::registry m_EnttRegistry;
+
 		Camera* m_Camera;
 
 	public:
@@ -27,6 +28,8 @@ namespace Engine
 		void DestroyEntity(entt::entity);
 
 		Entity GetEntity(entt::entity);
+
+		Camera* GetCamera();
 
 		friend class Entity;
 	};

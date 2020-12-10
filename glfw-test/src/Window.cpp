@@ -8,14 +8,12 @@
 #include <imgui\imgui_impl_opengl3.h>
 #include <string>
 namespace Engine {
-
-
-
 	Window::Window(int width, int height, std::string title) {
 		m_Width = width;
 		m_Height = height;
-		m_Cam = new Camera(ORTHO);
 		m_Title = title;
+
+		m_Scene = new Scene();
 
 		if (Initialize() == -1) {
 			std::cout << "ERROR: Failed to create window." << std::endl;
@@ -73,21 +71,20 @@ namespace Engine {
 	}
 
 	int Window::Close() {
+		delete m_Scene;
+
 		glfwTerminate();
 		return 0;
 	}
 
 	ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
-	void Window::Update() {
-
+	void Window::Update(Timestep ts) {
+		m_Scene->Update(ts);
 	}
 
 	void Window::Draw(Timestep ts) {
-
-		m_Cam->Update(ts);
 		
-		Renderer::BeginScene(m_Cam->GetPerspective(), m_Cam->GetTransform());
 
 		// Draw imgui.
 		ImGui_ImplOpenGL3_NewFrame();
@@ -104,16 +101,16 @@ namespace Engine {
 			ImGui::Text("Camera:");
 
 			ImGui::Text("Position:");
-			std::string x = std::to_string((m_Cam->GetTranslation()).x) + " "
-			 + std::to_string((m_Cam->GetTranslation()).y) + " "
-			 + std::to_string((m_Cam->GetTranslation()).z);
+			std::string x = std::to_string((m_Scene->GetCamera()->GetTranslation()).x) + " "
+			 + std::to_string((m_Scene->GetCamera()->GetTranslation()).y) + " "
+			 + std::to_string((m_Scene->GetCamera()->GetTranslation()).z);
 			ImGui::Text( x.c_str());
 
 			// Direction
 			ImGui::Text("Direction:");
-			std::string d = std::to_string((m_Cam->GetDirection()).x) + " "
-				+ std::to_string((m_Cam->GetDirection()).y) + " "
-				+ std::to_string((m_Cam->GetDirection()).z);
+			std::string d = std::to_string((m_Scene->GetCamera()->GetDirection()).x) + " "
+				+ std::to_string((m_Scene->GetCamera()->GetDirection()).y) + " "
+				+ std::to_string((m_Scene->GetCamera()->GetDirection()).z);
 			ImGui::Text(d.c_str());
 
 			// TYPE
@@ -128,7 +125,7 @@ namespace Engine {
 			//	m_Cam->SetType(PERSPECTIVE);
 				
 			// FOV
-			ImGui::SliderFloat("FOV", &m_Cam->Fov, 1.0f, 120.0f);  
+			ImGui::SliderFloat("FOV", &m_Scene->GetCamera()->Fov, 1.0f, 120.0f);
 			// Edit 1 float using a slider from 0.0f to 1.0f
 
 			ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
@@ -137,25 +134,14 @@ namespace Engine {
 
 		ImGui::Render();
 		
-		Renderer::CreateQuad(0.0f, 0.0f, 2.0f);
+		m_Scene->Draw();
 
-		Renderer::DrawCube(0.0f, 0.0f, 0.0f, 1.0f);
-		Renderer::DrawCube(1.0f, 1.0f, 0.0f, 0.0f);
-		//
-		Renderer::DrawCube(3.0f, 0.0f, 3.0f, 2.0f);
-
-		Renderer::Flush();
-		
 
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-		
-
 		/* Swap front and back buffers */
 		glfwSwapBuffers(instance);
 		/* Poll for and process events */
 		glfwPollEvents();
-
-		Renderer::EndScene();
 	}
 	GLFWwindow* Window::GetNative()
 	{

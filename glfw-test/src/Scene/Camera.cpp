@@ -8,6 +8,7 @@ namespace Engine {
 	Camera::Camera(CAMERA_TYPE type) {
 		m_Type = PERSPECTIVE;
 		
+		Translation = glm::vec3();
 		cameraDirection = glm::vec3(0, 0, 1);
 		up = glm::vec3(0.0f, 1.0f, 0.0f);
 		cameraRight = glm::normalize(glm::cross(up, cameraDirection));
@@ -65,9 +66,9 @@ namespace Engine {
 			if (Input::IsKeyPressed(GLFW_KEY_S))
 				Translation -= cameraDirection * (2.0f * ts);
 			if (Input::IsKeyPressed(GLFW_KEY_LEFT_SHIFT))
-				Translation += up * (2.0f * ts);
-			if (Input::IsKeyPressed(GLFW_KEY_SPACE))
 				Translation -= up * (2.0f * ts);
+			if (Input::IsKeyPressed(GLFW_KEY_SPACE))
+				Translation += up * (2.0f * ts);
 		}
 
 
@@ -118,7 +119,7 @@ namespace Engine {
 		//	m_Perspective = glm::ortho(-8.0f, 8.0f, -4.5f, 4.5f, -1.0f, 1.0f);
 		//}
 		//else if (m_Type == CAMERA_TYPE::PERSPECTIVE) {
-		m_Perspective = glm::perspectiveFov(glm::radians(Fov), 16.0f, 9.0f, 0.5f, 200.0f);
+		m_Perspective = glm::perspectiveFov(glm::radians(Fov), 16.0f, 9.0f, 0.1f, 200.0f);
 		//}
 
 		return m_Perspective;

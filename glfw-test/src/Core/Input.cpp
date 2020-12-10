@@ -80,4 +80,13 @@ namespace Engine {
 
 		return { (float)xpos, (float)ypos };	
 	}
+
+	bool Input::Init()
+	{
+		//auto window = Application::Get().GetWindow()->GetNative();
+		//glfwSetKeyCallback(window, Input::HandleInputCallback);
+		return false;
+	}
+
+	
 }

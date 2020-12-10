@@ -81,6 +81,15 @@
     <ClCompile Include="src\Core\Input.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Scene\World\World.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Scene\World\Chunks\Chunk.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Scene\World\Chunks\SubChunk.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="src\Scene\World\ChunkManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -1184,13 +1193,16 @@
     <ClInclude Include="src\Scene\World\World.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\Scene\World\Chunks\Chunk.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Scene\World\Chunks\SubChunk.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="src\Scene\World\ChunkManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Scene\World\Chunk.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Scene\World\SubChunk.h">
+    <ClInclude Include="src\Scene\World\Generation\FastNoise.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

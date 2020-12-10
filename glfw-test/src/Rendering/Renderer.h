@@ -19,6 +19,7 @@ namespace Engine {
 		static void CreateQuad(float x, float y, float textureID);
 		static void EndScene();
 
+		static void PushMesh(std::vector<QuadVertex> mesh);
 		static void DrawCube(float x, float y, float z, float textureId);
 
 		static void Clear();
