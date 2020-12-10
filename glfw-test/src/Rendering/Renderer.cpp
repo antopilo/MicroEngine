@@ -1,14 +1,16 @@
 #include "Renderer.h"
-#include "Debug.h"
 #include <GLFW\glfw3.h>
-#include "Texture.h"
-#include <array>
-#include "Vertex.h"
 
+#include <array>
+
+#include "Debug.h"
+#include "Texture.h"
 #include "VertexArray.h"
 #include "VertexBufferLayout.h"
 #include "VertexBuffer.h"
 #include "IndexBuffer.h"
+
+#include "Vertex.h"
 
 namespace Engine {
 
@@ -37,17 +39,20 @@ namespace Engine {
 	};
 
 	glm::mat4 Projection;
-	static Renderer2DData* s_Data;
+	static Engine::Renderer2DData* s_Data;
 
-
-
-
+	std::vector<QuadVertex> Renderer::m_Vertices;
+	int Renderer::IndicesCount = 0;
 
 	Shader* Renderer::TextureShader;
 
 	VertexArray* m_VertexArray;
 	VertexBuffer* m_VertexBuffer;
 	IndexBuffer* m_IndexBuffer;
+
+	const size_t MaxQuadCount = 1000;
+	const size_t MaxVertexCount = 1000 * 4;
+	const size_t MaxIndexCount = 1000 * 6;
 
 	void Renderer::Init() {
 
@@ -65,36 +70,32 @@ namespace Engine {
 		Texture* texture2 = new Texture("res/textures/test2.png");
 		texture->Bind(1);
 
-
-		//float positions[] = {
-		//	-1.5f, -0.5f,  /* text corrds */ 0.0f, 0.0f, /* color */	1.0f, 1.0f, 1.0f, 1.0f,   1.0f, /* textureID */ 1.0f,
-		//	-0.5f,  -0.5f, /* text corrds */ 1.0f, 0.0f, /* color */	1.0f, 1.0f, 1.0f, 1.0f,   1.0f, /* textureID */ 1.0f,
-		//	-0.5f,   0.5f, /* text corrds */ 1.0f, 1.0f, /* color */	1.0f, 0.0f, 1.0f, 1.0f,   1.0f, /* textureID */ 1.0f,
-		//	-1.5f,   0.5f, /* text corrds */ 0.0f, 1.0f, /* color */	1.0f, 1.0f, 1.0f, 1.0f,   1.0f, /* textureID */ 1.0f,
-		//
-		//	0.5f,  -0.5f, /* text corrds */ 0.0f, 0.0f, /* color */	1.0f, 1.0f, 1.0f, 1.0f,   1.0f, /* textureID */ 0.0f,
-		//	1.5f,  -0.5f, /* text corrds */ 1.0f, 0.0f, /* color */	1.0f, 1.0f, 1.0f, 1.0f,   1.0f, /* textureID */ 0.0f,
-		//	1.5f,   0.5f, /* text corrds */ 1.0f, 1.0f, /* color */	1.0f, 1.0f, 1.0f, 1.0f,   1.0f, /* textureID */ 0.0f,
-		//	0.5f,   0.5f, /* text corrds */ 0.0f, 1.0f, /* color */	1.0f, 1.0f, 1.0f, 1.0f,   1.0f, /* textureID */ 0.0f,
-		//};
-
 		// Vertex Array
 		m_VertexArray = new VertexArray();
 
 		// Buffer and attributes
-		m_VertexBuffer = new VertexBuffer(nullptr, sizeof(QuadVertex) * 1000);
+		m_VertexBuffer = new VertexBuffer(nullptr, sizeof(QuadVertex) * MaxVertexCount);
 
 		VertexBufferLayout layout;
 		layout.Push<QuadVertex>(1);
 		m_VertexArray->AddBuffer(*m_VertexBuffer, layout);
 
-		unsigned int indices[] = {
-			0, 1, 2, 2, 3, 0,
-			4, 5, 6, 6, 7, 4
-		};
+		uint32_t indices[MaxIndexCount];
+		uint32_t offset = 0;
+		for (auto i = 0; i < MaxIndexCount; i+= 6) {
+			indices[i + 0] = 0 + offset;
+			indices[i + 1] = 1 + offset;
+			indices[i + 2] = 2 + offset;
+
+			indices[i + 3] = 2 + offset;
+			indices[i + 4] = 3 + offset;
+			indices[i + 5] = 0 + offset;
+
+			offset += 4;
+		}
 
 		// Index buffer
-		m_IndexBuffer = new IndexBuffer(indices, 12);
+		m_IndexBuffer = new IndexBuffer(indices, MaxIndexCount);
 	}
 
 	void Renderer::BeginScene(glm::mat4 camera, glm::mat4 transform) {
@@ -105,78 +106,78 @@ namespace Engine {
 		TextureShader->SetUniformMat4f("u_View", transform);
 	}
 
-	void Renderer::DrawQuad(const glm::vec2& position, const glm::vec2& size, const glm::vec4& color)
-	{
-		//TextureShader->SetUniformMat4f("u_MVP", Projection);
-	}
-
-	void Renderer::DrawQuad(const glm::vec2& position, const glm::vec2& size, const Texture& texture)
-	{
-		//TextureShader->SetUniformMat4f("u_MVP", Projection);
-	}
 
 	void Renderer::EndScene() {
 
 		//ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
+		//for (auto i = 0; i < m_Vertices.size(); i++)
+		//	delete m_Vertices[i];
+	
+		m_Vertices.clear();
 
 		/* Swap front and back buffers */
 		
 	}
 
-	std::array<QuadVertex, 4> CreateQuad(float x, float y, float textureID) {
+	void Renderer::CreateQuad(float x, float y, float textureID) {
 		float size = 1.0f;
 
-		QuadVertex v0;
-		v0.Position = { x, y };
-		v0.TexCoord = { 0.0f, 0.0f };
-		v0.Color = { 1.0f, 1.0f, 1.0f, 1.0f };
-		v0.TexIndex = { textureID };
-		v0.TilingFactor = { 1.0f };
+		m_Vertices.push_back(
+			QuadVertex (
+				glm::vec2(x, y),
+				glm::vec4(1.0f, 1.0f, 1.0f, 1.0f),
+				glm::vec2(0.0f, 0.0f),
+				textureID,
+				1.0f
+			)
+		);
 
-		QuadVertex v1;
-		v1.Position = { x + size, y};
-		v1.TexCoord = { 1.0f, 0.0f };
-		v1.Color = { 1.0f, 1.0f, 1.0f, 1.0f };
-		v1.TexIndex = { textureID };
-		v1.TilingFactor = { 1.0f };
+		m_Vertices.push_back(
+			QuadVertex (
+				glm::vec2(x + size, y),
+				glm::vec4(1.0f, 1.0f, 1.0f, 1.0f),
+				glm::vec2(1.0f, 0.0f),
+				textureID,
+				1.0f
+				)
+		);
 
-		QuadVertex v2;
-		v2.Position = { x + size, y + size };
-		v2.TexCoord = { 1.0f, 1.0f };
-		v2.Color = { 1.0f, 1.0f, 1.0f, 1.0f };
-		v2.TexIndex = { textureID };
-		v2.TilingFactor = { 1.0f };
+		m_Vertices.push_back(
+			QuadVertex (
+				glm::vec2(x + size, y + size),
+				glm::vec4(1.0f, 1.0f, 1.0f, 1.0f),
+				glm::vec2(1.0f, 1.0f),
+				textureID,
+				1.0f
+			)
+		);
 
-		QuadVertex v3;
-		v3.Position = { x, y + size };
-		v3.Color = { 1.0f, 1.0f, 1.0f, 1.0f };
-		v3.TexCoord = { 0.0f, 1.0f };
-		v3.TexIndex = { textureID };
-		v3.TilingFactor = { 1.0f };
-		 
-		return { v0, v1, v2, v3 };
+		m_Vertices.push_back(
+			QuadVertex (
+				glm::vec2(x, y + size),
+				glm::vec4(1.0f, 1.0f, 1.0f, 1.0f),
+				glm::vec2(0.0f, 1.0f),
+				textureID,
+				1.0f
+				)
+		);
+
+		printf("Created quad");
+
+		IndicesCount += 6;
 	}
 
+	//std::vector<QuadVertex> Renderer::m_Vertices;
 
-	void Renderer::Draw() {
-
-		
-		
-
-		auto q0 = CreateQuad(-1.5f, -0.5f, 1.0f);
-		auto q1 = CreateQuad(0.5f,  -0.5f, 0.0f);
-
-		QuadVertex vertices[8];
-		memcpy(vertices, q0.data(), q0.size() * sizeof(QuadVertex));
-		memcpy(vertices + q0.size(), q1.data(), q1.size() * sizeof(QuadVertex));
-		m_VertexBuffer->SetData(vertices, sizeof(vertices));
-
+	void Renderer::Flush() {
+		m_VertexBuffer->SetData(m_Vertices.data(), m_Vertices.size() * sizeof(QuadVertex));
 		TextureShader->Bind();
 		m_VertexBuffer->Bind();
+		
 		m_IndexBuffer->Bind();
 
-		GLCall(glDrawElements(GL_TRIANGLES, 12, GL_UNSIGNED_INT, nullptr));
+		GLCall(glDrawElements(GL_TRIANGLES, IndicesCount, GL_UNSIGNED_INT, nullptr));
 	}
 
 	void Renderer::Clear() {

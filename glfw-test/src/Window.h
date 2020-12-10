@@ -26,6 +26,7 @@ namespace Engine {
 		GLFWwindow* instance;
 
 	public:
+
 		Window(int width, int height, std::string title);
 
 		int Initialize();

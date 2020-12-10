@@ -6,7 +6,7 @@
 #include <imgui\imgui.h>
 #include <imgui\imgui_impl_glfw.h>
 #include <imgui\imgui_impl_opengl3.h>
-
+#include <string>
 namespace Engine {
 
 
@@ -14,7 +14,7 @@ namespace Engine {
 	Window::Window(int width, int height, std::string title) {
 		m_Width = width;
 		m_Height = height;
-		m_Cam = new Camera();
+		m_Cam = new Camera(ORTHO);
 		m_Title = title;
 
 		if (Initialize() == -1) {
@@ -75,8 +75,6 @@ namespace Engine {
 		return 0;
 	}
 
-	bool show_demo_window = true;
-	bool show_another_window = false;
 	ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
 	void Window::Update() {
@@ -97,13 +95,26 @@ namespace Engine {
 			static float f = 0.0f;
 			static int counter = 0;
 
-			ImGui::Begin("Hello, world!");                          // Create a window called "Hello, world!" and append into it.
+			ImGui::Begin("Debugging!");                          // Create a window called "Hello, world!" and append into it.
 
-			ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
-			ImGui::Checkbox("Demo Window", &show_demo_window);      // Edit bools storing our window open/close state
-			ImGui::Checkbox("Another Window", &show_another_window);
+			ImGui::Text("Camera:");               // Display some text (you can use a format strings too)
+			ImGui::Text("Position:");               // Display some text (you can use a format strings too)
+			std::string x = std::to_string((m_Cam->GetTranslation()).x) + " "
+			 + std::to_string((m_Cam->GetTranslation()).y) + " "
+			 + std::to_string((m_Cam->GetTranslation()).z);
+			ImGui::Text( x.c_str());
 
-			ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
+			ImGui::Text("Type:");
+			const char* items[] = { "Orthographic", "Perspective"};
+			static int item = 0;
+			ImGui::Combo("Type", &item, items, IM_ARRAYSIZE(items));
+
+			if (item == 0)
+				m_Cam->SetType(ORTHO);
+			else if (item == 1)
+				m_Cam->SetType(PERSPECTIVE);
+				
+			ImGui::SliderFloat("FOV", &m_Cam->Fov, 0.0f, 120.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
 			ImGui::ColorEdit3("clear color", (float*)&clear_color); // Edit 3 floats representing a color
 
 			if (ImGui::Button("Button"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
@@ -115,31 +126,14 @@ namespace Engine {
 			ImGui::End();
 		}
 
-		{
-			ImGui::Begin("Etienne");
-			ImGui::Text("Je suis laid!");
-			ImGui::End();
-		}
-
-		if (true)
-		{
-			ImGui::Begin("Another Window", &show_another_window);   // Pass a pointer to our bool variable (the window will have a closing button that will clear the bool when clicked)
-			ImGui::Text("Hello from another window!");
-			if (ImGui::Button("Close Me"))
-				show_another_window = false;
-			ImGui::End();
-		}
-
-
 		ImGui::Render();
-		//ImGui::ShowDemoWindow(&true);
+		
 
 
-		//Renderer::DrawQuad({ 0.0f, 0.0f }, { 1.0f, 1.0f }, {0.0f, 0.0f, 1.0f});
-
-
+		
+		Renderer::CreateQuad(0.0f, 0.0f, 0.0f);
+		Renderer::Flush();
 		Renderer::EndScene();
-		Renderer::Draw();
 
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 		

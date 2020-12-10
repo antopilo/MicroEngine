@@ -10,7 +10,7 @@ namespace Engine {
 
 
 	Scene::Scene() {
-		m_Camera = new Camera();
+		m_Camera = new Camera(ORTHO);
 	}
 
 	Engine::Entity Scene::CreateEntity() {
