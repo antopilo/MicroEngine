@@ -64,9 +64,8 @@ namespace Engine {
 
 		int samplers[2] = { 0, 1 };
 		TextureShader->SetUniform1iv("u_Textures", 2, samplers);
-
 		Texture* texture = new Texture("res/textures/test.png");
-		texture->Bind();
+		texture->Bind(0);
 		Texture* texture2 = new Texture("res/textures/test2.png");
 		texture->Bind(1);
 
@@ -156,15 +155,14 @@ namespace Engine {
 		};
 
 		for (auto i = 0; i < 24 * 5; i += 5) {
-			m_Vertices.push_back(QuadVertex {
-				glm::vec3(vertices[i] + x, vertices[i + 1] + y, vertices[i + 2] + z),
-				glm::vec4(1.0f),
-				glm::vec2(vertices[i + 3], vertices[i + 4]),
-				textureId,
-				1.0f
-			});
+
+			glm::vec3 position = glm::vec3(vertices[i] + x, vertices[i + 1] + y, vertices[i + 2] + z);
+			glm::vec4 color = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
+			glm::vec2 texPos = glm::vec2(vertices[i + 3], vertices[i + 4]);
+			QuadVertex vert = QuadVertex(position, color, texPos, textureId, 1.0f);
+			m_Vertices.push_back(vert);
 		}
-		IndicesCount += 24;
+		IndicesCount += 36;
 	}
 
 	void Renderer::CreateQuad(float x, float y, float textureID) {
@@ -207,7 +205,7 @@ namespace Engine {
 				glm::vec2(0.0f, 1.0f),
 				textureID,
 				1.0f
-				)
+			)
 		);
 		IndicesCount += 6;
 	}
@@ -215,12 +213,11 @@ namespace Engine {
 	//std::vector<QuadVertex> Renderer::m_Vertices;
 
 	void Renderer::Flush() {
-		TextureShader->Bind();
-
+		//TextureShader->Bind();
 		m_VertexBuffer->SetData(m_Vertices.data(), m_Vertices.size() * sizeof(QuadVertex));
-		
+
+		TextureShader->Bind();
 		m_VertexBuffer->Bind();
-		
 		m_IndexBuffer->Bind();
 
 		GLCall(glDrawElements(GL_TRIANGLES, IndicesCount, GL_UNSIGNED_INT, nullptr));

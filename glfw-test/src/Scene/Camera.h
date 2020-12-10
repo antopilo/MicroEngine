@@ -21,7 +21,7 @@ namespace Engine {
 
 		CAMERA_TYPE m_Type;
 
-		bool controlled = false;
+		bool controlled = true;
 
 		glm::mat4 m_Perspective;
 		bool firstMouse = true;

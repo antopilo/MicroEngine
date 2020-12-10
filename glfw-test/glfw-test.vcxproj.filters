@@ -81,6 +81,9 @@
     <ClCompile Include="src\Core\Input.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Scene\World\ChunkManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Window.h">
@@ -1178,6 +1181,18 @@
     <ClInclude Include="src\Core\Input.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\Scene\World\World.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Scene\World\ChunkManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Scene\World\Chunk.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Scene\World\SubChunk.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\shaders\Basic.shader" />
@@ -1601,6 +1616,9 @@
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="res\textures\test2.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\textures\test3.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

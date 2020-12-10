@@ -19,8 +19,5 @@ namespace Engine {
 			TexIndex = tex;
 			TilingFactor = tile;
 		}
-
-
-		QuadVertex() {};
 	};
 }

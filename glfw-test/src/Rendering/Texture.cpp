@@ -31,7 +31,6 @@ namespace Engine {
 	}
 
 	Texture::~Texture() {
-
 		GLCall(glDeleteTextures(1, &m_RendererId));
 	}
 

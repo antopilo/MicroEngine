@@ -137,11 +137,15 @@ namespace Engine {
 
 		ImGui::Render();
 		
+		Renderer::CreateQuad(0.0f, 0.0f, 2.0f);
+
 		Renderer::DrawCube(0.0f, 0.0f, 0.0f, 1.0f);
 		Renderer::DrawCube(1.0f, 1.0f, 0.0f, 0.0f);
+		//
+		Renderer::DrawCube(3.0f, 0.0f, 3.0f, 2.0f);
 
 		Renderer::Flush();
-		Renderer::EndScene();
+		
 
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 		
@@ -151,7 +155,7 @@ namespace Engine {
 		/* Poll for and process events */
 		glfwPollEvents();
 
-
+		Renderer::EndScene();
 	}
 	GLFWwindow* Window::GetNative()
 	{

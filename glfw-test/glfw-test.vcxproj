@@ -158,6 +158,7 @@
     <ClCompile Include="src\Scene\Camera.cpp" />
     <ClCompile Include="src\Scene\Entities\Entity.cpp" />
     <ClCompile Include="src\Scene\Scene.cpp" />
+    <ClCompile Include="src\Scene\World\ChunkManager.cpp" />
     <ClCompile Include="src\Vendor\glm\detail\glm.cpp" />
     <ClCompile Include="src\Vendor\imgui\imgui.cpp" />
     <ClCompile Include="src\Vendor\imgui\imgui_demo.cpp" />
@@ -187,6 +188,10 @@
     <ClInclude Include="src\Scene\Entities\Entity.h" />
     <ClInclude Include="src\Scene\Scene.h" />
     <ClInclude Include="src\Scene\Camera.h" />
+    <ClInclude Include="src\Scene\World\Chunk.h" />
+    <ClInclude Include="src\Scene\World\ChunkManager.h" />
+    <ClInclude Include="src\Scene\World\SubChunk.h" />
+    <ClInclude Include="src\Scene\World\World.h" />
     <ClInclude Include="src\Vendor\entt\config\config.h" />
     <ClInclude Include="src\Vendor\entt\config\version.h" />
     <ClInclude Include="src\Vendor\entt\core\algorithm.hpp" />
@@ -679,6 +684,7 @@
   <ItemGroup>
     <Image Include="res\textures\test.png" />
     <Image Include="res\textures\test2.png" />
+    <Image Include="res\textures\test3.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
