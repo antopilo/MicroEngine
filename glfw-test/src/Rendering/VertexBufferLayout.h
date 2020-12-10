@@ -42,11 +42,11 @@ namespace Engine {
 		template<>
 		void Push<QuadVertex>(unsigned int count)
 		{
-			Push<float>(2);
-			Push<float>(4);
-			Push<float>(2);
-			Push<float>(1);
-			Push<float>(1);
+			Push<float>(3); // pos
+			Push<float>(4); // color
+			Push<float>(2); // texture pos
+			Push<float>(1); // texture id
+			Push<float>(1); // tiling scale.
 		}
 
 		template<>

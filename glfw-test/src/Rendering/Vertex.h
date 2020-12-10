@@ -6,19 +6,20 @@
 namespace Engine {
 	struct QuadVertex
 	{
-		glm::vec2 Position;
+		glm::vec3 Position;
 		glm::vec4 Color;
 		glm::vec2 TexCoord;
 		float TexIndex;
 		float TilingFactor;
 
-		QuadVertex(glm::vec2 pos, glm::vec4 color, glm::vec2 texCoord, float tex, float tile) {
+		QuadVertex(glm::vec3 pos, glm::vec4 color, glm::vec2 texCoord, float tex, float tile) {
 			Position = pos;
 			Color = color;
 			TexCoord = texCoord;
 			TexIndex = tex;
 			TilingFactor = tile;
 		}
+
 
 		QuadVertex() {};
 	};

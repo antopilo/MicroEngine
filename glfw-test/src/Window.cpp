@@ -137,14 +137,8 @@ namespace Engine {
 
 		ImGui::Render();
 		
-
-
-		
-		Renderer::CreateQuad(0.0f, 0.0f, 0.0f);
-		Renderer::CreateQuad(1.0f, 0.0f, 1.0f);
-		Renderer::CreateQuad(0.0f, -1.0f, 0.0f);
-		Renderer::CreateQuad(1.0f, 0.0f, -1.0f);
-		Renderer::CreateQuad(0.0f, 1.0f, 0.0f);
+		Renderer::DrawCube(0.0f, 0.0f, 0.0f, 1.0f);
+		Renderer::DrawCube(1.0f, 1.0f, 0.0f, 0.0f);
 
 		Renderer::Flush();
 		Renderer::EndScene();

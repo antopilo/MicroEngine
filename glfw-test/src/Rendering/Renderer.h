@@ -19,6 +19,8 @@ namespace Engine {
 		static void CreateQuad(float x, float y, float textureID);
 		static void EndScene();
 
+		static void DrawCube(float x, float y, float z, float textureId);
+
 		static void Clear();
 
 	private:
