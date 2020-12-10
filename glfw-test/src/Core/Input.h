@@ -5,7 +5,14 @@ namespace Engine {
 	{
 	public:
 		static bool IsKeyPressed(int keycode);
+		static bool IsKeyPress(int keycode);
+		static bool IsKeyReleased(int keycode);
+
 		static bool IsMouseButtonPressed(int button);
+
+		static void HideMouse();
+		static void ShowMouse();
+		static bool IsMouseHidden();
 
 		static float GetMouseX();
 		static float GetMouseY();

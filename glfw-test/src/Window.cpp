@@ -68,6 +68,8 @@ namespace Engine {
 		// Setup Platform/Renderer bindings
 		ImGui_ImplGlfw_InitForOpenGL(instance, true);
 		ImGui_ImplOpenGL3_Init("#version 330");
+
+		
 	}
 
 	int Window::Close() {
@@ -97,30 +99,37 @@ namespace Engine {
 
 			ImGui::Begin("Debugging!");                          // Create a window called "Hello, world!" and append into it.
 
-			ImGui::Text("Camera:");               // Display some text (you can use a format strings too)
-			ImGui::Text("Position:");               // Display some text (you can use a format strings too)
+			// CAMERA
+			// position
+			ImGui::Text("Camera:");
+
+			ImGui::Text("Position:");
 			std::string x = std::to_string((m_Cam->GetTranslation()).x) + " "
 			 + std::to_string((m_Cam->GetTranslation()).y) + " "
 			 + std::to_string((m_Cam->GetTranslation()).z);
 			ImGui::Text( x.c_str());
 
+			// Direction
+			ImGui::Text("Direction:");
+			std::string d = std::to_string((m_Cam->GetDirection()).x) + " "
+				+ std::to_string((m_Cam->GetDirection()).y) + " "
+				+ std::to_string((m_Cam->GetDirection()).z);
+			ImGui::Text(d.c_str());
+
+			// TYPE
 			ImGui::Text("Type:");
 			const char* items[] = { "Orthographic", "Perspective"};
 			static int item = 0;
 			ImGui::Combo("Type", &item, items, IM_ARRAYSIZE(items));
 
-			if (item == 0)
-				m_Cam->SetType(ORTHO);
-			else if (item == 1)
-				m_Cam->SetType(PERSPECTIVE);
+			//if (item == 0)
+			//	m_Cam->SetType(ORTHO);
+			//else if (item == 1)
+			//	m_Cam->SetType(PERSPECTIVE);
 				
-			ImGui::SliderFloat("FOV", &m_Cam->Fov, 0.0f, 120.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
-			ImGui::ColorEdit3("clear color", (float*)&clear_color); // Edit 3 floats representing a color
-
-			if (ImGui::Button("Button"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
-				counter++;
-			ImGui::SameLine();
-			ImGui::Text("counter = %d", counter);
+			// FOV
+			ImGui::SliderFloat("FOV", &m_Cam->Fov, 1.0f, 120.0f);  
+			// Edit 1 float using a slider from 0.0f to 1.0f
 
 			ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 			ImGui::End();
@@ -132,6 +141,11 @@ namespace Engine {
 
 		
 		Renderer::CreateQuad(0.0f, 0.0f, 0.0f);
+		Renderer::CreateQuad(1.0f, 0.0f, 1.0f);
+		Renderer::CreateQuad(0.0f, -1.0f, 0.0f);
+		Renderer::CreateQuad(1.0f, 0.0f, -1.0f);
+		Renderer::CreateQuad(0.0f, 1.0f, 0.0f);
+
 		Renderer::Flush();
 		Renderer::EndScene();
 
