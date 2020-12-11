@@ -41,7 +41,11 @@ namespace Engine {
 	glm::mat4 Projection;
 	static Engine::Renderer2DData* s_Data;
 
+
+
 	std::vector<QuadVertex> Renderer::m_Vertices;
+	uint32_t Renderer::m_Indices[MaxIndexCount];
+
 	int Renderer::IndicesCount = 0;
 
 	Shader* Renderer::TextureShader;
@@ -50,9 +54,7 @@ namespace Engine {
 	VertexBuffer* m_VertexBuffer;
 	IndexBuffer* m_IndexBuffer;
 
-	const size_t MaxQuadCount = 20000;
-	const size_t MaxVertexCount = 20000 * 4;
-	const size_t MaxIndexCount = 20000 * 6;
+
 
 	void Renderer::Init() {
 
@@ -86,16 +88,16 @@ namespace Engine {
 
 		m_VertexArray->AddBuffer(*m_VertexBuffer, layout);
 
-		uint32_t indices[MaxIndexCount];
+
 		uint32_t offset = 0;
 		for (auto i = 0; i < MaxIndexCount; i+= 6) {
-			indices[i + 0] = 0 + offset;
-			indices[i + 1] = 1 + offset;
-			indices[i + 2] = 2 + offset;
+			m_Indices[i + 0] = 0 + offset;
+			m_Indices[i + 1] = 1 + offset;
+			m_Indices[i + 2] = 2 + offset;
 
-			indices[i + 3] = 2 + offset;
-			indices[i + 4] = 3 + offset;
-			indices[i + 5] = 0 + offset;
+			m_Indices[i + 3] = 2 + offset;
+			m_Indices[i + 4] = 3 + offset;
+			m_Indices[i + 5] = 0 + offset;
 
 			offset += 4;
 		}
@@ -103,7 +105,7 @@ namespace Engine {
 		glEnable(GL_DEPTH_TEST);
 
 		// Index buffer
-		m_IndexBuffer = new IndexBuffer(indices, MaxIndexCount);
+		m_IndexBuffer = new IndexBuffer(m_Indices, MaxIndexCount);
 	}
 
 	void Renderer::BeginScene(glm::mat4 camera, glm::mat4 transform) {
@@ -123,8 +125,8 @@ namespace Engine {
 		//for (auto i = 0; i < m_Vertices.size(); i++)
 		//	delete m_Vertices[i];
 		Flush();
-		m_Vertices.clear();
-		IndicesCount = 0;
+		//m_Vertices.clear();
+		//IndicesCount = 0;
 		/* Swap front and back buffers */
 		
 	}
@@ -142,6 +144,7 @@ namespace Engine {
 			m_Vertices.push_back(mesh[i + 3]);
 			indices += 6;
 		}
+		IndicesCount += indices;
 	}
 
 	void Renderer::DrawCube(float x, float y, float z, float textureId) {
@@ -241,14 +244,16 @@ namespace Engine {
 
 	//std::vector<QuadVertex> Renderer::m_Vertices;
 
+	int lastIndicesCount = 0;
 	void Renderer::Flush() {
 		//TextureShader->Bind();
-		m_VertexBuffer->SetData(m_Vertices.data(), m_Vertices.size() * sizeof(QuadVertex));
+		if(lastIndicesCount != IndicesCount)
+			m_VertexBuffer->SetData(m_Vertices.data(), m_Vertices.size() * sizeof(QuadVertex));
 
 		TextureShader->Bind();
 		m_VertexBuffer->Bind();
 		m_IndexBuffer->Bind();
-
+		lastIndicesCount = IndicesCount;
 		GLCall(glDrawElements(GL_TRIANGLES, IndicesCount, GL_UNSIGNED_INT, nullptr));
 	}
 

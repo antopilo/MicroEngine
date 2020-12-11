@@ -20,19 +20,23 @@ namespace Engine {
 		
 		std::vector<SubChunk*> m_Subchunks;
 
-		const static int SUBCHUNK_COUNT = 16;
+		
 
 		//std::array<QuadVertex, 999> m_Mesh;
 		//std::array<int, 999> m_Indices;
 	public:
 		Chunk(glm::vec2 position);
+		const static int SUBCHUNK_COUNT = 16;
 
+		SubChunk* GetSubChunk(int idx);
 		int GetBlock(int x, int y, int z);
 		void SetBlock(int x, int y, int z, int type);
 
 		void Mesh();
 
 		void Render();
+
+		glm::vec2 GetPosition();
 
 		~Chunk();
 		void Draw();

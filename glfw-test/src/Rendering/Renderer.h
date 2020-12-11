@@ -6,7 +6,9 @@ namespace Engine {
 
 	class Texture;
 	class Camera;
-
+	const size_t MaxQuadCount = 800000;
+	const size_t MaxVertexCount = MaxQuadCount * 4;
+	const size_t MaxIndexCount = MaxQuadCount * 6;
 	struct Renderer2DData;
 	struct QuadVertex;
 	class Renderer {
@@ -27,6 +29,7 @@ namespace Engine {
 	private:
 		static Renderer2DData s_Data;
 		static std::vector<QuadVertex> m_Vertices;
+		static uint32_t m_Indices[MaxIndexCount];
 		static int IndicesCount;
 	};
 }

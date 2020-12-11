@@ -2,13 +2,13 @@
 #include <glm\gtx\quaternion.hpp>
 #include "../Core/Input.h"
 #include <GLFW\glfw3.h>
-
+#include "../Core/Timestep.h"
 namespace Engine {
 
 	Camera::Camera(CAMERA_TYPE type) {
 		m_Type = PERSPECTIVE;
 		
-		Translation = glm::vec3();
+		Translation = glm::vec3(-10.0f, 0.0f, -10.0f);
 		cameraDirection = glm::vec3(0, 0, 1);
 		up = glm::vec3(0.0f, 1.0f, 0.0f);
 		cameraRight = glm::normalize(glm::cross(up, cameraDirection));

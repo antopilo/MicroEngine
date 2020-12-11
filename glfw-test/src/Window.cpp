@@ -7,6 +7,8 @@
 #include <imgui\imgui_impl_glfw.h>
 #include <imgui\imgui_impl_opengl3.h>
 #include <string>
+#include "Scene/World/ChunkManager.h"
+
 namespace Engine {
 	Window::Window(int width, int height, std::string title) {
 		m_Width = width;
@@ -126,6 +128,9 @@ namespace Engine {
 				
 			// FOV
 			ImGui::SliderFloat("FOV", &m_Scene->GetCamera()->Fov, 1.0f, 120.0f);
+
+			ImGui::Text("Chunks info:");
+			ImGui::Text(std::to_string(ChunkManager::m_LoadedChunkCount).c_str());
 			// Edit 1 float using a slider from 0.0f to 1.0f
 
 			ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);

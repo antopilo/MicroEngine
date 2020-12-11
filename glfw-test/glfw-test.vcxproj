@@ -162,6 +162,7 @@
     <ClCompile Include="src\Scene\Scene.cpp" />
     <ClCompile Include="src\Scene\World\Chunks\Chunk.cpp" />
     <ClCompile Include="src\Scene\World\ChunkManager.cpp" />
+    <ClCompile Include="src\Scene\World\Chunks\ChunkMesher.cpp" />
     <ClCompile Include="src\Scene\World\Chunks\SubChunk.cpp" />
     <ClCompile Include="src\Scene\World\World.cpp" />
     <ClCompile Include="src\Vendor\glm\detail\glm.cpp" />
@@ -195,6 +196,7 @@
     <ClInclude Include="src\Scene\Camera.h" />
     <ClInclude Include="src\Scene\World\Chunks\Chunk.h" />
     <ClInclude Include="src\Scene\World\ChunkManager.h" />
+    <ClInclude Include="src\Scene\World\Chunks\ChunkMesher.h" />
     <ClInclude Include="src\Scene\World\Chunks\SubChunk.h" />
     <ClInclude Include="src\Scene\World\Generation\FastNoise.h" />
     <ClInclude Include="src\Scene\World\World.h" />

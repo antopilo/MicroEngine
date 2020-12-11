@@ -1,8 +1,313 @@
 #include "ChunkMesher.h"
 
+#include "SubChunk.h"
+
 namespace Engine {
-	std::vector<QuadVertex> ChunkMesher::MeshSubChunk(SubChunk* subchunk) 
+    
+    const glm::vec3 ChunkMesher::CUBE_VERTICES[] =
+    {
+        glm::vec3(0.0f, 0.0f, 0.0f), // 0
+        glm::vec3(1.0f, 0.0f, 0.0f), // 1
+        glm::vec3(1.0f, 0.0f, 1.0f), // 2
+        glm::vec3(0.0f, 0.0f, 1.0f), // 3
+        glm::vec3(0.0f, 1.0f, 0.0f), // 4
+        glm::vec3(1.0f, 1.0f, 0.0f), // 5
+        glm::vec3(1.0f, 1.0f, 1.0f), // 6
+        glm::vec3(0.0f, 1.0f, 1.0f)  // 7
+    };
+
+    const glm::vec3 CUBE_NORMALS[] =
+    {
+        glm::vec3( 0,  1,  0), 
+        glm::vec3( 0, -1,  0),
+        glm::vec3( 1,  0,  0), 
+        glm::vec3(-1,  0,  0),
+        glm::vec3( 0,  0,  1), 
+        glm::vec3( 0,  0, -1)
+    };
+
+    bool ChunkMesher::Left = false;
+    bool ChunkMesher::Right = false;
+    bool ChunkMesher::Front = false;
+    bool ChunkMesher::Back = false;
+    bool ChunkMesher::Top = false;
+    bool ChunkMesher::Bottom = false;
+
+    glm::vec3 ChunkMesher::Position = glm::vec3(0, 0, 0);
+
+    std::vector<QuadVertex> ChunkMesher::CurrentArray = std::vector<QuadVertex>();
+
+    std::vector<QuadVertex> ChunkMesher::MeshSubChunk(SubChunk* subchunk) 
 	{
-		// Todo mesher algo.
+        //if (SubChunk->GetCount() == 0)
+        //    return std::vector<QuadVertex>();
+
+        int type;
+        for (int x = 0; x < SubChunk::SIZE; x++) {
+            for (int y = 0; y < SubChunk::SIZE; y++) {
+                for (int z = 0; z < SubChunk::SIZE; z++) {
+                    type = subchunk->GetBlock(x, y, z);
+
+                    if (type == 0)// air
+                        continue;
+
+                    CreateBlock(x, y, z, type, subchunk);
+
+
+                }
+            }
+        }
+
+        return CurrentArray;
 	}
+    void ChunkMesher::CreateBlock(int x, int y, int z, int type, SubChunk* chunk)
+    {
+        int chunkIdx = chunk->GetIndex();
+
+        glm::vec2 parentPos = chunk->GetParent()->GetPosition();
+        int gx = parentPos.x * SubChunk::SIZE + x;
+        int gy = SubChunk::SIZE * chunk->GetIndex() + y;
+        int gz = parentPos.y * SubChunk::SIZE + z;
+
+        Top    = y != SubChunk::SIZE - 1 ? chunk->GetBlock(x, y + 1, z) == 0 : true;
+        Bottom = y != 0                  ? chunk->GetBlock(x, y - 1, z) == 0 : true;
+        Left   = x != SubChunk::SIZE - 1 ? chunk->GetBlock(x + 1, y, z) == 0 : true; // Todo chunk borders.
+        Right  = x != 0                  ? chunk->GetBlock(x - 1, y, z) == 0 : true;
+        Front  = z != SubChunk::SIZE - 1 ? chunk->GetBlock(x, y, z + 1) == 0 : true;
+        Back   = z != 0                  ? chunk->GetBlock(x, y, z - 1) == 0 : true;
+
+        // Block is surrounded.
+        if (Top && Bottom && Left && Right && Front && Back)
+            return;
+
+        bool topChunk = true;
+        bool bottomChunk = true;
+
+        // In between subchunks.
+        //if (chunkIdx != Chunk::SUBCHUNK_COUNT - 1) {
+        //    // TODO: Chunk count check.
+        //    SubChunk* above = chunk->GetParent()->GetSubChunk(chunkIdx + 1);
+        //    topChunk = Top = above->GetBlock(x, 0, z) == 0;
+        //}
+        //if (chunkIdx != 0) {
+        //    // TODO: Chunk count check.
+        //    SubChunk* under = chunk->GetParent()->GetSubChunk(chunkIdx - 1);
+        //    topChunk = Bottom = under->GetBlock(x, SubChunk::SIZE - 1, z) == 0;
+        //}
+
+        bool topBorder = y == SubChunk::SIZE - 1 ? topChunk : Top;
+        bool bottomBorder = y == 0 ? bottomChunk : Bottom;
+
+        // Todo Block texture and type.
+        if (Top)
+            PushQuad(0, gx, gy, gz, 4, 5, 6, 7);
+        if (Bottom)
+            PushQuad(0, gx, gy, gz, 3, 2, 1, 0);
+        if (Left)
+            PushQuad(0, gx, gy, gz, 0, 4, 7, 3);
+        if (Right)
+            PushQuad(0, gx, gy, gz, 1, 2, 6, 5);
+        if (Front)
+            PushQuad(0, gx, gy, gz, 2, 3, 7, 6);
+        if (Back)
+            PushQuad(0, gx, gy, gz, 5, 4, 0, 1);
+
+    }
+
+    void ChunkMesher::PushQuadAO(int face, int x, int y, int z, int c1, int c2, int c3, int c4)
+    {
+        float a00 = AOLookUp(face, x, y, z, c1);
+        float a10 = AOLookUp(face, x, y, z, c2);
+        float a11 = AOLookUp(face, x, y, z, c3);
+        float a01 = AOLookUp(face, x, y, z, c4);
+
+        if (a00 + a11 < a01 + a10) {
+            PushTriangleAO(x, y, z, c1, c2, c3, a00, a10, a11);
+            PushTriangleAO(x, y, z, c1, c3, c4, a00, a11, a01);
+        }
+        else {
+            PushTriangleAO(x, y, z, c1, c2, c4, a00, a10, a01);
+            PushTriangleAO(x, y, z, c1, c3, c4, a10, a11, a01);
+        }
+    }
+
+    float ChunkMesher::AOLookUp(int face, int x, int y, int z, int vertex)
+    {
+        //int corner = 0, side1 = 0, side2 = 0;
+        //if (face != 0 && face != 1)
+        //{
+        //    if (vertex == 0)
+        //    {
+        //        side1 = Back ? 0 : 1;
+        //        side2 = Left ? 0 : 1;
+        //        if (side1 == 0 || side2 == 0)
+        //            corner = ChunkManager::GetBlock(x - 1, y, z - 1) == 0 ? 0 : 1;
+        //    }
+        //    if (vertex == 1)
+        //    {
+
+        //        side1 = Right ? 0 : 1;
+        //        side2 = Back ? 0 : 1;
+        //        if (side1 == 0 || side2 == 0)
+        //            corner = ChunkManager::GetBlock(x + 1, y, z - 1) == 0 ? 0 : 1;
+        //    }
+        //    if (vertex == 2)
+        //    {
+
+        //        side1 = Front ? 0 : 1;
+        //        side2 = Right ? 0 : 1;
+        //        if (side1 == 0 || side2 == 0)
+        //            corner = ChunkManager::GetBlock(x + 1, y, z + 1) == 0 ? 0 : 1;
+        //    }
+        //    if (vertex == 3)
+        //    {
+
+        //        side1 = Left ? 0 : 1;
+        //        side2 = Front ? 0 : 1;
+        //        if (side1 == 0 || side2 == 0)
+        //            corner = ChunkManager::GetBlock(x - 1, y, z + 1) == 0 ? 0 : 1;
+        //    }
+        //    if (vertex == 4)
+        //    {
+
+        //        side1 = Back ? 0 : 1;
+        //        side2 = Left ? 0 : 1;
+        //        if (side1 == 0 || side2 == 0)
+        //            corner = ChunkManager::GetBlock(x - 1, y, z - 1) == 0 ? 0 : 1;
+        //    }
+        //    if (vertex == 5)
+        //    {
+
+        //        side1 = Right ? 0 : 1;
+        //        side2 = Back ? 0 : 1;
+        //        if (side1 == 0 || side2 == 0)
+        //            corner = ChunkManager::GetBlock(x + 1, y, z - 1) == 0 ? 0 : 1;
+        //    }
+        //    if (vertex == 6)
+        //    {
+
+        //        side1 = Front ? 0 : 1;
+        //        side2 = Right ? 0 : 1;
+        //        if (side1 == 0 || side2 == 0)
+        //            corner = ChunkManager::GetBlock(x + 1, y, z + 1) == 0 ? 0 : 1;
+        //    }
+        //    if (vertex == 7)
+        //    {
+
+        //        side1 = Left ? 0 : 1;
+        //        side2 = Front ? 0 : 1;
+        //        if (side1 == 0 || side2 == 0)
+        //            corner = ChunkManager::GetBlock(x - 1, y, z + 1) == 0 ? 0 : 1;
+        //    }
+
+        //}
+        //else
+        //{
+        //    if (vertex == 4)
+        //    {
+        //        side1 = ChunkManager::GetBlock(x, y + 1, z - 1) == 0 ? 0 : 1;
+        //        side2 = ChunkManager::GetBlock(x - 1, y + 1, z) == 0 ? 0 : 1;
+        //        if (side1 == 0 || side2 == 0)
+        //            corner = ChunkManager.GetBlock(x - 1, y + 1, z - 1) == 0 ? 0 : 1;
+        //    }
+        //    if (vertex == 5)
+        //    {
+
+        //        side1 = ChunkManager::GetBlock(x + 1, y + 1, z) == 0 ? 0 : 1;
+        //        side2 = ChunkManager::GetBlock(x, y + 1, z - 1) == 0 ? 0 : 1;
+        //        if (side1 == 0 || side2 == 0)
+        //            corner = ChunkManager.GetBlock(x + 1, y + 1, z - 1) == 0 ? 0 : 1;
+        //    }
+        //    if (vertex == 6)
+        //    {
+
+        //        side1 = ChunkManager::GetBlock(x, y + 1, z + 1) == 0 ? 0 : 1;
+        //        side2 = ChunkManager::GetBlock(x + 1, y + 1, z) == 0 ? 0 : 1;
+        //        if (side1 == 0 || side2 == 0)
+        //            corner = ChunkManager.GetBlock(x + 1, y + 1, z + 1) == 0 ? 0 : 1;
+        //    }
+        //    if (vertex == 7)
+        //    {
+
+        //        side1 = ChunkManager::GetBlock(x - 1, y + 1, z) == 0 ? 0 : 1;
+        //        side2 = ChunkManager::GetBlock(x, y + 1, z + 1) == 0 ? 0 : 1;
+        //        if (side1 == 0 || side2 == 0)
+        //            corner = ChunkManager.GetBlock(x - 1, y + 1, z + 1) == 0 ? 0 : 1;
+        //    }
+        //    if (vertex == 0)
+        //    {
+
+        //        side1 = ChunkManager::GetBlock(x, y - 1, z - 1) == 0 ? 0 : 1;
+        //        side2 = ChunkManager::GetBlock(x - 1, y - 1, z) == 0 ? 0 : 1;
+        //        if (side1 == 0 || side2 == 0)
+        //            corner = ChunkManager.GetBlock(x - 1, y - 1, z - 1) == 0 ? 0 : 1;
+        //    }
+        //    if (vertex == 1)
+        //    {
+
+        //        side1 = ChunkManager::GetBlock(x + 1, y - 1, z) == 0 ? 0 : 1;
+        //        side2 = ChunkManager::GetBlock(x, y - 1, z - 1) == 0 ? 0 : 1;
+        //        if (side1 == 0 || side2 == 0)
+        //            corner = ChunkManager::GetBlock(x + 1, y - 1, z - 1) == 0 ? 0 : 1;
+        //    }
+        //    if (vertex == 2)
+        //    {
+
+        //        side1 = ChunkManager::GetBlock(x, y - 1, z + 1) == 0 ? 0 : 1;
+        //        side2 = ChunkManager::GetBlock(x + 1, y - 1, z) == 0 ? 0 : 1;
+        //        if (side1 == 0 || side2 == 0)
+        //            corner = ChunkManager::GetBlock(x + 1, y - 1, z + 1) == 0 ? 0 : 1;
+        //    }
+        //    if (vertex == 3)
+        //    {
+
+        //        side1 = ChunkManager::GetBlock(x - 1, y - 1, z) == 0 ? 0 : 1;
+        //        side2 = ChunkManager::GetBlock(x, y - 1, z + 1) == 0 ? 0 : 1;
+        //        if (side1 == 0 || side2 == 0)
+        //            corner = ChunkManager.GetBlock(x - 1, y - 1, z + 1) == 0 ? 0 : 1;
+        //    }
+        //}
+        return 0.0f;
+    }
+
+    float ChunkMesher::PushTriangleAO(int x, int y, int z, int v1, int v2, int v3, float a1, float a2, float a3)
+    {
+        return 0.0f;
+    }
+
+    void ChunkMesher::PushQuad(int face, int x, int y, int z, int c1, int c2, int c3, int c4)
+    {
+        CurrentArray.push_back(QuadVertex{
+            glm::vec3(x + CUBE_VERTICES[c1].x, y + CUBE_VERTICES[c1].y, z + CUBE_VERTICES[c1].z),
+            glm::vec3(0.0f, 1.0f, 0.0f),
+            glm::vec4(1.0f, 0.0f, 1.0f, 1.0f),
+            glm::vec2(0.0f, 0.0f),
+            1.0f,
+            1.0f
+        });
+        CurrentArray.push_back(QuadVertex{
+            glm::vec3(x + CUBE_VERTICES[c2].x, y + CUBE_VERTICES[c2].y, z + CUBE_VERTICES[c2].z),
+            glm::vec3(0.0f, 1.0f, 1.0f),
+            glm::vec4(0.0f, 0.0f, 1.0f, 1.0f),
+            glm::vec2(0.0f, 0.0f),
+            1.0f,
+            1.0f
+        });
+        CurrentArray.push_back(QuadVertex{
+            glm::vec3(x + CUBE_VERTICES[c3].x, y + CUBE_VERTICES[c3].y, z + CUBE_VERTICES[c3].z),
+            glm::vec3(0.0f, 1.0f, 0.0f),
+            glm::vec4(1.0f, 0.0f, 0.0f, 1.0f),
+            glm::vec2(0.0f, 0.0f),
+            1.0f,
+            1.0f
+        });
+        CurrentArray.push_back(QuadVertex{
+            glm::vec3(x + CUBE_VERTICES[c4].x, y + CUBE_VERTICES[c4].y, z + CUBE_VERTICES[c4].z),
+            glm::vec3(0, 1, 0),
+            glm::vec4(1.0f, 1.0f, 1.0f, 1.0f),
+            glm::vec2(0.0f, 0.0f),
+            1.0f,
+            1.0f
+         });
+    }
 }

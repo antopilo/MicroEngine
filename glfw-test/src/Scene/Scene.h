@@ -1,6 +1,7 @@
 #pragma once
 #include "../Core/Timestep.h"
 #include "entt/entt.hpp"
+#include "World/World.h"
 
 namespace Engine
 {
@@ -16,8 +17,11 @@ namespace Engine
 
 		Camera* m_Camera;
 
+		World* m_World;
+
 	public:
 		Scene();
+		~Scene();
 
 		void Update(Timestep ts);
 

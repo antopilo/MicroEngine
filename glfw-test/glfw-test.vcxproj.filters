@@ -93,6 +93,9 @@
     <ClCompile Include="src\Scene\World\ChunkManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Scene\World\Chunks\ChunkMesher.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Window.h">
@@ -1203,6 +1206,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Scene\World\Generation\FastNoise.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Scene\World\Chunks\ChunkMesher.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

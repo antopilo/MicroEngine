@@ -6,26 +6,33 @@
 #include "Camera.h"
 #include "../Rendering/Renderer.h"
 #include "World/Generation/FastNoise.h"
+
 #define FNL_IMPL
 namespace Engine {
 
 	Scene::Scene() {
 		m_Camera = new Camera(ORTHO);
-		
+		m_World = new World(1337, m_Camera);
+		m_World->Init();
+	}
+
+	Scene::~Scene() {
+		delete m_Camera;
+		delete m_World;
 	}
 
 	Engine::Entity Scene::CreateEntity() {
 		return { m_EnttRegistry.create(), this };
 	}
 
-	Camera* Scene::GetCamera()
-	{
+	Camera* Scene::GetCamera() {
 		return m_Camera;
 	}
 
 	void Scene::Update(Timestep ts) {
 
 		m_Camera->Update(ts);
+		m_World->Update(ts);
 		//auto group = m_EnttRegistry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
 		//for (auto entity : group)
 		//{
@@ -40,14 +47,16 @@ namespace Engine {
 
 	void Scene::Draw()
 	{
-		
 		Renderer::BeginScene(m_Camera->GetPerspective(), m_Camera->GetTransform());
-		for(int x = 0; x < 16; x++)
-			for (int z = 0; z < 16; z++) {
-				int y = (int)(noise.GetNoise((float)x, (float)z) * 10);
-				
-				Renderer::DrawCube(x, (float)y, z, 1.0f);
-			}
+	
+		m_World->Draw();
+		//Renderer::DrawCube(0, 0, 0, 1.0f);
+		//for(int x = 0; x < 16; x++)
+		//	for (int z = 0; z < 16; z++) {
+		//		int y = (int)(noise.GetNoise((float)x, (float)z) * 10);
+		//		
+		//		Renderer::DrawCube(x, (float)y, z, 1.0f);
+		//	}
 
 		Renderer::EndScene();
 	}

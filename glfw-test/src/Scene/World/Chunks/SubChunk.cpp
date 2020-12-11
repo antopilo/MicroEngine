@@ -1,6 +1,7 @@
 #include "SubChunk.h"
 #include "ChunkMesher.h"
 #include "../Rendering/Renderer.h"
+#include "../Generation/FastNoise.h"
 
 namespace Engine {
 	SubChunk::SubChunk(int idx, Chunk* chunk)
@@ -9,14 +10,22 @@ namespace Engine {
 		m_Index = idx;
 		m_Parent = chunk;
 
-		// Fill array with air.
-		m_Blocks = new int** [SIZE];
+		FastNoiseLite noise;
+
+		float gx = chunk->GetPosition().x * SIZE;
+		float gy = m_Index * SIZE;
+		float gz = chunk->GetPosition().y * SIZE;
 		for (int i = 0; i < SIZE; i++) {
-			m_Blocks[i] = new int* [SIZE];
 			for (int j = 0; j < SIZE; j++) {
-				m_Blocks[i][j] = new int[SIZE];
+				for (int k = 0; k < SIZE; k++) {
+					if(noise.GetNoise((float)i + gx, (float)j + gy, (float)k + gz) > 0.5f)
+						m_Blocks[i][j][k] = 1;
+					else
+						m_Blocks[i][j][k] = 0;
+				}
 			}
 		}
+
 	}
 
 	SubChunk::~SubChunk() { // Delete the blocks
@@ -30,6 +39,11 @@ namespace Engine {
 	}
 
 
+	int SubChunk::GetBlock(int x, int y, int z)
+	{
+		return m_Blocks[x][y][z];
+	}
+
 	// Creates a mesh with the blocks inside the chunk.
 	void SubChunk::Mesh() {
 		m_Mesh = ChunkMesher::MeshSubChunk(this);
@@ -40,4 +54,11 @@ namespace Engine {
 		Renderer::PushMesh(m_Mesh);
 	}
 
+	Chunk* SubChunk::GetParent() {
+		return m_Parent;
+	}
+
+	int SubChunk::GetIndex() {
+		return m_Index;
+	}
 }
