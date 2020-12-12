@@ -1,2 +1,5 @@
-﻿  Chunk.cpp
+﻿  Scene.cpp
+  Window.cpp
+  Generating Code...
+F:\Desktop\repos\MicroEngine\glfw-test\src\Window.cpp(73): warning C4715: 'Engine::Window::Initialize': not all control paths return a value
   glfw-test.vcxproj -> F:\Desktop\repos\MicroEngine\Debug\glfw-test.exe

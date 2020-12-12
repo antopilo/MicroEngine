@@ -71,8 +71,8 @@ namespace Engine {
 
         Top    = y != SubChunk::SIZE - 1 ? chunk->GetBlock(x, y + 1, z) == 0 : true;
         Bottom = y != 0                  ? chunk->GetBlock(x, y - 1, z) == 0 : true;
-        Left   = x != SubChunk::SIZE - 1 ? chunk->GetBlock(x + 1, y, z) == 0 : true; // Todo chunk borders.
-        Right  = x != 0                  ? chunk->GetBlock(x - 1, y, z) == 0 : true;
+        Right   = x != SubChunk::SIZE - 1 ? chunk->GetBlock(x + 1, y, z) == 0 : true; // Todo chunk borders.
+        Left  = x != 0                  ? chunk->GetBlock(x - 1, y, z) == 0 : true;
         Front  = z != SubChunk::SIZE - 1 ? chunk->GetBlock(x, y, z + 1) == 0 : true;
         Back   = z != 0                  ? chunk->GetBlock(x, y, z - 1) == 0 : true;
 

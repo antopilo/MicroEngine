@@ -87,7 +87,7 @@ namespace Engine {
 
 	void Window::Draw(Timestep ts) {
 		
-
+		
 		// Draw imgui.
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
@@ -131,6 +131,9 @@ namespace Engine {
 
 			ImGui::Text("Chunks info:");
 			ImGui::Text(std::to_string(ChunkManager::m_LoadedChunkCount).c_str());
+
+			std::string drawcall = "Draw calls: " + std::to_string(Renderer::DrawCalls);
+			ImGui::Text(drawcall.c_str());
 			// Edit 1 float using a slider from 0.0f to 1.0f
 
 			ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
@@ -140,7 +143,7 @@ namespace Engine {
 		ImGui::Render();
 		
 		m_Scene->Draw();
-
+		Renderer::EndScene();
 
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 		/* Swap front and back buffers */

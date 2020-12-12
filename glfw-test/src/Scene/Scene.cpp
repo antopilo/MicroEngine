@@ -47,8 +47,8 @@ namespace Engine {
 
 	void Scene::Draw()
 	{
+		
 		Renderer::BeginScene(m_Camera->GetPerspective(), m_Camera->GetTransform());
-	
 		m_World->Draw();
 		//Renderer::DrawCube(0, 0, 0, 1.0f);
 		//for(int x = 0; x < 16; x++)
@@ -58,6 +58,6 @@ namespace Engine {
 		//		Renderer::DrawCube(x, (float)y, z, 1.0f);
 		//	}
 
-		Renderer::EndScene();
+		//Renderer::EndScene();
 	}
 }

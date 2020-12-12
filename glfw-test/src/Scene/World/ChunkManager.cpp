@@ -32,14 +32,14 @@ namespace Engine {
 
 		m_LoadedChunkCount += 1;
 		m_Chunks[x][z] = newChunk;
-		newChunk->Draw();
+		//newChunk->Draw();
 	}
 
 	void ChunkManager::Draw()
 	{
-		//for (auto x : m_Chunks)
-		//	for (auto chunk : x.second)
-		//		chunk.second->Draw();
+		for (auto x : m_Chunks)
+			for (auto chunk : x.second)
+				chunk.second->Draw();
 	}
 
 	void ChunkManager::Update(Timestep ts)

@@ -2,10 +2,9 @@
 #include "Chunk.h"
 
 namespace Engine {
+	class VertexBuffer;
+
 	class SubChunk {
-		
-
-
 	public:
 		const static int SIZE = 8;
 		SubChunk(int idx, Chunk* chunk);
@@ -27,6 +26,8 @@ namespace Engine {
 		int m_Index;
 		Chunk* m_Parent;
 
+		VertexBuffer* m_VertexBuffer;
 		std::vector<QuadVertex> m_Mesh;
+		int m_IndexCount = 0;
 	};
 }

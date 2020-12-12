@@ -9,7 +9,6 @@
 #include "VertexBufferLayout.h"
 #include "VertexBuffer.h"
 #include "IndexBuffer.h"
-
 #include "Vertex.h"
 
 namespace Engine {
@@ -52,13 +51,15 @@ namespace Engine {
 
 	VertexArray* m_VertexArray;
 	VertexBuffer* m_VertexBuffer;
-	IndexBuffer* m_IndexBuffer;
+
+	IndexBuffer* Renderer::m_IndexBuffer;
 
 
 
 	void Renderer::Init() {
-
+		glEnable(GL_DEPTH_TEST);
 		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+
 		// Texture shader
 		Shader* shader = new Shader("res/shaders/Basic.shader");
 		shader->Bind();
@@ -75,9 +76,14 @@ namespace Engine {
 		// Vertex Array
 		m_VertexArray = new VertexArray();
 
-		// Buffer and attributes
 		m_VertexBuffer = new VertexBuffer(nullptr, sizeof(QuadVertex) * MaxVertexCount);
 
+		SetBufferLayout(m_VertexBuffer);
+		CreateIndexBuffer();
+
+	}
+
+	void Renderer::SetBufferLayout(VertexBuffer* buffer) {
 		VertexBufferLayout layout;
 		layout.Push<float>(3); // pos
 		layout.Push<float>(3); // normal
@@ -85,12 +91,13 @@ namespace Engine {
 		layout.Push<float>(2); // texture coords
 		layout.Push<float>(1); // texture id
 		layout.Push<float>(1); // texture tiling
+	
+		m_VertexArray->AddBuffer(*buffer, layout);
+	}
 
-		m_VertexArray->AddBuffer(*m_VertexBuffer, layout);
-
-
+	void Renderer::CreateIndexBuffer() {
 		uint32_t offset = 0;
-		for (auto i = 0; i < MaxIndexCount; i+= 6) {
+		for (auto i = 0; i < MaxIndexCount; i += 6) {
 			m_Indices[i + 0] = 0 + offset;
 			m_Indices[i + 1] = 1 + offset;
 			m_Indices[i + 2] = 2 + offset;
@@ -101,16 +108,12 @@ namespace Engine {
 
 			offset += 4;
 		}
-
-		glEnable(GL_DEPTH_TEST);
-
-		// Index buffer
 		m_IndexBuffer = new IndexBuffer(m_Indices, MaxIndexCount);
 	}
 
 	void Renderer::BeginScene(glm::mat4 camera, glm::mat4 transform) {
 		Clear();
-
+		DrawCalls = 0;
 		TextureShader->Bind();
 		TextureShader->SetUniformMat4f("u_Projection", camera);
 		TextureShader->SetUniformMat4f("u_View", transform);
@@ -120,17 +123,19 @@ namespace Engine {
 
 	void Renderer::EndScene() {
 
+
+
 		//ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
 		//for (auto i = 0; i < m_Vertices.size(); i++)
 		//	delete m_Vertices[i];
-		Flush();
+		//Flush();
 		//m_Vertices.clear();
 		//IndicesCount = 0;
 		/* Swap front and back buffers */
 		
 	}
-
+	int Renderer::DrawCalls = 0;
 
 	// this push a mesh to the renderer. Make sure this is for indexed mesh.
 	// Should only have quads.
@@ -247,14 +252,17 @@ namespace Engine {
 	int lastIndicesCount = 0;
 	void Renderer::Flush() {
 		//TextureShader->Bind();
-		if(lastIndicesCount != IndicesCount)
-			m_VertexBuffer->SetData(m_Vertices.data(), m_Vertices.size() * sizeof(QuadVertex));
+		
 
-		TextureShader->Bind();
-		m_VertexBuffer->Bind();
-		m_IndexBuffer->Bind();
-		lastIndicesCount = IndicesCount;
-		GLCall(glDrawElements(GL_TRIANGLES, IndicesCount, GL_UNSIGNED_INT, nullptr));
+		//TextureShader->Bind();
+		//m_VertexBuffer->Bind();
+		//
+		//if (lastIndicesCount != IndicesCount)
+		//	m_VertexBuffer->SetData(m_Vertices.data(), m_Vertices.size() * sizeof(QuadVertex));
+		//
+		//m_IndexBuffer->Bind();
+		//lastIndicesCount = IndicesCount;
+		//GLCall(glDrawElements(GL_TRIANGLES, IndicesCount, GL_UNSIGNED_INT, nullptr));
 	}
 
 	void Renderer::Clear() {
