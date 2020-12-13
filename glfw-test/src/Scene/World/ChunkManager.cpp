@@ -16,7 +16,10 @@ namespace Engine {
 	}
 
 	void ChunkManager::Init() {
-		LoadChunk(0, 0);
+		//LoadChunk(0, 0);
+		//LoadChunk(1, 0);
+		//LoadChunk(0, 1);
+		//LoadChunk(1, 1);
 	}
 
 	void ChunkManager::LoadChunk(int x, int z)
@@ -49,7 +52,7 @@ namespace Engine {
 
 	void ChunkManager::Update(Timestep ts)
 	{
-		//CheckForLoad();
+			CheckForLoad();
 	;
 	}
 
@@ -57,7 +60,10 @@ namespace Engine {
 		glm::vec3 pos = m_Camera->GetTranslation();
 		int camZ = pos.z / SubChunk::SIZE;
 		int camX = pos.x / SubChunk::SIZE;
-		LoadChunk(camX, camZ);
+
+		for(auto x = camX - 4; x < camX + 4; x++)
+			for (auto z = camZ - 4; z < camZ + 4; z++)
+				LoadChunk(x, z);
 	}
 
 	int ChunkManager::GetBlock(int x, int y, int z)

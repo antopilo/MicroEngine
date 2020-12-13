@@ -38,14 +38,14 @@ namespace Engine {
     std::vector<QuadVertex> ChunkMesher::CurrentArray = std::vector<QuadVertex>();
 
     void ChunkMesher::Init() {
-        CurrentArray.reserve(5000);
+        CurrentArray.reserve(4000);
     }
 
     std::vector<QuadVertex> ChunkMesher::MeshSubChunk(SubChunk* subchunk) 
 	{
         //if (SubChunk->GetCount() == 0)
         //    return std::vector<QuadVertex>();
-        CurrentArray = std::vector<QuadVertex>();
+        CurrentArray.clear();
         
         int type;
         for (int x = 0; x < SubChunk::SIZE; x++) {
@@ -60,7 +60,6 @@ namespace Engine {
                 }
             }
         }
-
         return CurrentArray;
 	}
     void ChunkMesher::CreateBlock(int x, int y, int z, int type, SubChunk* chunk)
@@ -306,7 +305,7 @@ namespace Engine {
         });
         CurrentArray.push_back(QuadVertex{
             glm::vec3(float(x + CUBE_VERTICES[c4].x), float(y + CUBE_VERTICES[c4].y), float(z + CUBE_VERTICES[c4].z)),
-            glm::vec3(0, 1, 0),
+            glm::vec3(0.0f, 0.0f, 0.0f),
             glm::vec4(1.0f, 1.0f, 1.0f, 1.0f),
             glm::vec2(0.0f, 1.0f),
             1.0f,

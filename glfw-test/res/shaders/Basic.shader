@@ -47,5 +47,5 @@ void main()
     vec3 haha = lightPos;
     int index = int(v_TexId);
     vec4 texColor = texture(u_Textures[index], v_TexCoord);
-    color = texColor * v_TexColor;
+    color = texColor * v_TexColor * vec4(1.0f, 0.8f, 0.8f, 1.0f);
 }

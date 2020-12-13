@@ -45,30 +45,30 @@ namespace Engine {
 
 		if (m_Type == CAMERA_TYPE::ORTHO) {
 			if (Input::IsKeyPressed(GLFW_KEY_RIGHT))
-				Translation.x += 2.0f * ts;
+				Translation.x += 6.0f * ts;
 			if (Input::IsKeyPressed(GLFW_KEY_LEFT))
-				Translation.x -= 2.0f * ts;
+				Translation.x -= 6.0f * ts;
 
 			if (Input::IsKeyPressed(GLFW_KEY_UP))
-				Translation.y += 2.0f * ts;
+				Translation.y += 6.0f * ts;
 			if (Input::IsKeyPressed(GLFW_KEY_DOWN))
-				Translation.y -= 2.0f * ts;
+				Translation.y -= 6.0f * ts;
 		}
 		else {
 
 			if (Input::IsKeyPressed(GLFW_KEY_D ))
-				Translation -= cameraRight * (2.0f * ts);
+				Translation -= cameraRight * (6.0f * ts);
 			if (Input::IsKeyPressed(GLFW_KEY_A))
-				Translation += cameraRight * (2.0f * ts);
+				Translation += cameraRight * (6.0f * ts);
 
 			if (Input::IsKeyPressed(GLFW_KEY_W))
-				Translation += cameraDirection * (2.0f * ts);
+				Translation += cameraDirection * (6.0f * ts);
 			if (Input::IsKeyPressed(GLFW_KEY_S))
-				Translation -= cameraDirection * (2.0f * ts);
+				Translation -= cameraDirection * (6.0f * ts);
 			if (Input::IsKeyPressed(GLFW_KEY_LEFT_SHIFT))
-				Translation -= up * (2.0f * ts);
+				Translation -= up * (6.0f * ts);
 			if (Input::IsKeyPressed(GLFW_KEY_SPACE))
-				Translation += up * (2.0f * ts);
+				Translation += up * (6.0f * ts);
 		}
 
 

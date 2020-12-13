@@ -7,6 +7,7 @@
 #include "../Rendering/IndexBuffer.h"
 #include "../Rendering/VertexArray.h"	
 #include "../Rendering/VertexBufferLayout.h"
+#include "../Rendering/Vertex.h"
 namespace Engine {
 	SubChunk::SubChunk(int idx, Chunk* chunk)
 	{
@@ -22,21 +23,27 @@ namespace Engine {
 		for (int i = 0; i < SIZE; i++) {
 			for (int j = 0; j < SIZE; j++) {
 				for (int k = 0; k < SIZE; k++) {
-					//if(noise.GetNoise((float)i + gx, (float)j + gy, (float)k + gz) > 0.5f)
-					//	m_Blocks[i][j][k] = 1;
-					//else
-					//	m_Blocks[i][j][k] = 0;
-					m_Blocks[i][j][k] = 1;
+					if(noise.GetNoise((float)i + gx, (float)j + gy, (float)k + gz) > 0.5f)
+						m_Blocks[i][j][k] = 1;
+					else
+						m_Blocks[i][j][k] = 0;
+					//m_Blocks[i][j][k] = 1;
 				}
 			}
 		}
 		
 		// Create buffer
+		glGenVertexArrays(1, &VAO);
+		glBindVertexArray(VAO);
+		//glBindBuffer(GL_VERTEX_ARRAY, VAO);
+		unsigned int size = sizeof(QuadVertex) * 60000;
+
 		glGenBuffers(1, &VBO);
 		glBindBuffer(GL_ARRAY_BUFFER, VBO);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(QuadVertex) * MaxVertexCount, nullptr, GL_DYNAMIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, size, nullptr, GL_DYNAMIC_DRAW);
 
-		Renderer::m_VertexArray->Bind();
+		Renderer::m_IndexBuffer->Bind();
+		//Renderer::m_VertexArray->Bind();
 
 		// pos vec3
 		glEnableVertexAttribArray(0);
@@ -56,6 +63,8 @@ namespace Engine {
 		// tiling float
 		glEnableVertexAttribArray(5);
 		glVertexAttribPointer(5, 1, GL_FLOAT, GL_FALSE, sizeof(QuadVertex), (void*)(sizeof(GL_FLOAT) * 13));
+
+		glBindVertexArray(0);
 	}
 
 	SubChunk::~SubChunk() { // Delete the blocks
@@ -76,20 +85,24 @@ namespace Engine {
 
 	// Creates a mesh with the blocks inside the chunk.
 	void SubChunk::Mesh() {
-		this->m_Mesh = ChunkMesher::MeshSubChunk(this);;
+		this->m_Mesh = ChunkMesher::MeshSubChunk(this);
+
 		this->m_IndexCount = m_Mesh.size() * 1.5;
-		Renderer::m_VertexArray->Bind();
-		glBindBuffer(GL_ARRAY_BUFFER, this->VBO);
-		glBufferSubData(GL_ARRAY_BUFFER, 0, m_IndexCount * sizeof(QuadVertex), (const void*)m_Mesh.data());
+		unsigned int indices = m_IndexCount * sizeof(QuadVertex);
+		glBindVertexArray(VAO);
+		glBindBuffer(GL_ARRAY_BUFFER, VBO);
+		glBufferSubData(GL_ARRAY_BUFFER, 0, m_Mesh.size() * sizeof(QuadVertex), m_Mesh.data());
+		//m_Mesh.clear();
 	}
 
 	// Push the mesh to the renderer 
 	void SubChunk::Draw() {
 		Renderer::TextureShader->Bind();
+		//Renderer::m_IndexBuffer->Bind();
 
-		glBindBuffer(GL_ARRAY_BUFFER, VBO);
-
-		Renderer::m_IndexBuffer->Bind();
+		glBindVertexArray(VAO);
+		//glBindBuffer(GL_ARRAY_BUFFER, VBO);
+		//Renderer::m_IndexBuffer->Bind();
 		glDrawElements(GL_TRIANGLES, m_IndexCount, GL_UNSIGNED_INT, 0);
 
 		Renderer::DrawCalls += 1;

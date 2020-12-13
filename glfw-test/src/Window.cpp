@@ -93,64 +93,64 @@ namespace Engine {
 	void Window::Draw(Timestep ts) {
 		
 		
-		// Draw imgui.
-		//ImGui_ImplOpenGL3_NewFrame();
-		//ImGui_ImplGlfw_NewFrame();
-		//ImGui::NewFrame();
-		//{
-		//	static float f = 0.0f;
-		//	static int counter = 0;
+	//Draw imgui.
+		ImGui_ImplOpenGL3_NewFrame();
+		ImGui_ImplGlfw_NewFrame();
+		ImGui::NewFrame();
+		{
+			static float f = 0.0f;
+			static int counter = 0;
 
-		//	ImGui::Begin("Debugging!");                          // Create a window called "Hello, world!" and append into it.
+			ImGui::Begin("Debugging!");                          // Create a window called "Hello, world!" and append into it.
 
-		//	// CAMERA
-		//	// position
-		//	ImGui::Text("Camera:");
+			// CAMERA
+			// position
+			ImGui::Text("Camera:");
 
-		//	ImGui::Text("Position:");
-		//	std::string x = std::to_string((m_Scene->GetCamera()->GetTranslation()).x) + " "
-		//	 + std::to_string((m_Scene->GetCamera()->GetTranslation()).y) + " "
-		//	 + std::to_string((m_Scene->GetCamera()->GetTranslation()).z);
-		//	ImGui::Text( x.c_str());
+			ImGui::Text("Position:");
+			std::string x = std::to_string((m_Scene->GetCamera()->GetTranslation()).x) + " "
+			 + std::to_string((m_Scene->GetCamera()->GetTranslation()).y) + " "
+			 + std::to_string((m_Scene->GetCamera()->GetTranslation()).z);
+			ImGui::Text( x.c_str());
 
-		//	// Direction
-		//	ImGui::Text("Direction:");
-		//	std::string d = std::to_string((m_Scene->GetCamera()->GetDirection()).x) + " "
-		//		+ std::to_string((m_Scene->GetCamera()->GetDirection()).y) + " "
-		//		+ std::to_string((m_Scene->GetCamera()->GetDirection()).z);
-		//	ImGui::Text(d.c_str());
+			// Direction
+			ImGui::Text("Direction:");
+			std::string d = std::to_string((m_Scene->GetCamera()->GetDirection()).x) + " "
+				+ std::to_string((m_Scene->GetCamera()->GetDirection()).y) + " "
+				+ std::to_string((m_Scene->GetCamera()->GetDirection()).z);
+			ImGui::Text(d.c_str());
 
-		//	// TYPE
-		//	ImGui::Text("Type:");
-		//	const char* items[] = { "Orthographic", "Perspective"};
-		//	static int item = 0;
-		//	ImGui::Combo("Type", &item, items, IM_ARRAYSIZE(items));
+			// TYPE
+			ImGui::Text("Type:");
+			const char* items[] = { "Orthographic", "Perspective"};
+			static int item = 0;
+			ImGui::Combo("Type", &item, items, IM_ARRAYSIZE(items));
 
-		//	//if (item == 0)
-		//	//	m_Cam->SetType(ORTHO);
-		//	//else if (item == 1)
-		//	//	m_Cam->SetType(PERSPECTIVE);
-		//		
-		//	// FOV
-		//	ImGui::SliderFloat("FOV", &m_Scene->GetCamera()->Fov, 1.0f, 120.0f);
+			//if (item == 0)
+			//	m_Cam->SetType(ORTHO);
+			//else if (item == 1)
+			//	m_Cam->SetType(PERSPECTIVE);
+				
+			// FOV
+			ImGui::SliderFloat("FOV", &m_Scene->GetCamera()->Fov, 1.0f, 120.0f);
 
-		//	ImGui::Text("Chunks info:");
-		//	ImGui::Text(std::to_string(ChunkManager::m_LoadedChunkCount).c_str());
+			ImGui::Text("Chunks info:");
+			ImGui::Text(std::to_string(ChunkManager::m_LoadedChunkCount).c_str());
 
-		//	std::string drawcall = "Draw calls: " + std::to_string(Renderer::DrawCalls);
-		//	ImGui::Text(drawcall.c_str());
-		//	// Edit 1 float using a slider from 0.0f to 1.0f
+			std::string drawcall = "Draw calls: " + std::to_string(Renderer::DrawCalls);
+			ImGui::Text(drawcall.c_str());
+			// Edit 1 float using a slider from 0.0f to 1.0f
 
-		//	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-		//	ImGui::End();
-		//}
-		//
-		//ImGui::Render();
+			ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+			ImGui::End();
+		}
+		
+		ImGui::Render();
 		
 		m_Scene->Draw();
 		Renderer::EndScene();
 
-		//ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 		/* Swap front and back buffers */
 		glfwSwapBuffers(instance);
 		/* Poll for and process events */

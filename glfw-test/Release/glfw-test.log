@@ -1,16 +1,50 @@
-﻿  SubChunk.cpp
+﻿  Renderer.cpp
+F:\Desktop\repos\MicroEngine\glfw-test\src\Rendering\Renderer.cpp(124,10): warning C4477: 'printf' : format string '%d' requires an argument of type 'int', but variadic argument 1 has type 'const _Elem *'
+          with
+          [
+              _Elem=char
+          ]
+  Camera.cpp
+  Chunk.cpp
+  ChunkManager.cpp
+F:\Desktop\repos\MicroEngine\glfw-test\src\Scene\World\ChunkManager.cpp(61,12): warning C4244: 'initializing': conversion from 'T' to 'int', possible loss of data
+          with
+          [
+              T=float
+          ]
+F:\Desktop\repos\MicroEngine\glfw-test\src\Scene\World\ChunkManager.cpp(62,12): warning C4244: 'initializing': conversion from 'T' to 'int', possible loss of data
+          with
+          [
+              T=float
+          ]
+  ChunkMesher.cpp
 F:\Desktop\repos\MicroEngine\glfw-test\src\Scene\World\Chunks\ChunkMesher.h(37,3): warning C4091: 'static ': ignored on left of 'Engine::ChunkMesher' when no variable is declared
-F:\Desktop\repos\MicroEngine\glfw-test\src\Scene\World\Chunks\SubChunk.cpp(18,12): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-F:\Desktop\repos\MicroEngine\glfw-test\src\Scene\World\Chunks\SubChunk.cpp(38,28): warning C4154: deletion of an array expression; conversion to pointer supplied
-F:\Desktop\repos\MicroEngine\glfw-test\src\Scene\World\Chunks\SubChunk.cpp(40,24): warning C4154: deletion of an array expression; conversion to pointer supplied
-F:\Desktop\repos\MicroEngine\glfw-test\src\Scene\World\Chunks\SubChunk.cpp(42,20): warning C4154: deletion of an array expression; conversion to pointer supplied
-F:\Desktop\repos\MicroEngine\glfw-test\src\Scene\World\Chunks\SubChunk.cpp(55,38): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+F:\Desktop\repos\MicroEngine\glfw-test\src\Scene\World\Chunks\ChunkMesher.cpp(70,16): warning C4244: 'initializing': conversion from 'T' to 'int', possible loss of data
+          with
+          [
+              T=float
+          ]
+F:\Desktop\repos\MicroEngine\glfw-test\src\Scene\World\Chunks\ChunkMesher.cpp(72,16): warning C4244: 'initializing': conversion from 'T' to 'int', possible loss of data
+          with
+          [
+              T=float
+          ]
+  SubChunk.cpp
+F:\Desktop\repos\MicroEngine\glfw-test\src\Scene\World\Chunks\ChunkMesher.h(37,3): warning C4091: 'static ': ignored on left of 'Engine::ChunkMesher' when no variable is declared
+F:\Desktop\repos\MicroEngine\glfw-test\src\Scene\World\Chunks\SubChunk.cpp(21,12): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+F:\Desktop\repos\MicroEngine\glfw-test\src\Scene\World\Chunks\SubChunk.cpp(73,28): warning C4154: deletion of an array expression; conversion to pointer supplied
+F:\Desktop\repos\MicroEngine\glfw-test\src\Scene\World\Chunks\SubChunk.cpp(75,24): warning C4154: deletion of an array expression; conversion to pointer supplied
+F:\Desktop\repos\MicroEngine\glfw-test\src\Scene\World\Chunks\SubChunk.cpp(77,20): warning C4154: deletion of an array expression; conversion to pointer supplied
+F:\Desktop\repos\MicroEngine\glfw-test\src\Scene\World\Chunks\SubChunk.cpp(90,38): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+  World.cpp
+F:\Desktop\repos\MicroEngine\glfw-test\src\Scene\World\Chunks\ChunkMesher.h(37,3): warning C4091: 'static ': ignored on left of 'Engine::ChunkMesher' when no variable is declared
+  Window.cpp
 LINK : warning LNK4075: ignoring '/INCREMENTAL' due to '/LTCG' specification
 LINK : warning LNK4098: defaultlib 'LIBCMT' conflicts with use of other libs; use /NODEFAULTLIB:library
   Generating code
-  5 of 2363 functions ( 0.2%) were compiled, the rest were copied from previous compilation.
-    0 functions were new in current compilation
-    24 functions had inline decision re-evaluated but remain unchanged
+  359 of 2319 functions (15.5%) were compiled, the rest were copied from previous compilation.
+    30 functions were new in current compilation
+    67 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
 glew32s.lib(glew.obj) : warning LNK4099: PDB 'vc120.pdb' was not found with 'glew32s.lib(glew.obj)' or at 'F:\Desktop\repos\MicroEngine\Release\vc120.pdb'; linking object as if no debug info
   glfw-test.vcxproj -> F:\Desktop\repos\MicroEngine\Release\glfw-test.exe
