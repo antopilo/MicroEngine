@@ -127,10 +127,10 @@ namespace Engine {
 
 	void Renderer::Init() {
 		glEnable(GL_DEPTH_TEST);
-		glEnable(GL_DEBUG_OUTPUT);
-		glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
-		glDebugMessageCallback(GLDebugMessageCallback, nullptr);
-		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+		//glEnable(GL_DEBUG_OUTPUT);
+		//glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+		//glDebugMessageCallback(GLDebugMessageCallback, nullptr);
+		glClearColor(52.0/ 255.0f, 219.0f / 255.0f, 235.0f/255.0f, 1.0f);
 		glDepthFunc(GL_LEQUAL);
 
 		// Texture shader

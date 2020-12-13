@@ -3,7 +3,11 @@
 #include "../Core/Input.h"
 #include <GLFW\glfw3.h>
 #include "../Core/Timestep.h"
+#include "../Scene/World/Chunks/SubChunk.h"
+
 namespace Engine {
+
+
 
 	Camera::Camera(CAMERA_TYPE type) {
 		m_Type = PERSPECTIVE;
@@ -13,12 +17,14 @@ namespace Engine {
 		up = glm::vec3(0.0f, 1.0f, 0.0f);
 		cameraRight = glm::normalize(glm::cross(up, cameraDirection));
 		cameraUp = glm::cross(cameraDirection, cameraRight);
+		Frustrum = new Frustum(GetTransform());
 	}
 
 	void Camera::SetType(CAMERA_TYPE type)
 	{
 		m_Type = type;
 	}
+
 
 	void Camera::Update(Timestep ts) {
 		float x = Input::GetMouseX();
@@ -34,7 +40,12 @@ namespace Engine {
 			mouseLastX = x;
 			mouseLastY = y;
 		}
-
+		if (Input::IsKeyPress(GLFW_KEY_UP))
+			Speed += 0.1f;
+		else if (Input::IsKeyPress(GLFW_KEY_DOWN))
+			Speed -= 0.1f;
+		if (Speed < 0)
+			Speed = 0;
 		// Keyboard
 		if (!controlled) {
 
@@ -45,32 +56,37 @@ namespace Engine {
 
 		if (m_Type == CAMERA_TYPE::ORTHO) {
 			if (Input::IsKeyPressed(GLFW_KEY_RIGHT))
-				Translation.x += 6.0f * ts;
+				Translation.x += Speed * ts;
 			if (Input::IsKeyPressed(GLFW_KEY_LEFT))
-				Translation.x -= 6.0f * ts;
+				Translation.x -= Speed * ts;
 
 			if (Input::IsKeyPressed(GLFW_KEY_UP))
-				Translation.y += 6.0f * ts;
+				Translation.y += Speed * ts;
 			if (Input::IsKeyPressed(GLFW_KEY_DOWN))
-				Translation.y -= 6.0f * ts;
+				Translation.y -= Speed * ts;
 		}
 		else {
 
 			if (Input::IsKeyPressed(GLFW_KEY_D ))
-				Translation -= cameraRight * (6.0f * ts);
+				Translation -= cameraRight * (Speed * ts);
 			if (Input::IsKeyPressed(GLFW_KEY_A))
-				Translation += cameraRight * (6.0f * ts);
+				Translation += cameraRight * (Speed * ts);
 
 			if (Input::IsKeyPressed(GLFW_KEY_W))
-				Translation += cameraDirection * (6.0f * ts);
+				Translation += cameraDirection * (Speed * ts);
 			if (Input::IsKeyPressed(GLFW_KEY_S))
-				Translation -= cameraDirection * (6.0f * ts);
+				Translation -= cameraDirection * (Speed * ts);
 			if (Input::IsKeyPressed(GLFW_KEY_LEFT_SHIFT))
-				Translation -= up * (6.0f * ts);
+				Translation -= up * (Speed * ts);
 			if (Input::IsKeyPressed(GLFW_KEY_SPACE))
-				Translation += up * (6.0f * ts);
+				Translation += up * (Speed * ts);
 		}
 
+		if (Input::IsKeyPress(GLFW_KEY_F)) {
+			Frustrum = new Frustum(GetPerspective() * GetTransform());
+		}
+		delete Frustrum;
+		Frustrum = new Frustum(GetPerspective() * GetTransform());
 
 		if (firstMouse)
 		{
@@ -119,7 +135,7 @@ namespace Engine {
 		//	m_Perspective = glm::ortho(-8.0f, 8.0f, -4.5f, 4.5f, -1.0f, 1.0f);
 		//}
 		//else if (m_Type == CAMERA_TYPE::PERSPECTIVE) {
-		m_Perspective = glm::perspectiveFov(glm::radians(Fov), 16.0f, 9.0f, 0.1f, 200.0f);
+		m_Perspective = glm::perspectiveFov(glm::radians(Fov), 16.0f, 9.0f, 0.1f, 2000.0f);
 		//}
 
 		return m_Perspective;
@@ -131,5 +147,13 @@ namespace Engine {
 		return tr;
 
 	}
+	bool Camera::IsChunkVisible(SubChunk* chunk)
+	{
+		glm::vec2 parentPos = chunk->GetParent()->GetPosition();
+		glm::vec3 lowp = glm::vec3(parentPos.x * SubChunk::SIZE, chunk->GetIndex() * SubChunk::SIZE, parentPos.y * SubChunk::SIZE);;
+		glm::vec3 highp = glm::vec3((parentPos.x * SubChunk::SIZE) + SubChunk::SIZE, chunk->GetIndex() * SubChunk::SIZE + SubChunk::SIZE, parentPos.y * SubChunk::SIZE + SubChunk::SIZE);
+		return Frustrum->IsBoxVisible(lowp, highp);
+	}
+
 }
 

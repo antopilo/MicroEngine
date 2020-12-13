@@ -6,7 +6,7 @@ namespace Engine {
 
 	class SubChunk {
 	public:
-		const static int SIZE = 8;
+		const static int SIZE = 32;
 		SubChunk(int idx, Chunk* chunk);
 
 		void SetBlock(int x, int y, int z, int type);
@@ -22,10 +22,10 @@ namespace Engine {
 
 		~SubChunk();
 	private:
-		int m_Blocks[SIZE][SIZE][SIZE];
+		char m_Blocks[SIZE][SIZE][SIZE];
 		int m_Index;
 		Chunk* m_Parent;
-
+		int m_Count = 0;
 		unsigned int VBO;
 		unsigned int VAO;
 		VertexBuffer* m_VertexBuffer;

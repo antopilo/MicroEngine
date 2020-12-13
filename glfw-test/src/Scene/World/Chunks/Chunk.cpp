@@ -9,11 +9,9 @@ namespace Engine {
 		for (int i = 0; i < SUBCHUNK_COUNT; i++) {
 			SubChunk* newSc = new SubChunk(i, this);
 			m_Subchunks.push_back(newSc);
-			
 		}
 		for (int i = 0; i < SUBCHUNK_COUNT; i++) {
 			m_Subchunks[i]->Mesh();
-
 		}
 	}
 

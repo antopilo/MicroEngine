@@ -8,6 +8,8 @@
 #include "../Rendering/VertexArray.h"	
 #include "../Rendering/VertexBufferLayout.h"
 #include "../Rendering/Vertex.h"
+#include "../ChunkManager.h"
+#include "../Scene/Camera.h"
 namespace Engine {
 	SubChunk::SubChunk(int idx, Chunk* chunk)
 	{
@@ -23,15 +25,20 @@ namespace Engine {
 		for (int i = 0; i < SIZE; i++) {
 			for (int j = 0; j < SIZE; j++) {
 				for (int k = 0; k < SIZE; k++) {
-					if(noise.GetNoise((float)i + gx, (float)j + gy, (float)k + gz) > 0.5f)
-						m_Blocks[i][j][k] = 1;
+					if((noise.GetNoise((float)(i + gx) * 0.25, (float)(k + gz) * 0.25) + 1.0f) / 2 * 255 > gy + j) {
+					//if (noise.GetNoise((float)i + gx, (float)j + gy, (float)k + gz) > 0.5f) {
+						m_Blocks[i][j][k] = (char)1;
+						m_Count++;
+					}
+						
 					else
-						m_Blocks[i][j][k] = 0;
+						m_Blocks[i][j][k] = (char)0;
 					//m_Blocks[i][j][k] = 1;
 				}
 			}
 		}
 		
+		printf( ( std::to_string(sizeof(m_Blocks)) + std::string("\n") ).c_str() ) ;
 		// Create buffer
 		glGenVertexArrays(1, &VAO);
 		glBindVertexArray(VAO);
@@ -85,6 +92,9 @@ namespace Engine {
 
 	// Creates a mesh with the blocks inside the chunk.
 	void SubChunk::Mesh() {
+		if (m_Count == 0)
+			return;
+
 		this->m_Mesh = ChunkMesher::MeshSubChunk(this);
 
 		this->m_IndexCount = m_Mesh.size() * 1.5;
@@ -92,11 +102,15 @@ namespace Engine {
 		glBindVertexArray(VAO);
 		glBindBuffer(GL_ARRAY_BUFFER, VBO);
 		glBufferSubData(GL_ARRAY_BUFFER, 0, m_Mesh.size() * sizeof(QuadVertex), m_Mesh.data());
-		//m_Mesh.clear();
+		m_Mesh.clear();
+		m_Mesh.shrink_to_fit();
 	}
 
 	// Push the mesh to the renderer 
 	void SubChunk::Draw() {
+		if (m_IndexCount == 0 || !ChunkManager::GetCam()->IsChunkVisible(this))
+			return;
+
 		Renderer::TextureShader->Bind();
 		//Renderer::m_IndexBuffer->Bind();
 

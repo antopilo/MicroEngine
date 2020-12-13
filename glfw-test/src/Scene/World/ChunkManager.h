@@ -17,7 +17,11 @@ namespace Engine {
 
 		static void SetCam(Camera* cam);
 
+		static Camera* GetCam();
+
 		static void Init();
+
+		static bool IsChunkLoaded(int x, int z);
 
 		static void LoadChunk(int x, int z);
 		

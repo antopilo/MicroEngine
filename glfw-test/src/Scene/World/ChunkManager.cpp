@@ -15,6 +15,10 @@ namespace Engine {
 	
 	}
 
+	Camera* ChunkManager::GetCam() {
+		return m_Camera;
+	}
+
 	void ChunkManager::Init() {
 		//LoadChunk(0, 0);
 		//LoadChunk(1, 0);
@@ -22,17 +26,22 @@ namespace Engine {
 		//LoadChunk(1, 1);
 	}
 
-	void ChunkManager::LoadChunk(int x, int z)
-	{
+
+	bool ChunkManager::IsChunkLoaded(int x, int z) {
 		if (m_Chunks.find(x) != m_Chunks.end()) {
 			// Already contains chunk!
 			std::unordered_map<int, Chunk* > test = m_Chunks[x];
 			if (test.find(z) != test.end()) {
-				printf("Tried to load already loaded chunks \n");
-				return;
+				//printf("Tried to load already loaded chunks \n");
+				return true;
 			}
-				
+
 		}
+		return false;
+	}
+	void ChunkManager::LoadChunk(int x, int z)
+	{
+		
 		
 		glm::vec2 pos = glm::vec2(x, z);
 		
@@ -61,9 +70,18 @@ namespace Engine {
 		int camZ = pos.z / SubChunk::SIZE;
 		int camX = pos.x / SubChunk::SIZE;
 
+		int numLoaded = 0;
 		for(auto x = camX - 4; x < camX + 4; x++)
-			for (auto z = camZ - 4; z < camZ + 4; z++)
-				LoadChunk(x, z);
+			for (auto z = camZ - 4; z < camZ + 4; z++) {
+				if (numLoaded > 4)
+					return;
+				if (!IsChunkLoaded(x, z)) {
+					LoadChunk(x, z);
+					numLoaded++;
+				}
+					
+			}
+				
 	}
 
 	int ChunkManager::GetBlock(int x, int y, int z)

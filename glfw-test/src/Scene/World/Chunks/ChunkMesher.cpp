@@ -38,7 +38,7 @@ namespace Engine {
     std::vector<QuadVertex> ChunkMesher::CurrentArray = std::vector<QuadVertex>();
 
     void ChunkMesher::Init() {
-        CurrentArray.reserve(4000);
+        CurrentArray.reserve(12000);
     }
 
     std::vector<QuadVertex> ChunkMesher::MeshSubChunk(SubChunk* subchunk) 
@@ -46,6 +46,7 @@ namespace Engine {
         //if (SubChunk->GetCount() == 0)
         //    return std::vector<QuadVertex>();
         CurrentArray.clear();
+        CurrentArray.shrink_to_fit();
         
         int type;
         for (int x = 0; x < SubChunk::SIZE; x++) {
@@ -60,6 +61,7 @@ namespace Engine {
                 }
             }
         }
+        CurrentArray.shrink_to_fit();
         return CurrentArray;
 	}
     void ChunkMesher::CreateBlock(int x, int y, int z, int type, SubChunk* chunk)
@@ -104,15 +106,15 @@ namespace Engine {
         if (topBorder)
             PushQuad(0, gx, gy, gz, 4, 5, 6, 7);
         if (bottomBorder)
-            PushQuad(0, gx, gy, gz, 3, 2, 1, 0);
+            PushQuad(1, gx, gy, gz, 3, 2, 1, 0);
         if (Left)
-            PushQuad(0, gx, gy, gz, 0, 4, 7, 3);
+            PushQuad(2, gx, gy, gz, 0, 4, 7, 3);
         if (Right)
-            PushQuad(0, gx, gy, gz, 1, 2, 6, 5);
+            PushQuad(3, gx, gy, gz, 1, 2, 6, 5);
         if (Front)
-            PushQuad(0, gx, gy, gz, 2, 3, 7, 6);
+            PushQuad(4, gx, gy, gz, 2, 3, 7, 6);
         if (Back)
-            PushQuad(0, gx, gy, gz, 5, 4, 0, 1);
+            PushQuad(5, gx, gy, gz, 5, 4, 0, 1);
 
     }
 
@@ -279,10 +281,23 @@ namespace Engine {
 
     void ChunkMesher::PushQuad(int face, int x, int y, int z, int c1, int c2, int c3, int c4)
     {
+        float light;
+        if (face == 0)
+            light = 1.0f;
+        if (face == 1)
+            light = 0.5f;
+        if (face == 2)
+            light = 0.7f;
+        if (face == 3)
+            light = 0.8f;
+        if (face == 4)
+            light =0.9f;
+        if (face == 5)
+            light = 0.75f;
         CurrentArray.push_back(QuadVertex{
             glm::vec3(float(x + CUBE_VERTICES[c1].x), float(y + CUBE_VERTICES[c1].y), float(z + CUBE_VERTICES[c1].z)),
             glm::vec3(0.0f, 1.0f, 0.0f),
-            glm::vec4(1.0f, 1.0f, 1.0f, 1.0f),
+            glm::vec4(1.0f * light, 1.0f * light, 1.0f * light, 1.0f),
             glm::vec2(0.0f, 0.0f),
             1.0f,
             1.0f
@@ -290,7 +305,7 @@ namespace Engine {
         CurrentArray.push_back(QuadVertex{
             glm::vec3(float(x + CUBE_VERTICES[c2].x), float(y + CUBE_VERTICES[c2].y), float(z + CUBE_VERTICES[c2].z)),
             glm::vec3(0.0f, 1.0f, 1.0f),
-            glm::vec4(1.0f, 1.0f, 1.0f, 1.0f),
+            glm::vec4(1.0f * light, 1.0f * light, 1.0f * light, 1.0f),
             glm::vec2(1.0f, 0.0f),
             1.0f,
             1.0f
@@ -298,7 +313,7 @@ namespace Engine {
         CurrentArray.push_back(QuadVertex{
             glm::vec3(float(x + CUBE_VERTICES[c3].x), float(y + CUBE_VERTICES[c3].y), float(z + CUBE_VERTICES[c3].z)),
             glm::vec3(0.0f, 1.0f, 0.0f),
-            glm::vec4(1.0f, 1.0f, 1.0f, 1.0f),
+            glm::vec4(1.0f * light, 1.0f * light, 1.0f * light, 1.0f),
             glm::vec2(1.0f, 1.0f),
             1.0f,
             1.0f
@@ -306,7 +321,7 @@ namespace Engine {
         CurrentArray.push_back(QuadVertex{
             glm::vec3(float(x + CUBE_VERTICES[c4].x), float(y + CUBE_VERTICES[c4].y), float(z + CUBE_VERTICES[c4].z)),
             glm::vec3(0.0f, 0.0f, 0.0f),
-            glm::vec4(1.0f, 1.0f, 1.0f, 1.0f),
+            glm::vec4(1.0f * light, 1.0f * light, 1.0f * light, 1.0f),
             glm::vec2(0.0f, 1.0f),
             1.0f,
             1.0f
