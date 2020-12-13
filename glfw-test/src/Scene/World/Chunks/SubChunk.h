@@ -26,6 +26,7 @@ namespace Engine {
 		int m_Index;
 		Chunk* m_Parent;
 
+		unsigned int VBO;
 		VertexBuffer* m_VertexBuffer;
 		std::vector<QuadVertex> m_Mesh;
 		int m_IndexCount = 0;

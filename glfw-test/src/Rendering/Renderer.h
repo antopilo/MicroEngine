@@ -7,16 +7,19 @@ namespace Engine {
 	class Texture;
 	class Camera;
 	class VertexBuffer;
-	const size_t MaxQuadCount = 800000;
+	const size_t MaxQuadCount = 80000;
 	const size_t MaxVertexCount = MaxQuadCount * 4;
 	const size_t MaxIndexCount = MaxQuadCount * 6;
 	struct Renderer2DData;
 	struct QuadVertex;
 	class IndexBuffer;
+	class VertexArray;
 	class Renderer {
 	public:
 		static Shader* TextureShader;
 		static IndexBuffer* m_IndexBuffer;
+		static VertexArray* m_VertexArray;
+
 		static void Init();
 		static void SetBufferLayout(VertexBuffer* buffer);
 		static void CreateIndexBuffer();
@@ -31,6 +34,7 @@ namespace Engine {
 
 		static void Clear();
 		static int DrawCalls;
+		//static unsigned int m_VertexArray;
 	private:
 		static Renderer2DData s_Data;
 		static std::vector<QuadVertex> m_Vertices;

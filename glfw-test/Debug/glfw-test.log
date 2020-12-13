@@ -1,8 +1,8 @@
 ﻿  SubChunk.cpp
 F:\Desktop\repos\MicroEngine\glfw-test\src\Scene\World\Chunks\ChunkMesher.h(37,3): warning C4091: 'static ': ignored on left of 'Engine::ChunkMesher' when no variable is declared
-F:\Desktop\repos\MicroEngine\glfw-test\src\Scene\World\Chunks\SubChunk.cpp(18,12): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-F:\Desktop\repos\MicroEngine\glfw-test\src\Scene\World\Chunks\SubChunk.cpp(39,28): warning C4154: deletion of an array expression; conversion to pointer supplied
-F:\Desktop\repos\MicroEngine\glfw-test\src\Scene\World\Chunks\SubChunk.cpp(41,24): warning C4154: deletion of an array expression; conversion to pointer supplied
-F:\Desktop\repos\MicroEngine\glfw-test\src\Scene\World\Chunks\SubChunk.cpp(43,20): warning C4154: deletion of an array expression; conversion to pointer supplied
-F:\Desktop\repos\MicroEngine\glfw-test\src\Scene\World\Chunks\SubChunk.cpp(56,38): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+F:\Desktop\repos\MicroEngine\glfw-test\src\Scene\World\Chunks\SubChunk.cpp(20,12): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+F:\Desktop\repos\MicroEngine\glfw-test\src\Scene\World\Chunks\SubChunk.cpp(66,28): warning C4154: deletion of an array expression; conversion to pointer supplied
+F:\Desktop\repos\MicroEngine\glfw-test\src\Scene\World\Chunks\SubChunk.cpp(68,24): warning C4154: deletion of an array expression; conversion to pointer supplied
+F:\Desktop\repos\MicroEngine\glfw-test\src\Scene\World\Chunks\SubChunk.cpp(70,20): warning C4154: deletion of an array expression; conversion to pointer supplied
+F:\Desktop\repos\MicroEngine\glfw-test\src\Scene\World\Chunks\SubChunk.cpp(82,38): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
   glfw-test.vcxproj -> F:\Desktop\repos\MicroEngine\Debug\glfw-test.exe

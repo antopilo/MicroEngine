@@ -12,6 +12,11 @@ namespace Engine {
 
 	void ChunkManager::SetCam(Camera* cam) {
 		m_Camera = cam;
+	
+	}
+
+	void ChunkManager::Init() {
+		LoadChunk(0, 0);
 	}
 
 	void ChunkManager::LoadChunk(int x, int z)
@@ -31,7 +36,7 @@ namespace Engine {
 		Chunk* newChunk = new Chunk(pos);
 
 		m_LoadedChunkCount += 1;
-		m_Chunks[x][z] = newChunk;
+			m_Chunks[x][z] = newChunk;
 		//newChunk->Draw();
 	}
 
@@ -45,7 +50,7 @@ namespace Engine {
 	void ChunkManager::Update(Timestep ts)
 	{
 		//CheckForLoad();
-		LoadChunk(1, 1);
+	;
 	}
 
 	void ChunkManager::CheckForLoad() {

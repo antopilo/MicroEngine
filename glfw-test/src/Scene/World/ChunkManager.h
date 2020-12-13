@@ -17,6 +17,8 @@ namespace Engine {
 
 		static void SetCam(Camera* cam);
 
+		static void Init();
+
 		static void LoadChunk(int x, int z);
 		
 		static void Draw();

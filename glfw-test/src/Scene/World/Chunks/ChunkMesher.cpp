@@ -45,9 +45,8 @@ namespace Engine {
 	{
         //if (SubChunk->GetCount() == 0)
         //    return std::vector<QuadVertex>();
-        CurrentArray.clear();
+        CurrentArray = std::vector<QuadVertex>();
         
-
         int type;
         for (int x = 0; x < SubChunk::SIZE; x++) {
             for (int y = 0; y < SubChunk::SIZE; y++) {
@@ -70,7 +69,7 @@ namespace Engine {
 
         glm::vec2 parentPos = chunk->GetParent()->GetPosition();
         int gx = parentPos.x * SubChunk::SIZE + x;
-        int gy = chunk->GetIndex() * SubChunk::SIZE + y;
+        int gy = (chunk->GetIndex() * SubChunk::SIZE) + y;
         int gz = parentPos.y * SubChunk::SIZE + z;
 
         Top    = y != SubChunk::SIZE - 1 ? chunk->GetBlock(x, y + 1, z) == 0 : true;
@@ -282,34 +281,34 @@ namespace Engine {
     void ChunkMesher::PushQuad(int face, int x, int y, int z, int c1, int c2, int c3, int c4)
     {
         CurrentArray.push_back(QuadVertex{
-            glm::vec3(x + CUBE_VERTICES[c1].x, y + CUBE_VERTICES[c1].y, z + CUBE_VERTICES[c1].z),
+            glm::vec3(float(x + CUBE_VERTICES[c1].x), float(y + CUBE_VERTICES[c1].y), float(z + CUBE_VERTICES[c1].z)),
             glm::vec3(0.0f, 1.0f, 0.0f),
-            glm::vec4(1.0f, 0.0f, 1.0f, 1.0f),
-            glm::vec2(0.0f, 0.0f),
-            1.0f,
-            1.0f
-        });
-        CurrentArray.push_back(QuadVertex{
-            glm::vec3(x + CUBE_VERTICES[c2].x, y + CUBE_VERTICES[c2].y, z + CUBE_VERTICES[c2].z),
-            glm::vec3(0.0f, 1.0f, 1.0f),
-            glm::vec4(0.0f, 0.0f, 1.0f, 1.0f),
-            glm::vec2(0.0f, 0.0f),
-            1.0f,
-            1.0f
-        });
-        CurrentArray.push_back(QuadVertex{
-            glm::vec3(x + CUBE_VERTICES[c3].x, y + CUBE_VERTICES[c3].y, z + CUBE_VERTICES[c3].z),
-            glm::vec3(0.0f, 1.0f, 0.0f),
-            glm::vec4(1.0f, 0.0f, 0.0f, 1.0f),
-            glm::vec2(0.0f, 0.0f),
-            1.0f,
-            1.0f
-        });
-        CurrentArray.push_back(QuadVertex{
-            glm::vec3(x + CUBE_VERTICES[c4].x, y + CUBE_VERTICES[c4].y, z + CUBE_VERTICES[c4].z),
-            glm::vec3(0, 1, 0),
             glm::vec4(1.0f, 1.0f, 1.0f, 1.0f),
             glm::vec2(0.0f, 0.0f),
+            1.0f,
+            1.0f
+        });
+        CurrentArray.push_back(QuadVertex{
+            glm::vec3(float(x + CUBE_VERTICES[c2].x), float(y + CUBE_VERTICES[c2].y), float(z + CUBE_VERTICES[c2].z)),
+            glm::vec3(0.0f, 1.0f, 1.0f),
+            glm::vec4(1.0f, 1.0f, 1.0f, 1.0f),
+            glm::vec2(1.0f, 0.0f),
+            1.0f,
+            1.0f
+        });
+        CurrentArray.push_back(QuadVertex{
+            glm::vec3(float(x + CUBE_VERTICES[c3].x), float(y + CUBE_VERTICES[c3].y), float(z + CUBE_VERTICES[c3].z)),
+            glm::vec3(0.0f, 1.0f, 0.0f),
+            glm::vec4(1.0f, 1.0f, 1.0f, 1.0f),
+            glm::vec2(1.0f, 1.0f),
+            1.0f,
+            1.0f
+        });
+        CurrentArray.push_back(QuadVertex{
+            glm::vec3(float(x + CUBE_VERTICES[c4].x), float(y + CUBE_VERTICES[c4].y), float(z + CUBE_VERTICES[c4].z)),
+            glm::vec3(0, 1, 0),
+            glm::vec4(1.0f, 1.0f, 1.0f, 1.0f),
+            glm::vec2(0.0f, 1.0f),
             1.0f,
             1.0f
          });

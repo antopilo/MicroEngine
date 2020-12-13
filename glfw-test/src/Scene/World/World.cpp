@@ -16,7 +16,7 @@ namespace Engine {
 	}
 
 	void World::Init(){
-		
+		ChunkManager::Init();
 	}
 
 	void World::Update(Timestep ts) {

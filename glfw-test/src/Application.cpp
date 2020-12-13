@@ -8,7 +8,7 @@ namespace Engine {
 		
 
 		m_Window = new Engine::Window(1280, 720, "Hello world");
-		Renderer::Init();
+		
 		//m_ImGuiLayer = new ImGuiLayer();
 	}
 

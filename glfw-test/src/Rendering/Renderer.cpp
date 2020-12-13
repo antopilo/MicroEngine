@@ -5,12 +5,13 @@
 
 #include "Debug.h"
 #include "Texture.h"
-#include "VertexArray.h"
-#include "VertexBufferLayout.h"
+
 #include "VertexBuffer.h"
 #include "IndexBuffer.h"
 #include "Vertex.h"
+#include "VertexArray.h"
 
+#include "VertexBufferLayout.h"
 namespace Engine {
 	glm::mat4 Projection;
 	static Engine::Renderer2DData* s_Data;
@@ -21,16 +22,16 @@ namespace Engine {
 	int Renderer::IndicesCount = 0;
 
 	Shader* Renderer::TextureShader;
-
-	VertexArray* m_VertexArray;
+	VertexArray* Renderer::m_VertexArray;
 	VertexBuffer* m_VertexBuffer;
 
 	IndexBuffer* Renderer::m_IndexBuffer;
 
 	void Renderer::Init() {
-		//glEnable(GL_DEPTH_TEST);
+		glEnable(GL_DEPTH_TEST);
 		
 		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+		glDepthFunc(GL_LEQUAL);
 
 		// Texture shader
 		Shader* shader = new Shader("res/shaders/Basic.shader");
@@ -48,11 +49,11 @@ namespace Engine {
 		// Vertex Array
 		m_VertexArray = new VertexArray();
 
-		m_VertexBuffer = new VertexBuffer(nullptr, sizeof(QuadVertex) * MaxVertexCount);
+		//m_VertexBuffer = new VertexBuffer(nullptr, sizeof(QuadVertex) * MaxVertexCount);
 
-		SetBufferLayout(m_VertexBuffer);
+		//SetBufferLayout(m_VertexBuffer);
 		CreateIndexBuffer();
-		m_IndexBuffer->Bind();
+		//m_IndexBuffer->Bind();
 		Renderer::TextureShader->Bind();
 	}
 
@@ -90,6 +91,8 @@ namespace Engine {
 		TextureShader->Bind();
 		TextureShader->SetUniformMat4f("u_Projection", camera);
 		TextureShader->SetUniformMat4f("u_View", transform);
+
+		Renderer::m_IndexBuffer->Bind();
 	}
 
 
