@@ -37,10 +37,16 @@ namespace Engine {
 
     std::vector<QuadVertex> ChunkMesher::CurrentArray = std::vector<QuadVertex>();
 
+    void ChunkMesher::Init() {
+        CurrentArray.reserve(5000);
+    }
+
     std::vector<QuadVertex> ChunkMesher::MeshSubChunk(SubChunk* subchunk) 
 	{
         //if (SubChunk->GetCount() == 0)
         //    return std::vector<QuadVertex>();
+        CurrentArray.clear();
+        
 
         int type;
         for (int x = 0; x < SubChunk::SIZE; x++) {
@@ -52,8 +58,6 @@ namespace Engine {
                         continue;
 
                     CreateBlock(x, y, z, type, subchunk);
-
-
                 }
             }
         }
@@ -66,13 +70,13 @@ namespace Engine {
 
         glm::vec2 parentPos = chunk->GetParent()->GetPosition();
         int gx = parentPos.x * SubChunk::SIZE + x;
-        int gy = SubChunk::SIZE * chunk->GetIndex() + y;
+        int gy = chunk->GetIndex() * SubChunk::SIZE + y;
         int gz = parentPos.y * SubChunk::SIZE + z;
 
         Top    = y != SubChunk::SIZE - 1 ? chunk->GetBlock(x, y + 1, z) == 0 : true;
         Bottom = y != 0                  ? chunk->GetBlock(x, y - 1, z) == 0 : true;
         Right   = x != SubChunk::SIZE - 1 ? chunk->GetBlock(x + 1, y, z) == 0 : true; // Todo chunk borders.
-        Left  = x != 0                  ? chunk->GetBlock(x - 1, y, z) == 0 : true;
+        Left  = x != 0                  ? chunk->GetBlock(x - 1, y, z) == 0 :   true;
         Front  = z != SubChunk::SIZE - 1 ? chunk->GetBlock(x, y, z + 1) == 0 : true;
         Back   = z != 0                  ? chunk->GetBlock(x, y, z - 1) == 0 : true;
 
@@ -80,28 +84,28 @@ namespace Engine {
         if (Top && Bottom && Left && Right && Front && Back)
             return;
 
-        bool topChunk = true;
-        bool bottomChunk = true;
+        bool topChunk = false;
+        bool bottomChunk = false;
 
         // In between subchunks.
-        //if (chunkIdx != Chunk::SUBCHUNK_COUNT - 1) {
-        //    // TODO: Chunk count check.
-        //    SubChunk* above = chunk->GetParent()->GetSubChunk(chunkIdx + 1);
-        //    topChunk = Top = above->GetBlock(x, 0, z) == 0;
-        //}
-        //if (chunkIdx != 0) {
-        //    // TODO: Chunk count check.
-        //    SubChunk* under = chunk->GetParent()->GetSubChunk(chunkIdx - 1);
-        //    topChunk = Bottom = under->GetBlock(x, SubChunk::SIZE - 1, z) == 0;
-        //}
+        if (chunkIdx != Chunk::SUBCHUNK_COUNT - 1) {
+            // TODO: Chunk count check.
+            SubChunk* above = chunk->GetParent()->GetSubChunk(chunkIdx + 1);
+            topChunk = above->GetBlock(x, 0, z) == 0;
+        }
+        if (chunkIdx != 0) {
+            // TODO: Chunk count check.
+            SubChunk* under = chunk->GetParent()->GetSubChunk(chunkIdx - 1);
+            bottomChunk = under->GetBlock(x, SubChunk::SIZE - 1, z) == 0;
+        }
 
-        bool topBorder = y == SubChunk::SIZE - 1 ? topChunk : Top;
-        bool bottomBorder = y == 0 ? bottomChunk : Bottom;
+        bool topBorder    = y == SubChunk::SIZE - 1 ? topChunk :    Top;
+        bool bottomBorder = y == 0                  ? bottomChunk : Bottom;
 
         // Todo Block texture and type.
-        if (Top)
+        if (topBorder)
             PushQuad(0, gx, gy, gz, 4, 5, 6, 7);
-        if (Bottom)
+        if (bottomBorder)
             PushQuad(0, gx, gy, gz, 3, 2, 1, 0);
         if (Left)
             PushQuad(0, gx, gy, gz, 0, 4, 7, 3);

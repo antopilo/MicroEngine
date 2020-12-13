@@ -20,10 +20,11 @@ namespace Engine {
 		for (int i = 0; i < SIZE; i++) {
 			for (int j = 0; j < SIZE; j++) {
 				for (int k = 0; k < SIZE; k++) {
-					if(noise.GetNoise((float)i + gx, (float)j + gy, (float)k + gz) > 0.5f)
-						m_Blocks[i][j][k] = 1;
-					else
-						m_Blocks[i][j][k] = 0;
+					//if(noise.GetNoise((float)i + gx, (float)j + gy, (float)k + gz) > 0.5f)
+					//	m_Blocks[i][j][k] = 1;
+					//else
+					//	m_Blocks[i][j][k] = 0;
+					m_Blocks[i][j][k] = 1;
 				}
 			}
 		}
@@ -50,27 +51,25 @@ namespace Engine {
 
 	// Creates a mesh with the blocks inside the chunk.
 	void SubChunk::Mesh() {
-		m_Mesh = ChunkMesher::MeshSubChunk(this);
+		this->m_Mesh = ChunkMesher::MeshSubChunk(this);
 
-		m_IndexCount = m_Mesh.size() * 1.5;
+		this->m_IndexCount = m_Mesh.size() * 1.5;
 
-		m_VertexBuffer->Bind();
-		m_VertexBuffer->SetData(m_Mesh.data(), m_Mesh.size() * sizeof(QuadVertex));
-		m_Mesh.clear();
+		this->m_VertexBuffer->Bind();
+		this->m_VertexBuffer->SetData(m_Mesh.data(), m_Mesh.size() * sizeof(QuadVertex));
+		this->m_VertexBuffer->Unbind();
+		//this->m_Mesh.clear();
 
 	}
 
 	// Push the mesh to the renderer
 	void SubChunk::Draw() {
-		//Renderer::PushMesh(m_Mesh);
 
-		Renderer::TextureShader->Bind();
-		m_VertexBuffer->Bind();
 		
+		m_VertexBuffer->Bind();
 		//if (lastIndicesCount != IndicesCount)
 		//	m_VertexBuffer->SetData(m_Vertices.data(), m_Vertices.size() * sizeof(QuadVertex));
-		
-		Renderer::m_IndexBuffer->Bind();
+		//Renderer::m_IndexBuffer->Bind();
 		glDrawElements(GL_TRIANGLES, m_IndexCount, GL_UNSIGNED_INT, nullptr);
 		Renderer::DrawCalls += 1;
 	}

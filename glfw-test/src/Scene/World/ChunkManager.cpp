@@ -44,14 +44,14 @@ namespace Engine {
 
 	void ChunkManager::Update(Timestep ts)
 	{
-		CheckForLoad();
-		//LoadChunk(1, 1);
+		//CheckForLoad();
+		LoadChunk(1, 1);
 	}
 
 	void ChunkManager::CheckForLoad() {
 		glm::vec3 pos = m_Camera->GetTranslation();
-		int camX = pos.x / SubChunk::SIZE;
 		int camZ = pos.z / SubChunk::SIZE;
+		int camX = pos.x / SubChunk::SIZE;
 		LoadChunk(camX, camZ);
 	}
 

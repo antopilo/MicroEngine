@@ -8,6 +8,7 @@ namespace Engine {
 	static class ChunkMesher
 	{
 	public:
+		static void Init();
 		static std::vector<QuadVertex> MeshSubChunk(SubChunk* subchunk);
 
 	private:

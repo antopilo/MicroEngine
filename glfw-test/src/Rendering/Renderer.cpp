@@ -12,35 +12,8 @@
 #include "Vertex.h"
 
 namespace Engine {
-
-	struct Renderer2DData
-	{
-		static const uint32_t MaxQuads = 20000 * 4;
-		static const uint32_t MaxVertices = MaxQuads * 4;
-		static const uint32_t MaxIndices = MaxQuads * 6;
-		static const uint32_t MaxTextureSlots = 32; // TODO: RenderCaps
-
-		VertexArray* QuadVertexArray;
-		VertexBuffer* QuadVertexBuffer;
-		//Shader* TextureShader;
-		Texture* WhiteTexture;
-
-		uint32_t QuadIndexCount = 0;
-		QuadVertex* QuadVertexBufferBase = nullptr;
-		QuadVertex* QuadVertexBufferPtr = nullptr;
-
-		std::array< Texture , MaxTextureSlots> TextureSlots;
-		uint32_t TextureSlotIndex = 1; // 0 = white texture
-
-		glm::vec4 QuadVertexPositions[4];
-
-		//Renderer2D::Statistics Stats;
-	};
-
 	glm::mat4 Projection;
 	static Engine::Renderer2DData* s_Data;
-
-
 
 	std::vector<QuadVertex> Renderer::m_Vertices;
 	uint32_t Renderer::m_Indices[MaxIndexCount];
@@ -54,10 +27,9 @@ namespace Engine {
 
 	IndexBuffer* Renderer::m_IndexBuffer;
 
-
-
 	void Renderer::Init() {
-		glEnable(GL_DEPTH_TEST);
+		//glEnable(GL_DEPTH_TEST);
+		
 		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 
 		// Texture shader
@@ -80,7 +52,8 @@ namespace Engine {
 
 		SetBufferLayout(m_VertexBuffer);
 		CreateIndexBuffer();
-
+		m_IndexBuffer->Bind();
+		Renderer::TextureShader->Bind();
 	}
 
 	void Renderer::SetBufferLayout(VertexBuffer* buffer) {
@@ -117,14 +90,10 @@ namespace Engine {
 		TextureShader->Bind();
 		TextureShader->SetUniformMat4f("u_Projection", camera);
 		TextureShader->SetUniformMat4f("u_View", transform);
-		//TextureShader->SetUniform3f("lightPos", 1.2f, 1.0f, 2.0f);
 	}
 
 
 	void Renderer::EndScene() {
-
-
-
 		//ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
 		//for (auto i = 0; i < m_Vertices.size(); i++)
@@ -133,123 +102,10 @@ namespace Engine {
 		//m_Vertices.clear();
 		//IndicesCount = 0;
 		/* Swap front and back buffers */
-		
 	}
+
 	int Renderer::DrawCalls = 0;
 
-	// this push a mesh to the renderer. Make sure this is for indexed mesh.
-	// Should only have quads.
-	void Renderer::PushMesh(std::vector<QuadVertex> mesh)
-	{
-		int indices = 0;
-		for (auto i = 0; i < mesh.size(); i += 4) {
-			m_Vertices.push_back(mesh[i]);
-			m_Vertices.push_back(mesh[i + 1]);
-			m_Vertices.push_back(mesh[i + 2]);
-			m_Vertices.push_back(mesh[i + 3]);
-			indices += 6;
-		}
-		IndicesCount += indices;
-	}
-
-	void Renderer::DrawCube(float x, float y, float z, float textureId) {
-		float vertices[] = {
-			-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,  0.0f, 0.0f, -1.0f,
-			 0.5f, -0.5f, -0.5f,  1.0f, 0.0f,  0.0f, 0.0f, -1.0f,
-			 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,  0.0f, 0.0f, -1.0f,
-			-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,  0.0f, 0.0f, -1.0f,
-											  
-			-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,  0.0f, 0.0f, 1.0f,
-			 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,  0.0f, 0.0f, 1.0f,
-			 0.5f,  0.5f,  0.5f,  1.0f, 1.0f,  0.0f, 0.0f, 1.0f,
-			-0.5f,  0.5f,  0.5f,  0.0f, 1.0f,  0.0f, 0.0f, 1.0f,
-											  
-			-0.5f,  0.5f,  0.5f,  1.0f, 0.0f,  -1.0f, 0.0f, 0.0f,
-			-0.5f,  0.5f, -0.5f,  1.0f, 1.0f,  -1.0f, 0.0f, 0.0f,
-			-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,  -1.0f, 0.0f, 0.0f,
-			-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,  -1.0f, 0.0f, 0.0f,
-											   
-			 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,  1.0f, 0.0f, 0.0f,
-			 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,  1.0f, 0.0f, 0.0f,
-			 0.5f, -0.5f, -0.5f,  0.0f, 1.0f,  1.0f, 0.0f, 0.0f,
-			 0.5f, -0.5f,  0.5f,  0.0f, 0.0f,  1.0f, 0.0f, 0.0f,
-
-			-0.5f, -0.5f, -0.5f,  0.0f, 1.0f, 0.0f, 1.0f, 0.0f,
-			 0.5f, -0.5f, -0.5f,  1.0f, 1.0f, 0.0f, 1.0f, 0.0f,
-			 0.5f, -0.5f,  0.5f,  1.0f, 0.0f, 0.0f, 1.0f, 0.0f,
-			-0.5f, -0.5f,  0.5f,  0.0f, 0.0f, 0.0f, 1.0f, 0.0f,
-											  
-			-0.5f,  0.5f, -0.5f,  0.0f, 1.0f, 0.0f, 1.0f, 0.0f,
-			 0.5f,  0.5f, -0.5f,  1.0f, 1.0f, 0.0f, 1.0f, 0.0f,
-			 0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 0.0f, 1.0f, 0.0f,
-			-0.5f,  0.5f,  0.5f,  0.0f, 0.0f,  0.0f, 1.0f, 0.0f
-		};
-
-		for (auto i = 0; i < 24 * 8; i += 8) {
-
-			glm::vec3 position = glm::vec3(vertices[i] + x, vertices[i + 1] + y, vertices[i + 2] + z);
-			glm::vec2 texPos   = glm::vec2(vertices[i + 3], vertices[i + 4]);
-			glm::vec3 normal   = glm::vec3(vertices[i + 5], vertices[i + 6], vertices[i + 7]);
-			glm::vec4 color    = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
-
-			QuadVertex vert = QuadVertex(position, normal, color, texPos, textureId, 1.0f);
-			m_Vertices.push_back(vert);
-		}
-		IndicesCount += 6 * 6;
-	}
-
-	void Renderer::CreateQuad(float x, float y, float textureID) {
-		float size = 1.0f;
-
-		m_Vertices.push_back(
-			QuadVertex (
-				glm::vec3(x, y, 0),
-				glm::vec3(0.0f, 0.0f, 1.0f),
-				glm::vec4(1.0f, 1.0f, 1.0f, 1.0f),
-				glm::vec2(0.0f, 0.0f),
-				textureID,
-				1.0f
-			)
-		);
-
-		m_Vertices.push_back(
-			QuadVertex (
-				glm::vec3(x + size, y, 0),
-				glm::vec3(0.0f, 0.0f, 1.0f),
-				glm::vec4(1.0f, 1.0f, 1.0f, 1.0f),
-				glm::vec2(1.0f, 0.0f),
-				textureID,
-				1.0f
-				)
-		);
-
-		m_Vertices.push_back(
-			QuadVertex (
-				glm::vec3(x + size, y + size, 0),
-				glm::vec3(0.0f, 0.0f, 1.0f),
-				glm::vec4(1.0f, 1.0f, 1.0f, 1.0f),
-				glm::vec2(1.0f, 1.0f),
-				textureID,
-				1.0f
-			)
-		);
-
-		m_Vertices.push_back(
-			QuadVertex (
-				glm::vec3(x, y + size, 0),
-				glm::vec3(0.0f, 0.0f, 1.0f),
-				glm::vec4(1.0f, 1.0f, 1.0f, 1.0f),
-				glm::vec2(0.0f, 1.0f),
-				textureID,
-				1.0f
-			)
-		);
-		IndicesCount += 6;
-	}
-
-	//std::vector<QuadVertex> Renderer::m_Vertices;
-
-	int lastIndicesCount = 0;
 	void Renderer::Flush() {
 		//TextureShader->Bind();
 		

@@ -26,7 +26,7 @@ namespace Engine {
 		//std::array<int, 999> m_Indices;
 	public:
 		Chunk(glm::vec2 position);
-		const static int SUBCHUNK_COUNT = 16;
+		const static int SUBCHUNK_COUNT = 2;
 
 		SubChunk* GetSubChunk(int idx);
 		int GetBlock(int x, int y, int z);

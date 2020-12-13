@@ -1,5 +1,8 @@
-﻿  Scene.cpp
-  Window.cpp
-  Generating Code...
-F:\Desktop\repos\MicroEngine\glfw-test\src\Window.cpp(73): warning C4715: 'Engine::Window::Initialize': not all control paths return a value
+﻿  SubChunk.cpp
+F:\Desktop\repos\MicroEngine\glfw-test\src\Scene\World\Chunks\ChunkMesher.h(37,3): warning C4091: 'static ': ignored on left of 'Engine::ChunkMesher' when no variable is declared
+F:\Desktop\repos\MicroEngine\glfw-test\src\Scene\World\Chunks\SubChunk.cpp(18,12): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+F:\Desktop\repos\MicroEngine\glfw-test\src\Scene\World\Chunks\SubChunk.cpp(39,28): warning C4154: deletion of an array expression; conversion to pointer supplied
+F:\Desktop\repos\MicroEngine\glfw-test\src\Scene\World\Chunks\SubChunk.cpp(41,24): warning C4154: deletion of an array expression; conversion to pointer supplied
+F:\Desktop\repos\MicroEngine\glfw-test\src\Scene\World\Chunks\SubChunk.cpp(43,20): warning C4154: deletion of an array expression; conversion to pointer supplied
+F:\Desktop\repos\MicroEngine\glfw-test\src\Scene\World\Chunks\SubChunk.cpp(56,38): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
   glfw-test.vcxproj -> F:\Desktop\repos\MicroEngine\Debug\glfw-test.exe
