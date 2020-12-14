@@ -150,7 +150,7 @@ namespace Engine {
 		m_Scene->Draw();
 		Renderer::EndScene();
 
-		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+		//ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 		/* Swap front and back buffers */
 		glfwSwapBuffers(instance);
 		/* Poll for and process events */

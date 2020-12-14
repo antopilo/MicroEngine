@@ -4,15 +4,29 @@
 #include "Chunks/SubChunk.h"
 
 namespace Engine {
+	struct ChunkPos {
+		int x;
+		int y;
 
-	std::unordered_map<int, std::unordered_map<int, Chunk*>> ChunkManager::m_Chunks;
+		bool operator<(const ChunkPos& comp) const {
+			return std::tie(x, y) < std::tie(comp.x, comp.y);
+		}
+
+		bool operator==(const ChunkPos& o) const {
+			return x == o.x && y == o.y;
+		}
+
+	};
+	
+	int RenderDistance = 2;
+
+	std::map<ChunkPos, std::shared_ptr<Chunk>> ChunkManager::m_Chunks;
 	Camera* ChunkManager::m_Camera;
 
 	int ChunkManager::m_LoadedChunkCount = 0;
 
 	void ChunkManager::SetCam(Camera* cam) {
 		m_Camera = cam;
-	
 	}
 
 	Camera* ChunkManager::GetCam() {
@@ -20,6 +34,7 @@ namespace Engine {
 	}
 
 	void ChunkManager::Init() {
+		//m_Chunks.reserve(2000);
 		//LoadChunk(0, 0);
 		//LoadChunk(1, 0);
 		//LoadChunk(0, 1);
@@ -28,41 +43,54 @@ namespace Engine {
 
 
 	bool ChunkManager::IsChunkLoaded(int x, int z) {
-		if (m_Chunks.find(x) != m_Chunks.end()) {
-			// Already contains chunk!
-			std::unordered_map<int, Chunk* > test = m_Chunks[x];
-			if (test.find(z) != test.end()) {
-				//printf("Tried to load already loaded chunks \n");
-				return true;
-			}
-
+		if (m_Chunks.find(ChunkPos{ x, z }) != m_Chunks.end()) {
+			return true;
 		}
 		return false;
 	}
+
 	void ChunkManager::LoadChunk(int x, int z)
 	{
-		
-		
-		glm::vec2 pos = glm::vec2(x, z);
-		
-		Chunk* newChunk = new Chunk(pos);
-
 		m_LoadedChunkCount += 1;
-			m_Chunks[x][z] = newChunk;
+		m_Chunks[ChunkPos{ x,z }] = std::shared_ptr<Chunk>(new Chunk(glm::vec2(x, z)));
 		//newChunk->Draw();
+	}
+
+	void ChunkManager::Mesh() {
+		int meshedCount = 0;
+		for (auto c : m_Chunks)
+			if (!c.second->isMeshed) {
+				c.second->Mesh();
+				meshedCount++;
+			}
 	}
 
 	void ChunkManager::Draw()
 	{
-		for (auto x : m_Chunks)
-			for (auto chunk : x.second)
-				chunk.second->Draw();
+		for (auto chunk : m_Chunks)
+			chunk.second->Draw();
 	}
 
 	void ChunkManager::Update(Timestep ts)
 	{
 			CheckForLoad();
-	;
+			Mesh();
+			CheckForUnload();
+	}
+
+	void ChunkManager::CheckForUnload() {
+		glm::vec3 pos = m_Camera->GetTranslation();
+		int camZ = pos.z / SubChunk::SIZE;
+		int camX = pos.x / SubChunk::SIZE;
+		for (auto chunk : m_Chunks) {
+			glm::vec2 minus = chunk.second->GetPosition() - glm::vec2(camX, camZ);
+			float dist = sqrt(minus.x * minus.x + minus.y * minus.y);
+			if (dist > RenderDistance * 2) {
+				chunk.second = nullptr;
+				m_Chunks.erase(chunk.first);
+				return;
+			}
+		}
 	}
 
 	void ChunkManager::CheckForLoad() {
@@ -71,15 +99,14 @@ namespace Engine {
 		int camX = pos.x / SubChunk::SIZE;
 
 		int numLoaded = 0;
-		for(auto x = camX - 4; x < camX + 4; x++)
-			for (auto z = camZ - 4; z < camZ + 4; z++) {
+		for(auto x = camX - RenderDistance; x < camX + RenderDistance; x++)
+			for (auto z = camZ - RenderDistance; z < camZ + RenderDistance; z++) {
 				if (numLoaded > 4)
 					return;
 				if (!IsChunkLoaded(x, z)) {
 					LoadChunk(x, z);
 					numLoaded++;
 				}
-					
 			}
 				
 	}

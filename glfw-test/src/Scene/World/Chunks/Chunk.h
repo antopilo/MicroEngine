@@ -18,17 +18,15 @@ namespace Engine {
 		Chunk* m_Front;
 		Chunk* m_Back;
 		
-		std::vector<SubChunk*> m_Subchunks;
-
-		
+		std::vector<std::unique_ptr<SubChunk>> m_Subchunks;
 
 		//std::array<QuadVertex, 999> m_Mesh;
 		//std::array<int, 999> m_Indices;
 	public:
 		Chunk(glm::vec2 position);
-		const static int SUBCHUNK_COUNT = 16;
+		const static int SUBCHUNK_COUNT = 8;
 
-		SubChunk* GetSubChunk(int idx);
+		SubChunk& GetSubChunk(int idx);
 		int GetBlock(int x, int y, int z);
 		void SetBlock(int x, int y, int z, int type);
 
@@ -38,6 +36,9 @@ namespace Engine {
 
 		glm::vec2 GetPosition();
 
+		bool isMeshed = false;
+		bool isGenerated = false;
+		bool isSurrounded = false;
 
 		~Chunk();
 		void Draw();

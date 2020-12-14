@@ -1,6 +1,6 @@
 #pragma once
 #include "Chunk.h"
-
+#include <memory>
 namespace Engine {
 	class VertexBuffer;
 
@@ -9,8 +9,10 @@ namespace Engine {
 		const static int SIZE = 32;
 		SubChunk(int idx, Chunk* chunk);
 
+		void Generate();
+
 		void SetBlock(int x, int y, int z, int type);
-		int GetBlock(int x, int y, int z);
+		int& GetBlock(int x, int y, int z);
 
 		void Mesh();
 
@@ -29,7 +31,7 @@ namespace Engine {
 		unsigned int VBO;
 		unsigned int VAO;
 		VertexBuffer* m_VertexBuffer;
-		std::vector<QuadVertex> m_Mesh;
+		std::unique_ptr<std::vector<QuadVertex>>* m_Mesh;
 		int m_IndexCount = 0;
 	};
 }

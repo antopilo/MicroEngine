@@ -149,9 +149,11 @@ namespace Engine {
 	}
 	bool Camera::IsChunkVisible(SubChunk* chunk)
 	{
-		glm::vec2 parentPos = chunk->GetParent()->GetPosition();
-		glm::vec3 lowp = glm::vec3(parentPos.x * SubChunk::SIZE, chunk->GetIndex() * SubChunk::SIZE, parentPos.y * SubChunk::SIZE);;
-		glm::vec3 highp = glm::vec3((parentPos.x * SubChunk::SIZE) + SubChunk::SIZE, chunk->GetIndex() * SubChunk::SIZE + SubChunk::SIZE, parentPos.y * SubChunk::SIZE + SubChunk::SIZE);
+		auto sub = chunk;
+		auto parent = sub->GetParent();
+		glm::vec2 parentPos = parent->GetPosition();
+		glm::vec3 lowp = glm::vec3(parentPos.x * SubChunk::SIZE, sub->GetIndex() * SubChunk::SIZE, parentPos.y * SubChunk::SIZE);;
+		glm::vec3 highp = glm::vec3((parentPos.x * SubChunk::SIZE) + SubChunk::SIZE, sub->GetIndex() * SubChunk::SIZE + SubChunk::SIZE, parentPos.y * SubChunk::SIZE + SubChunk::SIZE);
 		return Frustrum->IsBoxVisible(lowp, highp);
 	}
 

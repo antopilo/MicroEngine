@@ -10,35 +10,26 @@
 #include "../Rendering/Vertex.h"
 #include "../ChunkManager.h"
 #include "../Scene/Camera.h"
+#include "../Blocks.h"
+
 namespace Engine {
 	SubChunk::SubChunk(int idx, Chunk* chunk)
 	{
 		// Setup ref
 		m_Index = idx;
 		m_Parent = chunk;
-
-		FastNoiseLite noise;
-
-		float gx = chunk->GetPosition().x * SIZE;
-		float gy = m_Index * SIZE;
-		float gz = chunk->GetPosition().y * SIZE;
-		for (int i = 0; i < SIZE; i++) {
-			for (int j = 0; j < SIZE; j++) {
-				for (int k = 0; k < SIZE; k++) {
-					if((noise.GetNoise((float)(i + gx) * 0.25, (float)(k + gz) * 0.25) + 1.0f) / 2 * 255 > gy + j) {
-					//if (noise.GetNoise((float)i + gx, (float)j + gy, (float)k + gz) > 0.5f) {
-						m_Blocks[i][j][k] = (char)1;
-						m_Count++;
-					}
-						
-					else
-						m_Blocks[i][j][k] = (char)0;
-					//m_Blocks[i][j][k] = 1;
-				}
-			}
-		}
-		
-		printf( ( std::to_string(sizeof(m_Blocks)) + std::string("\n") ).c_str() ) ;
+		memset(&m_Blocks, 0, SIZE * SIZE * SIZE);
+		//m_Blocks = new char * *[SIZE];
+		//for (int i = 0; i < SIZE; i++) {
+		//	m_Blocks[i] = new char* [SIZE];
+		//	for (int j = 0; j < SIZE; j++) {
+		//		m_Blocks[i][j] = new char[SIZE];
+		//	} 
+		//}
+		m_Blocks[0][0][0] = (char)1;
+		m_Count = 2;
+		//Generate();
+		//printf( ( std::to_string(sizeof(m_Blocks)) + std::string("\n") ).c_str() ) ;
 		// Create buffer
 		glGenVertexArrays(1, &VAO);
 		glBindVertexArray(VAO);
@@ -56,54 +47,65 @@ namespace Engine {
 		glEnableVertexAttribArray(0);
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(QuadVertex), 0);
 		// normal vec3
-		glEnableVertexAttribArray(1);
-		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(QuadVertex), (void*)(sizeof(GL_FLOAT) * 3));
+		//glEnableVertexAttribArray(1);
+		//glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(QuadVertex), (void*)(sizeof(GL_FLOAT) * 3));
 		// color vec4
-		glEnableVertexAttribArray(2);
-		glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, sizeof(QuadVertex), (void*)(sizeof(GL_FLOAT) * 6));
+		glEnableVertexAttribArray(1);
+		glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(QuadVertex), (void*)(sizeof(GL_FLOAT) * 3));
 		// texture pos vec2
-		glEnableVertexAttribArray(3);
-		glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, sizeof(QuadVertex), (void*)(sizeof(GL_FLOAT) * 10));
+		glEnableVertexAttribArray(2);
+		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(QuadVertex), (void*)(sizeof(GL_FLOAT) * 7));
 		// texture float
-		glEnableVertexAttribArray(4);
-		glVertexAttribPointer(4, 1, GL_FLOAT, GL_FALSE, sizeof(QuadVertex), (void*)(sizeof(GL_FLOAT) * 12));
+		glEnableVertexAttribArray(3);
+		glVertexAttribPointer(3, 1, GL_FLOAT, GL_FALSE, sizeof(QuadVertex), (void*)(sizeof(GL_FLOAT) * 9));
 		// tiling float
-		glEnableVertexAttribArray(5);
-		glVertexAttribPointer(5, 1, GL_FLOAT, GL_FALSE, sizeof(QuadVertex), (void*)(sizeof(GL_FLOAT) * 13));
+		glEnableVertexAttribArray(4);
+		glVertexAttribPointer(4, 1, GL_FLOAT, GL_FALSE, sizeof(QuadVertex), (void*)(sizeof(GL_FLOAT) * 11));
 
 		glBindVertexArray(0);
 	}
 
-	SubChunk::~SubChunk() { // Delete the blocks
-		for (int i = 0; i < SIZE; ++i) {
-			for (int j = 0; j < SIZE; ++j) {
-				delete[] m_Blocks[i][j];
+	void SubChunk::Generate() {
+		//FastNoiseLite noise;
+
+		auto parent = m_Parent;
+		float gx = parent->GetPosition().x * SIZE;
+		float gy = m_Index * SIZE;
+		float gz = parent->GetPosition().y * SIZE;
+
+		for (int i = 0; i < SIZE; i++) {
+			for (int j = 0; j < SIZE; j++) {
+				for (int k = 0; k < SIZE; k++) {
+					m_Blocks[i][j][k] = (char)1;
+					m_Count++;
+				}
 			}
-			delete[] m_Blocks[i];
 		}
-		delete[] m_Blocks;
+	}
+
+	SubChunk::~SubChunk() { // Delete the blocks
+		//delete m_Blocks;
 	}
 
 
-	int SubChunk::GetBlock(int x, int y, int z)
+	int& SubChunk::GetBlock(int x, int y, int z)
 	{
-		return m_Blocks[x][y][z];
+		return (int&)m_Blocks[x][y][z];
 	}
 
 	// Creates a mesh with the blocks inside the chunk.
 	void SubChunk::Mesh() {
-		if (m_Count == 0)
-			return;
+		//if (m_Count == 0)
+		//	return;
 
 		this->m_Mesh = ChunkMesher::MeshSubChunk(this);
-
-		this->m_IndexCount = m_Mesh.size() * 1.5;
+		this->m_IndexCount = m_Mesh->get()->size() * 1.5;
 		unsigned int indices = m_IndexCount * sizeof(QuadVertex);
 		glBindVertexArray(VAO);
 		glBindBuffer(GL_ARRAY_BUFFER, VBO);
-		glBufferSubData(GL_ARRAY_BUFFER, 0, m_Mesh.size() * sizeof(QuadVertex), m_Mesh.data());
-		m_Mesh.clear();
-		m_Mesh.shrink_to_fit();
+		glBufferSubData(GL_ARRAY_BUFFER, 0, m_Mesh->get()->size() * sizeof(QuadVertex), m_Mesh->get()->data());
+		m_Mesh->get()->clear();
+		m_Mesh->get()->shrink_to_fit();
 	}
 
 	// Push the mesh to the renderer 

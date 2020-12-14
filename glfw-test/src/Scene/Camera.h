@@ -3,6 +3,7 @@
 #include <glm\ext\matrix_clip_space.hpp>
 #include "../Core/Timestep.h"
 #include "Frustrum.h"
+#include <memory>
 namespace Engine {
 	enum CAMERA_TYPE {
 		ORTHO,
@@ -14,7 +15,7 @@ namespace Engine {
 	private:
 		float mouseLastX = 0;
 		float mouseLastY = 0;
-		float Speed = 1.0f;
+		float Speed = 10.0f;
 		glm::vec3 Translation = { 0.0f, 0.0f, 0.0f };
 		glm::vec3 Rotation = { 0.0f, 0.0f, 0.0f };
 		glm::vec3 Scale = { 1.0f, 1.0f, 1.0f };

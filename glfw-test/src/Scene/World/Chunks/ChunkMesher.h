@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include <glm\ext\vector_float3.hpp>
+#include <memory>
 namespace Engine {
 	class SubChunk;
 	struct QuadVertex;
@@ -9,8 +10,8 @@ namespace Engine {
 	{
 	public:
 		static void Init();
-		static std::vector<QuadVertex> MeshSubChunk(SubChunk* subchunk);
-
+		static std::unique_ptr<std::vector<QuadVertex>>* MeshSubChunk(SubChunk* subchunk);
+		
 	private:
         const float CUBE_SIZE = 1.0f;
         const static glm::vec3 CUBE_VERTICES[];
@@ -24,7 +25,8 @@ namespace Engine {
 		static bool Bottom;
 		static glm::vec3 Position;
 
-		static std::vector<QuadVertex> CurrentArray;
+		static QuadVertex newArray[100000];
+		//static std::unique_ptr<std::vector<QuadVertex>> CurrentArray;
 
 		static void CreateBlock(int x, int y, int z, int type, SubChunk* chunk);
 

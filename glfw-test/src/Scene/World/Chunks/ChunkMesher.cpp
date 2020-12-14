@@ -1,6 +1,8 @@
 #include "ChunkMesher.h"
 
 #include "SubChunk.h"
+#include <sstream>
+#include <memory>
 
 namespace Engine {
     
@@ -35,50 +37,55 @@ namespace Engine {
 
     glm::vec3 ChunkMesher::Position = glm::vec3(0, 0, 0);
 
-    std::vector<QuadVertex> ChunkMesher::CurrentArray = std::vector<QuadVertex>();
+    std::unique_ptr<std::vector<QuadVertex>> CurrentArray = std::unique_ptr<std::vector<QuadVertex>>(new std::vector<QuadVertex>());
 
     void ChunkMesher::Init() {
-        CurrentArray.reserve(12000);
+        CurrentArray->reserve(100000);
     }
 
-    std::vector<QuadVertex> ChunkMesher::MeshSubChunk(SubChunk* subchunk) 
+    std::unique_ptr<std::vector<QuadVertex>>* ChunkMesher::MeshSubChunk(SubChunk* subchunk) 
 	{
         //if (SubChunk->GetCount() == 0)
         //    return std::vector<QuadVertex>();
-        CurrentArray.clear();
-        CurrentArray.shrink_to_fit();
-        
+        CurrentArray->clear();
+        //CurrentArray->shrink_to_fit();
         int type;
-        for (int x = 0; x < SubChunk::SIZE; x++) {
-            for (int y = 0; y < SubChunk::SIZE; y++) {
-                for (int z = 0; z < SubChunk::SIZE; z++) {
-                    type = subchunk->GetBlock(x, y, z);
-
-                    if (type == 0)// air
-                        continue;
-
-                    CreateBlock(x, y, z, type, subchunk);
-                }
-            }
-        }
-        CurrentArray.shrink_to_fit();
-        return CurrentArray;
+        //for (int x = 0; x < SubChunk::SIZE; x++) {
+        //    for (int y = 0; y < SubChunk::SIZE; y++) {
+        //        for (int z = 0; z < SubChunk::SIZE; z++) {
+        //            type = subchunk->GetBlock(x, y, z);
+        //
+        //            if (type == 0)// air
+        //                continue;
+        //            try {
+        //                CreateBlock(x, y, z, type, subchunk);
+        //            }
+        //            catch (const std::bad_alloc&) {
+        //                printf(("bad alloc size:" + std::to_string(CurrentArray->size()) + "\n").c_str());
+        //            }
+        //        }
+        //    }
+        //}
+        CreateBlock(0, 0, 0, 1, subchunk);
+        printf(( "mesh size: " + std::to_string(CurrentArray->size()) + "\n").c_str());
+        return &CurrentArray;
 	}
     void ChunkMesher::CreateBlock(int x, int y, int z, int type, SubChunk* chunk)
     {
+        
         int chunkIdx = chunk->GetIndex();
-
-        glm::vec2 parentPos = chunk->GetParent()->GetPosition();
+        auto parent = chunk->GetParent();
+        glm::vec2 parentPos = parent->GetPosition();
         int gx = parentPos.x * SubChunk::SIZE + x;
         int gy = (chunk->GetIndex() * SubChunk::SIZE) + y;
         int gz = parentPos.y * SubChunk::SIZE + z;
 
-        Top    = y != SubChunk::SIZE - 1 ? chunk->GetBlock(x, y + 1, z) == 0 : true;
-        Bottom = y != 0                  ? chunk->GetBlock(x, y - 1, z) == 0 : true;
-        Right   = x != SubChunk::SIZE - 1 ? chunk->GetBlock(x + 1, y, z) == 0 : true; // Todo chunk borders.
-        Left  = x != 0                  ? chunk->GetBlock(x - 1, y, z) == 0 :   true;
-        Front  = z != SubChunk::SIZE - 1 ? chunk->GetBlock(x, y, z + 1) == 0 : true;
-        Back   = z != 0                  ? chunk->GetBlock(x, y, z - 1) == 0 : true;
+        Top    = y != SubChunk::SIZE - 1 ? chunk->GetBlock(x, y + 1, z) == 0 : false;
+        Bottom = y != 0                  ? chunk->GetBlock(x, y - 1, z) == 0 : false;
+        Right   = x != SubChunk::SIZE - 1 ? chunk->GetBlock(x + 1, y, z) == 0 : false; // Todo chunk borders.
+        Left  = x != 0                  ? chunk->GetBlock(x - 1, y, z) == 0 : false;
+        Front  = z != SubChunk::SIZE - 1 ? chunk->GetBlock(x, y, z + 1) == 0 : false;
+        Back   = z != 0                  ? chunk->GetBlock(x, y, z - 1) == 0 : false;
 
         // Block is surrounded.
         if (Top && Bottom && Left && Right && Front && Back)
@@ -90,13 +97,13 @@ namespace Engine {
         // In between subchunks.
         if (chunkIdx != Chunk::SUBCHUNK_COUNT - 1) {
             // TODO: Chunk count check.
-            SubChunk* above = chunk->GetParent()->GetSubChunk(chunkIdx + 1);
-            topChunk = above->GetBlock(x, 0, z) == 0;
+            SubChunk& above = parent->GetSubChunk(chunkIdx + 1);
+            topChunk = above.GetBlock(x, 0, z) == 0;
         }
         if (chunkIdx != 0) {
             // TODO: Chunk count check.
-            SubChunk* under = chunk->GetParent()->GetSubChunk(chunkIdx - 1);
-            bottomChunk = under->GetBlock(x, SubChunk::SIZE - 1, z) == 0;
+            SubChunk& under = parent->GetSubChunk(chunkIdx - 1);
+            bottomChunk = under.GetBlock(x, SubChunk::SIZE - 1, z) == 0;
         }
 
         bool topBorder    = y == SubChunk::SIZE - 1 ? topChunk :    Top;
@@ -294,37 +301,41 @@ namespace Engine {
             light =0.9f;
         if (face == 5)
             light = 0.75f;
-        CurrentArray.push_back(QuadVertex{
+        CurrentArray->push_back(std::move(QuadVertex{
             glm::vec3(float(x + CUBE_VERTICES[c1].x), float(y + CUBE_VERTICES[c1].y), float(z + CUBE_VERTICES[c1].z)),
             glm::vec3(0.0f, 1.0f, 0.0f),
             glm::vec4(1.0f * light, 1.0f * light, 1.0f * light, 1.0f),
             glm::vec2(0.0f, 0.0f),
             1.0f,
             1.0f
-        });
-        CurrentArray.push_back(QuadVertex{
+            }));
+
+        CurrentArray->push_back(std::move(QuadVertex{
             glm::vec3(float(x + CUBE_VERTICES[c2].x), float(y + CUBE_VERTICES[c2].y), float(z + CUBE_VERTICES[c2].z)),
             glm::vec3(0.0f, 1.0f, 1.0f),
             glm::vec4(1.0f * light, 1.0f * light, 1.0f * light, 1.0f),
             glm::vec2(1.0f, 0.0f),
             1.0f,
             1.0f
-        });
-        CurrentArray.push_back(QuadVertex{
+            }));
+
+
+        CurrentArray->push_back(std::move(QuadVertex{
             glm::vec3(float(x + CUBE_VERTICES[c3].x), float(y + CUBE_VERTICES[c3].y), float(z + CUBE_VERTICES[c3].z)),
             glm::vec3(0.0f, 1.0f, 0.0f),
             glm::vec4(1.0f * light, 1.0f * light, 1.0f * light, 1.0f),
             glm::vec2(1.0f, 1.0f),
             1.0f,
             1.0f
-        });
-        CurrentArray.push_back(QuadVertex{
+            }));
+
+        CurrentArray->push_back(std::move(QuadVertex{
             glm::vec3(float(x + CUBE_VERTICES[c4].x), float(y + CUBE_VERTICES[c4].y), float(z + CUBE_VERTICES[c4].z)),
             glm::vec3(0.0f, 0.0f, 0.0f),
             glm::vec4(1.0f * light, 1.0f * light, 1.0f * light, 1.0f),
             glm::vec2(0.0f, 1.0f),
             1.0f,
             1.0f
-         });
+            }));
     }
 }

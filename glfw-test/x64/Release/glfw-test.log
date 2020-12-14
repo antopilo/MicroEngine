@@ -1,0 +1,41 @@
+﻿  Renderer.cpp
+F:\Desktop\repos\MicroEngine\glfw-test\src\Rendering\Renderer.cpp(124,10): warning C4477: 'printf' : format string '%d' requires an argument of type 'int', but variadic argument 1 has type 'const _Elem *'
+          with
+          [
+              _Elem=char
+          ]
+F:\Desktop\repos\MicroEngine\glfw-test\src\Rendering\Renderer.cpp(124,10): warning C4313: 'printf': '%d' in format string conflicts with argument 1 of type 'const _Elem *'
+          with
+          [
+              _Elem=char
+          ]
+F:\Desktop\repos\MicroEngine\glfw-test\src\Rendering\Renderer.cpp(133,66): warning C4305: 'argument': truncation from 'double' to 'GLclampf'
+  ChunkManager.cpp
+F:\Desktop\repos\MicroEngine\glfw-test\src\Scene\World\ChunkManager.cpp(81,12): warning C4244: 'initializing': conversion from 'T' to 'int', possible loss of data
+          with
+          [
+              T=float
+          ]
+F:\Desktop\repos\MicroEngine\glfw-test\src\Scene\World\ChunkManager.cpp(82,12): warning C4244: 'initializing': conversion from 'T' to 'int', possible loss of data
+          with
+          [
+              T=float
+          ]
+F:\Desktop\repos\MicroEngine\glfw-test\src\Scene\World\ChunkManager.cpp(94,12): warning C4244: 'initializing': conversion from 'T' to 'int', possible loss of data
+          with
+          [
+              T=float
+          ]
+F:\Desktop\repos\MicroEngine\glfw-test\src\Scene\World\ChunkManager.cpp(95,12): warning C4244: 'initializing': conversion from 'T' to 'int', possible loss of data
+          with
+          [
+              T=float
+          ]
+LINK : warning LNK4098: defaultlib 'LIBCMT' conflicts with use of other libs; use /NODEFAULTLIB:library
+  Generating code
+  9 of 2386 functions ( 0.4%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    26 functions had inline decision re-evaluated but remain unchanged
+  Finished generating code
+glew32s.lib(glew.obj) : warning LNK4099: PDB 'vc120.pdb' was not found with 'glew32s.lib(glew.obj)' or at 'F:\Desktop\repos\MicroEngine\x64\Release\vc120.pdb'; linking object as if no debug info
+  glfw-test.vcxproj -> F:\Desktop\repos\MicroEngine\x64\Release\glfw-test.exe
