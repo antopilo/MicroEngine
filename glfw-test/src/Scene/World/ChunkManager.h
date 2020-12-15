@@ -11,7 +11,7 @@ namespace Engine {
 	class ChunkManager
 	{
 	private:
-		static std::map<ChunkPos, std::shared_ptr<Chunk>> m_Chunks;
+		static std::map<ChunkPos, std::shared_ptr<Chunk>>* m_Chunks;
 
 	public:
 		static Camera* m_Camera;

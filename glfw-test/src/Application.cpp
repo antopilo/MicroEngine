@@ -34,6 +34,9 @@ namespace Engine {
 		s_Instance = this;
 	}
 
+	Application::~Application() {
+		delete m_Window;
+	}
 	Window* Application::GetWindow()
 	{
 		return m_Window;

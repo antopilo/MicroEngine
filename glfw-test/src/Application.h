@@ -24,6 +24,7 @@ namespace Engine {
 		int Close();
 
 		Application();
+		~Application();
 		//Scene* GetScene();
 
 		// Todo: serialization of scene.

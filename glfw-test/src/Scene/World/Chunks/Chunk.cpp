@@ -6,8 +6,9 @@ namespace Engine {
 	{
 		m_Position = glm::vec2(position.x, position.y );
 		m_Subchunks.reserve(SUBCHUNK_COUNT);
+
 		for (int i = 0; i < SUBCHUNK_COUNT; i++) {
-			m_Subchunks.push_back( std::unique_ptr<SubChunk>( new SubChunk(i, this ) ) );
+			m_Subchunks.push_back( new SubChunk(i, this ));
 		}
 		
 	}
@@ -26,6 +27,7 @@ namespace Engine {
 
 	Chunk::~Chunk() {
 		for (int i = 0; i < SUBCHUNK_COUNT; i++) {
+			//delete m_Subchunks[i];
 			m_Subchunks.clear();
 		}
 	}

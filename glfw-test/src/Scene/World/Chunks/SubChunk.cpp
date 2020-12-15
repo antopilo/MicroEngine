@@ -26,9 +26,7 @@ namespace Engine {
 		//		m_Blocks[i][j] = new char[SIZE];
 		//	} 
 		//}
-		m_Blocks[0][0][0] = (char)1;
-		m_Count = 2;
-		//Generate();
+		Generate();
 		//printf( ( std::to_string(sizeof(m_Blocks)) + std::string("\n") ).c_str() ) ;
 		// Create buffer
 		glGenVertexArrays(1, &VAO);
@@ -66,18 +64,21 @@ namespace Engine {
 	}
 
 	void SubChunk::Generate() {
-		//FastNoiseLite noise;
+		FastNoiseLite noise;
 
 		auto parent = m_Parent;
 		float gx = parent->GetPosition().x * SIZE;
 		float gy = m_Index * SIZE;
 		float gz = parent->GetPosition().y * SIZE;
 
-		for (int i = 0; i < SIZE; i++) {
-			for (int j = 0; j < SIZE; j++) {
-				for (int k = 0; k < SIZE; k++) {
-					m_Blocks[i][j][k] = (char)1;
-					m_Count++;
+		for (auto i = 0; i < SIZE; i++) {
+			for (auto j = 0; j < SIZE; j++) {
+				for (auto k = 0; k < SIZE; k++) {
+					if (noise.GetNoise(gx + i, gy + j, gz + k) > 0) {
+						m_Blocks[i][j][k] = (char)1;
+						m_Count += 1;
+					}
+						
 				}
 			}
 		}
@@ -85,12 +86,14 @@ namespace Engine {
 
 	SubChunk::~SubChunk() { // Delete the blocks
 		//delete m_Blocks;
+		glDeleteBuffers(1, &VBO);
+		glDeleteBuffers(1, &VAO);
 	}
 
 
-	int& SubChunk::GetBlock(int x, int y, int z)
+	int SubChunk::GetBlock(int x, int y, int z)
 	{
-		return (int&)m_Blocks[x][y][z];
+		return (int)m_Blocks[x][y][z];
 	}
 
 	// Creates a mesh with the blocks inside the chunk.
@@ -99,13 +102,11 @@ namespace Engine {
 		//	return;
 
 		this->m_Mesh = ChunkMesher::MeshSubChunk(this);
-		this->m_IndexCount = m_Mesh->get()->size() * 1.5;
+		this->m_IndexCount = m_Mesh->size() * 1.5;
 		unsigned int indices = m_IndexCount * sizeof(QuadVertex);
 		glBindVertexArray(VAO);
 		glBindBuffer(GL_ARRAY_BUFFER, VBO);
-		glBufferSubData(GL_ARRAY_BUFFER, 0, m_Mesh->get()->size() * sizeof(QuadVertex), m_Mesh->get()->data());
-		m_Mesh->get()->clear();
-		m_Mesh->get()->shrink_to_fit();
+		glBufferSubData(GL_ARRAY_BUFFER, 0, m_Mesh->size() * sizeof(QuadVertex), m_Mesh->data());
 	}
 
 	// Push the mesh to the renderer 

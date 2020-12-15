@@ -37,38 +37,42 @@ namespace Engine {
 
     glm::vec3 ChunkMesher::Position = glm::vec3(0, 0, 0);
 
-    std::unique_ptr<std::vector<QuadVertex>> CurrentArray = std::unique_ptr<std::vector<QuadVertex>>(new std::vector<QuadVertex>());
+    std::vector<QuadVertex>* CurrentArray; 
 
     void ChunkMesher::Init() {
+        CurrentArray = new std::vector<QuadVertex>();
         CurrentArray->reserve(100000);
     }
 
-    std::unique_ptr<std::vector<QuadVertex>>* ChunkMesher::MeshSubChunk(SubChunk* subchunk) 
+    std::vector<QuadVertex>* ChunkMesher::MeshSubChunk(SubChunk* subchunk) 
 	{
+        if (CurrentArray != nullptr)
+            delete CurrentArray;
+
+        CurrentArray = new std::vector<QuadVertex>();
         //if (SubChunk->GetCount() == 0)
         //    return std::vector<QuadVertex>();
         CurrentArray->clear();
-        //CurrentArray->shrink_to_fit();
+        CurrentArray->shrink_to_fit();
         int type;
-        //for (int x = 0; x < SubChunk::SIZE; x++) {
-        //    for (int y = 0; y < SubChunk::SIZE; y++) {
-        //        for (int z = 0; z < SubChunk::SIZE; z++) {
-        //            type = subchunk->GetBlock(x, y, z);
-        //
-        //            if (type == 0)// air
-        //                continue;
-        //            try {
-        //                CreateBlock(x, y, z, type, subchunk);
-        //            }
-        //            catch (const std::bad_alloc&) {
-        //                printf(("bad alloc size:" + std::to_string(CurrentArray->size()) + "\n").c_str());
-        //            }
-        //        }
-        //    }
-        //}
-        CreateBlock(0, 0, 0, 1, subchunk);
+        for (int x = 0; x < SubChunk::SIZE; x++) {
+            for (int y = 0; y < SubChunk::SIZE; y++) {
+                for (int z = 0; z < SubChunk::SIZE; z++) {
+                    type = subchunk->GetBlock(x, y, z);
+        
+                    if (type == 0)// air
+                        continue;
+                    try {
+                        CreateBlock(x, y, z, type, subchunk);
+                    }
+                    catch (const std::bad_alloc&) {
+                        printf(("bad alloc size:" + std::to_string(CurrentArray->size()) + "\n").c_str());
+                    }
+                }
+            }
+        }
         printf(( "mesh size: " + std::to_string(CurrentArray->size()) + "\n").c_str());
-        return &CurrentArray;
+        return CurrentArray;
 	}
     void ChunkMesher::CreateBlock(int x, int y, int z, int type, SubChunk* chunk)
     {
@@ -301,41 +305,41 @@ namespace Engine {
             light =0.9f;
         if (face == 5)
             light = 0.75f;
-        CurrentArray->push_back(std::move(QuadVertex{
+        CurrentArray->push_back(QuadVertex{
             glm::vec3(float(x + CUBE_VERTICES[c1].x), float(y + CUBE_VERTICES[c1].y), float(z + CUBE_VERTICES[c1].z)),
             glm::vec3(0.0f, 1.0f, 0.0f),
             glm::vec4(1.0f * light, 1.0f * light, 1.0f * light, 1.0f),
             glm::vec2(0.0f, 0.0f),
             1.0f,
             1.0f
-            }));
+            });
 
-        CurrentArray->push_back(std::move(QuadVertex{
+        CurrentArray->push_back(QuadVertex{
             glm::vec3(float(x + CUBE_VERTICES[c2].x), float(y + CUBE_VERTICES[c2].y), float(z + CUBE_VERTICES[c2].z)),
             glm::vec3(0.0f, 1.0f, 1.0f),
             glm::vec4(1.0f * light, 1.0f * light, 1.0f * light, 1.0f),
             glm::vec2(1.0f, 0.0f),
             1.0f,
             1.0f
-            }));
+            });
 
 
-        CurrentArray->push_back(std::move(QuadVertex{
+        CurrentArray->push_back(QuadVertex{
             glm::vec3(float(x + CUBE_VERTICES[c3].x), float(y + CUBE_VERTICES[c3].y), float(z + CUBE_VERTICES[c3].z)),
             glm::vec3(0.0f, 1.0f, 0.0f),
             glm::vec4(1.0f * light, 1.0f * light, 1.0f * light, 1.0f),
             glm::vec2(1.0f, 1.0f),
             1.0f,
             1.0f
-            }));
+            });
 
-        CurrentArray->push_back(std::move(QuadVertex{
+        CurrentArray->push_back(QuadVertex{
             glm::vec3(float(x + CUBE_VERTICES[c4].x), float(y + CUBE_VERTICES[c4].y), float(z + CUBE_VERTICES[c4].z)),
             glm::vec3(0.0f, 0.0f, 0.0f),
             glm::vec4(1.0f * light, 1.0f * light, 1.0f * light, 1.0f),
             glm::vec2(0.0f, 1.0f),
             1.0f,
             1.0f
-            }));
+            });
     }
 }

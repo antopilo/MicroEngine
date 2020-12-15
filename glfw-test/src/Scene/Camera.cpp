@@ -82,9 +82,7 @@ namespace Engine {
 				Translation += up * (Speed * ts);
 		}
 
-		if (Input::IsKeyPress(GLFW_KEY_F)) {
-			Frustrum = new Frustum(GetPerspective() * GetTransform());
-		}
+
 		delete Frustrum;
 		Frustrum = new Frustum(GetPerspective() * GetTransform());
 

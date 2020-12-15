@@ -12,7 +12,7 @@ namespace Engine {
 		void Generate();
 
 		void SetBlock(int x, int y, int z, int type);
-		int& GetBlock(int x, int y, int z);
+		int GetBlock(int x, int y, int z);
 
 		void Mesh();
 
@@ -30,8 +30,7 @@ namespace Engine {
 		int m_Count = 0;
 		unsigned int VBO;
 		unsigned int VAO;
-		VertexBuffer* m_VertexBuffer;
-		std::unique_ptr<std::vector<QuadVertex>>* m_Mesh;
+		std::vector<QuadVertex>* m_Mesh;
 		int m_IndexCount = 0;
 	};
 }

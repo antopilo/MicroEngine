@@ -1,2 +1,5 @@
-﻿  Chunk.cpp
+﻿  SubChunk.cpp
+F:\Desktop\repos\MicroEngine\glfw-test\src\Scene\World\Chunks\ChunkMesher.h(39,3): warning C4091: 'static ': ignored on left of 'Engine::ChunkMesher' when no variable is declared
+F:\Desktop\repos\MicroEngine\glfw-test\src\Scene\World\Chunks\SubChunk.cpp(71,12): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+F:\Desktop\repos\MicroEngine\glfw-test\src\Scene\World\Chunks\SubChunk.cpp(105,39): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
   glfw-test.vcxproj -> F:\Desktop\repos\MicroEngine\x64\Debug\glfw-test.exe

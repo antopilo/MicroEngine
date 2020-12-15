@@ -18,9 +18,9 @@ namespace Engine {
 
 	};
 	
-	int RenderDistance = 2;
+	int RenderDistance = 4;
 
-	std::map<ChunkPos, std::shared_ptr<Chunk>> ChunkManager::m_Chunks;
+	std::map<ChunkPos, std::shared_ptr<Chunk>>* ChunkManager::m_Chunks = new std::map<ChunkPos, std::shared_ptr<Chunk>>();
 	Camera* ChunkManager::m_Camera;
 
 	int ChunkManager::m_LoadedChunkCount = 0;
@@ -43,7 +43,7 @@ namespace Engine {
 
 
 	bool ChunkManager::IsChunkLoaded(int x, int z) {
-		if (m_Chunks.find(ChunkPos{ x, z }) != m_Chunks.end()) {
+		if (m_Chunks->find(ChunkPos{ x, z }) != m_Chunks->end()) {
 			return true;
 		}
 		return false;
@@ -52,13 +52,13 @@ namespace Engine {
 	void ChunkManager::LoadChunk(int x, int z)
 	{
 		m_LoadedChunkCount += 1;
-		m_Chunks[ChunkPos{ x,z }] = std::shared_ptr<Chunk>(new Chunk(glm::vec2(x, z)));
+		m_Chunks->insert(std::pair(ChunkPos{x, z}, std::shared_ptr<Chunk>(new Chunk(glm::vec2(x, z)))));
 		//newChunk->Draw();
 	}
 
 	void ChunkManager::Mesh() {
 		int meshedCount = 0;
-		for (auto c : m_Chunks)
+		for (auto c : *m_Chunks)
 			if (!c.second->isMeshed) {
 				c.second->Mesh();
 				meshedCount++;
@@ -67,7 +67,7 @@ namespace Engine {
 
 	void ChunkManager::Draw()
 	{
-		for (auto chunk : m_Chunks)
+		for (auto chunk : *m_Chunks)
 			chunk.second->Draw();
 	}
 
@@ -76,18 +76,19 @@ namespace Engine {
 			CheckForLoad();
 			Mesh();
 			CheckForUnload();
+			
 	}
 
 	void ChunkManager::CheckForUnload() {
 		glm::vec3 pos = m_Camera->GetTranslation();
 		int camZ = pos.z / SubChunk::SIZE;
 		int camX = pos.x / SubChunk::SIZE;
-		for (auto chunk : m_Chunks) {
+		for (auto chunk : *m_Chunks) {
 			glm::vec2 minus = chunk.second->GetPosition() - glm::vec2(camX, camZ);
 			float dist = sqrt(minus.x * minus.x + minus.y * minus.y);
 			if (dist > RenderDistance * 2) {
-				chunk.second = nullptr;
-				m_Chunks.erase(chunk.first);
+				//chunk.second = nullptr;
+				m_Chunks->erase(chunk.first);
 				return;
 			}
 		}
@@ -103,6 +104,7 @@ namespace Engine {
 			for (auto z = camZ - RenderDistance; z < camZ + RenderDistance; z++) {
 				if (numLoaded > 4)
 					return;
+
 				if (!IsChunkLoaded(x, z)) {
 					LoadChunk(x, z);
 					numLoaded++;

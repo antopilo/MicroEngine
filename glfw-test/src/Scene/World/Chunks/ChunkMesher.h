@@ -10,7 +10,7 @@ namespace Engine {
 	{
 	public:
 		static void Init();
-		static std::unique_ptr<std::vector<QuadVertex>>* MeshSubChunk(SubChunk* subchunk);
+		static std::vector<QuadVertex>* MeshSubChunk(SubChunk* subchunk);
 		
 	private:
         const float CUBE_SIZE = 1.0f;
@@ -25,7 +25,7 @@ namespace Engine {
 		static bool Bottom;
 		static glm::vec3 Position;
 
-		static QuadVertex newArray[100000];
+		//static QuadVertex newArray[100000];
 		//static std::unique_ptr<std::vector<QuadVertex>> CurrentArray;
 
 		static void CreateBlock(int x, int y, int z, int type, SubChunk* chunk);

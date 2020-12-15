@@ -49,14 +49,5 @@ namespace Engine {
 	{
 		Renderer::BeginScene(m_Camera->GetPerspective(), m_Camera->GetTransform());
 		m_World->Draw();
-		//Renderer::DrawCube(0, 0, 0, 1.0f);
-		//for(int x = 0; x < 16; x++)
-		//	for (int z = 0; z < 16; z++) {
-		//		int y = (int)(noise.GetNoise((float)x, (float)z) * 10);
-		//		
-		//		Renderer::DrawCube(x, (float)y, z, 1.0f);
-		//	}
-
-		//Renderer::EndScene();
 	}
 }

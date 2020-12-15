@@ -12,13 +12,8 @@ namespace Engine {
 	private:
 		glm::vec2 m_Position; 
 		//std::array<SubChunk, 16> m_SubChunks;
-
-		Chunk* m_Left;
-		Chunk* m_Right;
-		Chunk* m_Front;
-		Chunk* m_Back;
 		
-		std::vector<std::unique_ptr<SubChunk>> m_Subchunks;
+		std::vector<SubChunk*> m_Subchunks;
 
 		//std::array<QuadVertex, 999> m_Mesh;
 		//std::array<int, 999> m_Indices;
