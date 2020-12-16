@@ -10,10 +10,10 @@ F:\Desktop\repos\MicroEngine\glfw-test\src\Scene\World\Chunks\ChunkMesher.cpp(86
           [
               T=float
           ]
-F:\Desktop\repos\MicroEngine\glfw-test\src\Scene\World\Chunks\ChunkMesher.cpp(286,24): warning C4244: 'return': conversion from 'int' to 'float', possible loss of data
+F:\Desktop\repos\MicroEngine\glfw-test\src\Scene\World\Chunks\ChunkMesher.cpp(287,24): warning C4244: 'return': conversion from 'int' to 'float', possible loss of data
 LINK : warning LNK4098: defaultlib 'LIBCMT' conflicts with use of other libs; use /NODEFAULTLIB:library
   Generating code
-  1 of 2240 functions (<0.1%) were compiled, the rest were copied from previous compilation.
+  1 of 2204 functions (<0.1%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
     24 functions had inline decision re-evaluated but remain unchanged
   Finished generating code

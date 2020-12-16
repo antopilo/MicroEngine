@@ -87,10 +87,11 @@ namespace Engine {
 
         Top    = y != SubChunk::SIZE - 1 ? chunk->GetBlock(x, y + 1, z) == 0 : true;
         Bottom = y != 0                  ? chunk->GetBlock(x, y - 1, z) == 0 : true;
-        Right   = x != SubChunk::SIZE - 1 ? chunk->GetBlock(x + 1, y, z) == 0 : true; // Todo chunk borders.
-        Left  = x != 0                  ? chunk->GetBlock(x - 1, y, z) == 0 : true;
-        Front  = z != SubChunk::SIZE - 1 ? chunk->GetBlock(x, y, z + 1) == 0 : true;
-        Back   = z != 0                  ? chunk->GetBlock(x, y, z - 1) == 0 : true;
+
+        Right = x != SubChunk::SIZE - 1 ? chunk->GetBlock(x + 1, y, z) == 0 : chunk->GetParent()->Right->GetSubChunk(chunk->GetIndex()).GetBlock(0, y, z) == 0; // Todo chunk borders.
+        Left  = x != 0                  ? chunk->GetBlock(x - 1, y, z) == 0 :   chunk->GetParent()->Left->GetSubChunk(chunk->GetIndex()).GetBlock(SubChunk::SIZE - 1, y, z) == 0;
+        Front  = z != SubChunk::SIZE - 1 ? chunk->GetBlock(x, y, z + 1) == 0 :  chunk->GetParent()->Front->GetSubChunk(chunk->GetIndex()).GetBlock(x, y, 0) == 0;
+        Back   = z != 0                  ? chunk->GetBlock(x, y, z - 1) == 0 :  chunk->GetParent()->Back->GetSubChunk(chunk->GetIndex()).GetBlock(x, y, SubChunk::SIZE - 1) == 0;
 
         // Block is surrounded.
         if (Top && Bottom && Left && Right && Front && Back)
@@ -103,19 +104,19 @@ namespace Engine {
         if (chunkIdx != Chunk::SUBCHUNK_COUNT - 1) {
             // TODO: Chunk count check.
             SubChunk& above = parent->GetSubChunk(chunkIdx + 1);
-            topChunk = above.GetBlock(x, 0, z) == 0;
+            topChunk = Top = above.GetBlock(x, 0, z) == 0;
         }
         if (chunkIdx != 0) {
             // TODO: Chunk count check.
             SubChunk& under = parent->GetSubChunk(chunkIdx - 1);
-            bottomChunk = under.GetBlock(x, SubChunk::SIZE - 1, z) == 0;
+            bottomChunk = Bottom = under.GetBlock(x, SubChunk::SIZE - 1, z) == 0;
         }
 
         bool topBorder    = y == SubChunk::SIZE - 1 ? topChunk :    Top;
         bool bottomBorder = y == 0                  ? bottomChunk : Bottom;
 
         // Todo Block texture and type.
-        if (topBorder)
+        if (topBorder || gy + 1 == SubChunk::SIZE * Chunk::SUBCHUNK_COUNT)
             PushQuadAO(0, gx, gy, gz, 4, 5, 6, 7);
         if (bottomBorder)
             PushQuadAO(1, gx, gy, gz, 3, 2, 1, 0);

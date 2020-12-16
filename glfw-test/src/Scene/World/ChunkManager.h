@@ -23,6 +23,10 @@ namespace Engine {
 
 		static void Init();
 
+		static Chunk* GetChunk(int x, int z);
+
+		static void CheckSurrounded();
+
 		static bool IsChunkLoaded(int x, int z);
 
 		static void LoadChunk(int x, int z);

@@ -1,21 +1,82 @@
-﻿  ChunkMesher.cpp
-F:\Desktop\repos\MicroEngine\glfw-test\src\Scene\World\Chunks\ChunkMesher.h(41,3): warning C4091: 'static ': ignored on left of 'Engine::ChunkMesher' when no variable is declared
-F:\Desktop\repos\MicroEngine\glfw-test\src\Scene\World\Chunks\ChunkMesher.cpp(84,16): warning C4244: 'initializing': conversion from 'T' to 'int', possible loss of data
+﻿  Chunk.cpp
+F:\Desktop\repos\MicroEngine\glfw-test\src\Scene\World\Chunks\Chunk.cpp(32,80): warning C4244: 'argument': conversion from 'T' to 'int', possible loss of data
           with
           [
               T=float
           ]
-F:\Desktop\repos\MicroEngine\glfw-test\src\Scene\World\Chunks\ChunkMesher.cpp(86,16): warning C4244: 'initializing': conversion from 'T' to 'int', possible loss of data
+F:\Desktop\repos\MicroEngine\glfw-test\src\Scene\World\Chunks\Chunk.cpp(32,65): warning C4244: 'argument': conversion from 'T' to 'int', possible loss of data
           with
           [
               T=float
           ]
-F:\Desktop\repos\MicroEngine\glfw-test\src\Scene\World\Chunks\ChunkMesher.cpp(286,24): warning C4244: 'return': conversion from 'int' to 'float', possible loss of data
-  SubChunk.cpp
-F:\Desktop\repos\MicroEngine\glfw-test\src\Scene\World\Chunks\ChunkMesher.h(41,3): warning C4091: 'static ': ignored on left of 'Engine::ChunkMesher' when no variable is declared
-F:\Desktop\repos\MicroEngine\glfw-test\src\Scene\World\Chunks\SubChunk.cpp(70,12): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-F:\Desktop\repos\MicroEngine\glfw-test\src\Scene\World\Chunks\SubChunk.cpp(113,39): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
-  World.cpp
-F:\Desktop\repos\MicroEngine\glfw-test\src\Scene\World\Chunks\ChunkMesher.h(41,3): warning C4091: 'static ': ignored on left of 'Engine::ChunkMesher' when no variable is declared
-  Generating Code...
+F:\Desktop\repos\MicroEngine\glfw-test\src\Scene\World\Chunks\Chunk.cpp(33,80): warning C4244: 'argument': conversion from 'T' to 'int', possible loss of data
+          with
+          [
+              T=float
+          ]
+F:\Desktop\repos\MicroEngine\glfw-test\src\Scene\World\Chunks\Chunk.cpp(33,65): warning C4244: 'argument': conversion from 'T' to 'int', possible loss of data
+          with
+          [
+              T=float
+          ]
+F:\Desktop\repos\MicroEngine\glfw-test\src\Scene\World\Chunks\Chunk.cpp(34,83): warning C4244: 'argument': conversion from 'T' to 'int', possible loss of data
+          with
+          [
+              T=float
+          ]
+F:\Desktop\repos\MicroEngine\glfw-test\src\Scene\World\Chunks\Chunk.cpp(34,62): warning C4244: 'argument': conversion from 'T' to 'int', possible loss of data
+          with
+          [
+              T=float
+          ]
+F:\Desktop\repos\MicroEngine\glfw-test\src\Scene\World\Chunks\Chunk.cpp(35,83): warning C4244: 'argument': conversion from 'T' to 'int', possible loss of data
+          with
+          [
+              T=float
+          ]
+F:\Desktop\repos\MicroEngine\glfw-test\src\Scene\World\Chunks\Chunk.cpp(35,62): warning C4244: 'argument': conversion from 'T' to 'int', possible loss of data
+          with
+          [
+              T=float
+          ]
+F:\Desktop\repos\MicroEngine\glfw-test\src\Scene\World\Chunks\Chunk.cpp(41,62): warning C4244: 'argument': conversion from 'T' to 'int', possible loss of data
+          with
+          [
+              T=float
+          ]
+F:\Desktop\repos\MicroEngine\glfw-test\src\Scene\World\Chunks\Chunk.cpp(41,47): warning C4244: 'argument': conversion from 'T' to 'int', possible loss of data
+          with
+          [
+              T=float
+          ]
+F:\Desktop\repos\MicroEngine\glfw-test\src\Scene\World\Chunks\Chunk.cpp(46,63): warning C4244: 'argument': conversion from 'T' to 'int', possible loss of data
+          with
+          [
+              T=float
+          ]
+F:\Desktop\repos\MicroEngine\glfw-test\src\Scene\World\Chunks\Chunk.cpp(46,48): warning C4244: 'argument': conversion from 'T' to 'int', possible loss of data
+          with
+          [
+              T=float
+          ]
+F:\Desktop\repos\MicroEngine\glfw-test\src\Scene\World\Chunks\Chunk.cpp(51,62): warning C4244: 'argument': conversion from 'T' to 'int', possible loss of data
+          with
+          [
+              T=float
+          ]
+F:\Desktop\repos\MicroEngine\glfw-test\src\Scene\World\Chunks\Chunk.cpp(51,45): warning C4244: 'argument': conversion from 'T' to 'int', possible loss of data
+          with
+          [
+              T=float
+          ]
+F:\Desktop\repos\MicroEngine\glfw-test\src\Scene\World\Chunks\Chunk.cpp(56,62): warning C4244: 'argument': conversion from 'T' to 'int', possible loss of data
+          with
+          [
+              T=float
+          ]
+F:\Desktop\repos\MicroEngine\glfw-test\src\Scene\World\Chunks\Chunk.cpp(56,44): warning C4244: 'argument': conversion from 'T' to 'int', possible loss of data
+          with
+          [
+              T=float
+          ]
   glfw-test.vcxproj -> F:\Desktop\repos\MicroEngine\x64\Debug\glfw-test.exe

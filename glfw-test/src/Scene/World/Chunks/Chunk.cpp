@@ -1,5 +1,6 @@
 #include "Chunk.h"
 #include "SubChunk.h"
+#include "../ChunkManager.h"
 
 namespace Engine {
 	Chunk::Chunk(glm::vec2 position)
@@ -25,8 +26,40 @@ namespace Engine {
 		return *m_Subchunks[idx];
 	}
 
-	
 
+
+	void Chunk::CheckIfSurrounded() {
+		bool leftIsLoaded  = ChunkManager::IsChunkLoaded(m_Position.x - 1, m_Position.y);
+		bool rightIsLoaded = ChunkManager::IsChunkLoaded(m_Position.x + 1, m_Position.y);
+		bool frontIsLoaded = ChunkManager::IsChunkLoaded(m_Position.x,     m_Position.y + 1);
+		bool backIsLoaded  = ChunkManager::IsChunkLoaded(m_Position.x,     m_Position.y - 1);
+
+		if (!leftIsLoaded || !rightIsLoaded || !frontIsLoaded || !backIsLoaded)
+			isSurrounded = false;
+
+		if (leftIsLoaded)
+			Left = ChunkManager::GetChunk(m_Position.x - 1, m_Position.y);
+		else
+			Left = nullptr;
+
+		if (rightIsLoaded)
+			Right = ChunkManager::GetChunk(m_Position.x + 1, m_Position.y);
+		else
+			Right = nullptr;
+
+		if (frontIsLoaded)
+			Front = ChunkManager::GetChunk(m_Position.x, m_Position.y + 1);
+		else
+			Front = nullptr;
+
+		if (backIsLoaded)
+			Back = ChunkManager::GetChunk(m_Position.x , m_Position.y - 1);
+		else
+			Back = nullptr;
+
+		isSurrounded = leftIsLoaded && rightIsLoaded && frontIsLoaded && backIsLoaded;
+	}	   
+		
 	Chunk::~Chunk() {
 		for (int i = 0; i < SUBCHUNK_COUNT; i++) {
 			delete m_Subchunks[i];

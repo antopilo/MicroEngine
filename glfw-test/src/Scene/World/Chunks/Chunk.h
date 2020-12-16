@@ -29,8 +29,13 @@ namespace Engine {
 
 		void Render();
 
-		glm::vec2 GetPosition();
+		Chunk* Left = nullptr;
+		Chunk* Front = nullptr;
+		Chunk* Right = nullptr;
+		Chunk* Back = nullptr;
 
+		glm::vec2 GetPosition();
+		void CheckIfSurrounded();
 		bool isMeshed = false;
 		bool isGenerated = false;
 		bool isSurrounded = false;

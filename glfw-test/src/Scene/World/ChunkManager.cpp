@@ -20,7 +20,7 @@ namespace Engine {
 
 	};
 	
-	int RenderDistance = 24;
+	int RenderDistance = 4;
 
 	std::map<ChunkPos, Chunk*> ChunkManager::m_Chunks;// = new std::map<ChunkPos, std::shared_ptr<Chunk>>();
 	std::vector<Chunk*> ChunkManager::m_GenerateChunk;
@@ -51,6 +51,17 @@ namespace Engine {
 		return false;
 	}
 
+	Chunk* ChunkManager::GetChunk(int x, int z) {
+		return m_Chunks[ChunkPos{ x, z }];
+	}
+
+	void ChunkManager::CheckSurrounded() {
+		for (auto c : m_Chunks) {
+			if (!c.second->isSurrounded)
+				c.second->CheckIfSurrounded();
+		}
+	}
+
 	void ChunkManager::LoadChunk(int x, int z)
 	{
 		m_LoadedChunkCount += 1;
@@ -61,19 +72,19 @@ namespace Engine {
 	}
 
 	void ChunkManager::Generate() {
-		for (auto c : m_GenerateChunk) {
-			ChunkGenerator::GenerateHeightPass(c);
-		}
-		m_GenerateChunk.clear();
-		m_GenerateChunk.shrink_to_fit();
+		//for (auto c : m_GenerateChunk) {
+		//	ChunkGenerator::GenerateHeightPass(c);
+		//}
+		//m_GenerateChunk.clear();
+		//m_GenerateChunk.shrink_to_fit();
 	}
 
 	void ChunkManager::Mesh() {
 		int meshedCount = 0;
 		for (auto c : m_Chunks) {
-			if (meshedCount > 16)
+			if (meshedCount > 8)
 				return;
-			if (!c.second->isMeshed) {
+			if (!c.second->isMeshed && c.second->isSurrounded) {
 				c.second->Mesh();
 				meshedCount++;
 			}
@@ -90,6 +101,7 @@ namespace Engine {
 	{
 			CheckForLoad();
 			Generate();
+			CheckSurrounded();
 			Mesh();
 			CheckForUnload();
 			

@@ -17,7 +17,7 @@ namespace Engine {
 		// Setup ref
 		m_Index = idx;
 		m_Parent = chunk;
-		memset(&m_Blocks, 0, SIZE * SIZE * SIZE);
+		memset(&m_Blocks, 1, SIZE * SIZE * SIZE);
 		//m_Blocks = new char * *[SIZE];
 		//for (int i = 0; i < SIZE; i++) {
 		//	m_Blocks[i] = new char* [SIZE];
@@ -31,7 +31,7 @@ namespace Engine {
 		glGenVertexArrays(1, &VAO);
 		glBindVertexArray(VAO);
 		//glBindBuffer(GL_VERTEX_ARRAY, VAO);
-		unsigned int size = sizeof(QuadVertex) * 24000;
+		unsigned int size = sizeof(QuadVertex) * 40000;
 
 		glGenBuffers(1, &VBO);
 		glBindBuffer(GL_ARRAY_BUFFER, VBO);
