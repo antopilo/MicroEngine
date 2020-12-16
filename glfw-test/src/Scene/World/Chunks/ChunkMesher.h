@@ -37,5 +37,6 @@ namespace Engine {
 
 		static float PushTriangleAO(int x, int y, int z, int v1, int v2, int v3, float a1, float a2, float a3);
 		static void PushQuad(int face, int x, int y, int z, int c1, int c2, int c3, int c4);
+		static int VertexAO(int side1, int side2, int corner);
 	};
 }

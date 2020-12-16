@@ -46,6 +46,7 @@ namespace Engine {
 
 		void SetType(CAMERA_TYPE type);
 		bool IsChunkVisible(SubChunk* chunk);
+		bool IsPositionInFrustrum(glm::vec2 pos);
 		void Update(Timestep ts);
 
 		glm::vec3 GetTranslation();

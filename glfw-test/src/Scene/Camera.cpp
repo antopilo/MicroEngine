@@ -4,7 +4,7 @@
 #include <GLFW\glfw3.h>
 #include "../Core/Timestep.h"
 #include "../Scene/World/Chunks/SubChunk.h"
-
+#include "../Scene/World/Chunks/Chunk.h"
 namespace Engine {
 
 
@@ -67,8 +67,8 @@ namespace Engine {
 		}
 		else {
 
-			//if (Input::IsKeyPressed(GLFW_KEY_D ))
-			Translation -= cameraRight * (Speed * ts);
+			if (Input::IsKeyPressed(GLFW_KEY_D ))
+				Translation -= cameraRight * (Speed * ts);
 			if (Input::IsKeyPressed(GLFW_KEY_A))
 				Translation += cameraRight * (Speed * ts);
 
@@ -153,6 +153,13 @@ namespace Engine {
 		glm::vec3 lowp = glm::vec3(parentPos.x * SubChunk::SIZE, sub->GetIndex() * SubChunk::SIZE, parentPos.y * SubChunk::SIZE);;
 		glm::vec3 highp = glm::vec3((parentPos.x * SubChunk::SIZE) + SubChunk::SIZE, sub->GetIndex() * SubChunk::SIZE + SubChunk::SIZE, parentPos.y * SubChunk::SIZE + SubChunk::SIZE);
 		return Frustrum->IsBoxVisible(lowp, highp);
+	}
+
+	bool Camera::IsPositionInFrustrum(glm::vec2 pos) {
+
+		glm::vec3 low = glm::vec3(pos.x, 0, pos.y);
+		glm::vec3 high = glm::vec3(pos.x + SubChunk::SIZE, Chunk::SUBCHUNK_COUNT * SubChunk::SIZE, pos.y + SubChunk::SIZE);
+		return Frustrum->IsBoxVisible(low, high);
 	}
 
 }

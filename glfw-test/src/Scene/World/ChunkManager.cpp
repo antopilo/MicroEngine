@@ -1,8 +1,10 @@
 #include "ChunkManager.h"
 #include "../../Core/Timestep.h"
 #include "../Camera.h"
-#include "Chunks/SubChunk.h"
 
+#include "Generation/ChunkGenerator.h"
+#include "Chunks/Chunk.h"
+#include "Chunks/SubChunk.h"
 namespace Engine {
 	struct ChunkPos {
 		int x;
@@ -18,9 +20,10 @@ namespace Engine {
 
 	};
 	
-	int RenderDistance = 4;
+	int RenderDistance = 24;
 
-	std::map<ChunkPos, std::shared_ptr<Chunk>>* ChunkManager::m_Chunks = new std::map<ChunkPos, std::shared_ptr<Chunk>>();
+	std::map<ChunkPos, Chunk*> ChunkManager::m_Chunks;// = new std::map<ChunkPos, std::shared_ptr<Chunk>>();
+	std::vector<Chunk*> ChunkManager::m_GenerateChunk;
 	Camera* ChunkManager::m_Camera;
 
 	int ChunkManager::m_LoadedChunkCount = 0;
@@ -41,9 +44,8 @@ namespace Engine {
 		//LoadChunk(1, 1);
 	}
 
-
 	bool ChunkManager::IsChunkLoaded(int x, int z) {
-		if (m_Chunks->find(ChunkPos{ x, z }) != m_Chunks->end()) {
+		if (m_Chunks.find(ChunkPos{ x, z }) != m_Chunks.end()) {
 			return true;
 		}
 		return false;
@@ -52,14 +54,24 @@ namespace Engine {
 	void ChunkManager::LoadChunk(int x, int z)
 	{
 		m_LoadedChunkCount += 1;
-		(*m_Chunks)[ChunkPos{ x, z }] = std::shared_ptr<Chunk>(new Chunk(glm::vec2(x, z)));
+		m_Chunks[ChunkPos{ x, z }] = new Chunk(glm::vec2(x, z));
+		m_GenerateChunk.push_back(m_Chunks[ChunkPos{ x, z }]);
+
 		//newChunk->Draw();
+	}
+
+	void ChunkManager::Generate() {
+		for (auto c : m_GenerateChunk) {
+			ChunkGenerator::GenerateHeightPass(c);
+		}
+		m_GenerateChunk.clear();
+		m_GenerateChunk.shrink_to_fit();
 	}
 
 	void ChunkManager::Mesh() {
 		int meshedCount = 0;
-		for (auto c : *m_Chunks) {
-			if (meshedCount > 4)
+		for (auto c : m_Chunks) {
+			if (meshedCount > 16)
 				return;
 			if (!c.second->isMeshed) {
 				c.second->Mesh();
@@ -70,13 +82,14 @@ namespace Engine {
 
 	void ChunkManager::Draw()
 	{
-		for (auto chunk : *m_Chunks)
+		for (auto chunk : m_Chunks)
 			chunk.second->Draw();
 	}
 
 	void ChunkManager::Update(Timestep ts)
 	{
 			CheckForLoad();
+			Generate();
 			Mesh();
 			CheckForUnload();
 			
@@ -86,14 +99,15 @@ namespace Engine {
 		glm::vec3 pos = m_Camera->GetTranslation();
 		int camZ = pos.z / SubChunk::SIZE;
 		int camX = pos.x / SubChunk::SIZE;
-		std::map<ChunkPos, std::shared_ptr<Chunk>>::iterator itr = (m_Chunks)->begin();
-		while (itr != m_Chunks->end()) {
+		std::map<ChunkPos, Chunk*>::iterator itr = m_Chunks.begin();
+		while (itr != m_Chunks.end()) {
 			glm::vec2 minus = itr->second->GetPosition() - glm::vec2(camX, camZ);
 
 			float dist = sqrt(minus.x * minus.x + minus.y * minus.y);
 
-			if (dist > RenderDistance * 2) {
-				itr = m_Chunks->erase(itr);
+			if (dist > RenderDistance) {
+				delete (itr)->second;
+				itr = m_Chunks.erase(itr);
 			}
 			else {
 				++itr;
@@ -109,10 +123,13 @@ namespace Engine {
 		int numLoaded = 0;
 		for(auto x = camX - RenderDistance; x < camX + RenderDistance; x++)
 			for (auto z = camZ - RenderDistance; z < camZ + RenderDistance; z++) {
+
+				auto minus = glm::vec2(camX, camZ) - glm::vec2(x, z);
+				float dist = sqrt(minus.x * minus.x + minus.y * minus.y);
 				if (numLoaded > 4)
 					return;
 
-				if (!IsChunkLoaded(x, z)) {
+				if (dist < RenderDistance && !IsChunkLoaded(x, z)) {
 					LoadChunk(x, z);
 					numLoaded++;
 				}
@@ -120,8 +137,41 @@ namespace Engine {
 				
 	}
 
-	int ChunkManager::GetBlock(int x, int y, int z)
+	int ChunkManager::GetBlock(int gx, int gy, int gz)
 	{
+		// Chunk position
+		int cx = gx / SubChunk::SIZE;
+		int cz = gz / SubChunk::SIZE;
+
+		// Local position
+		int lx = gx - (cx * SubChunk::SIZE);
+		int ly = gy;
+		int lz = gz - (cz * SubChunk::SIZE);
+
+		if (ly > Chunk::SUBCHUNK_COUNT * SubChunk::SIZE - 1 || ly < 0)
+			return 0;
+
+		if (gx < 0)
+		{
+			if (gx % SubChunk::SIZE != 0)
+				cx = gx / SubChunk::SIZE - 1;
+
+			lx = gx - (SubChunk::SIZE * cx);
+		}
+		if (gz < 0)
+		{
+			if (gz % SubChunk::SIZE != 0)
+				cz = gz / SubChunk::SIZE - 1;
+
+			lz = gz - (SubChunk::SIZE * cz);
+		}
+
+		//Renderer.AddDebugBox(new DebugBox(new Vector3(gx + 0.5f, gy + 0.5f, gz + 0.5f), Color.Green));
+		ChunkPos cv = ChunkPos{ cx, cz };
+		if (m_Chunks.find(cv) != m_Chunks.end())
+		{
+			return m_Chunks[cv]->GetBlock(lx, ly, lz);
+		}
 		return 0;
 	}
 }

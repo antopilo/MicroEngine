@@ -11,7 +11,6 @@
 #include "../ChunkManager.h"
 #include "../Scene/Camera.h"
 #include "../Blocks.h"
-
 namespace Engine {
 	SubChunk::SubChunk(int idx, Chunk* chunk)
 	{
@@ -26,13 +25,13 @@ namespace Engine {
 		//		m_Blocks[i][j] = new char[SIZE];
 		//	} 
 		//}
-		Generate();
+		//Generate();
 		//printf( ( std::to_string(sizeof(m_Blocks)) + std::string("\n") ).c_str() ) ;
 		// Create buffer
 		glGenVertexArrays(1, &VAO);
 		glBindVertexArray(VAO);
 		//glBindBuffer(GL_VERTEX_ARRAY, VAO);
-		unsigned int size = sizeof(QuadVertex) * 60000;
+		unsigned int size = sizeof(QuadVertex) * 24000;
 
 		glGenBuffers(1, &VBO);
 		glBindBuffer(GL_ARRAY_BUFFER, VBO);
@@ -86,11 +85,19 @@ namespace Engine {
 
 	SubChunk::~SubChunk() { // Delete the blocks
 		//delete m_Blocks;
-		glDeleteVertexArrays(1, &VAO);
 		glDeleteBuffers(1, &VBO);
+		glDeleteVertexArrays(1, &VAO);
+		
 		//glDeleteBuffers(1, &VAO);
 	}
 
+
+	void SubChunk::SetBlock(int x, int y, int z, int type)
+	{
+		int oldType = m_Blocks[x][y][z];
+		m_Blocks[x][y][z] = type;
+		if (type != 0 && oldType == 0) m_Count++;
+	}
 
 	int SubChunk::GetBlock(int x, int y, int z)
 	{

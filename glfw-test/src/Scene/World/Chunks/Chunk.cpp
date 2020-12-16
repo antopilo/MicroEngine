@@ -25,6 +25,8 @@ namespace Engine {
 		return *m_Subchunks[idx];
 	}
 
+	
+
 	Chunk::~Chunk() {
 		for (int i = 0; i < SUBCHUNK_COUNT; i++) {
 			delete m_Subchunks[i];
@@ -39,6 +41,23 @@ namespace Engine {
 			subChunk->Draw();
 
 		}
+	}
+
+	void Chunk::SetBlock(int x, int y, int z, int type) {
+		int maxY = SUBCHUNK_COUNT * SubChunk::SIZE;
+		int idx = (y / SubChunk::SIZE);
+		int localY = y - (idx * SubChunk::SIZE);
+
+		m_Subchunks[idx]->SetBlock(x, localY, z, type);
+	}
+
+	int Chunk::GetBlock(int x, int y, int z)
+	{
+		int maxY = SUBCHUNK_COUNT * SubChunk::SIZE;
+		int idx = (y / SubChunk::SIZE);
+		int localY = y - (idx * SubChunk::SIZE);
+
+		return m_Subchunks[idx]->GetBlock(x, localY, z);
 	}
 
 	glm::vec2 Chunk::GetPosition() {

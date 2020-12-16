@@ -5,14 +5,13 @@
 
 namespace Engine {
 	class Camera;
-
 	struct ChunkPos;
 
 	class ChunkManager
 	{
 	private:
-		static std::map<ChunkPos, std::shared_ptr<Chunk>>* m_Chunks;
-
+		static std::map<ChunkPos, Chunk*> m_Chunks;
+		static std::vector<Chunk*> m_GenerateChunk;
 	public:
 		static Camera* m_Camera;
 
@@ -27,6 +26,10 @@ namespace Engine {
 		static bool IsChunkLoaded(int x, int z);
 
 		static void LoadChunk(int x, int z);
+	
+		static int GetBlock(int gx, int gy, int gz);
+
+		static void Generate();
 
 		static void Mesh();
 		
@@ -38,6 +41,5 @@ namespace Engine {
 
 		static void CheckForLoad();
 
-		static int GetBlock(int x, int y, int z);
 	};
 }
