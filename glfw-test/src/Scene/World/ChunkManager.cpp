@@ -34,7 +34,7 @@ namespace Engine {
 	}
 
 	void ChunkManager::Init() {
-		//m_Chunks.reserve(2000);
+		
 		//LoadChunk(0, 0);
 		//LoadChunk(1, 0);
 		//LoadChunk(0, 1);
@@ -52,17 +52,20 @@ namespace Engine {
 	void ChunkManager::LoadChunk(int x, int z)
 	{
 		m_LoadedChunkCount += 1;
-		m_Chunks->insert(std::pair(ChunkPos{x, z}, std::shared_ptr<Chunk>(new Chunk(glm::vec2(x, z)))));
+		(*m_Chunks)[ChunkPos{ x, z }] = std::shared_ptr<Chunk>(new Chunk(glm::vec2(x, z)));
 		//newChunk->Draw();
 	}
 
 	void ChunkManager::Mesh() {
 		int meshedCount = 0;
-		for (auto c : *m_Chunks)
+		for (auto c : *m_Chunks) {
+			if (meshedCount > 4)
+				return;
 			if (!c.second->isMeshed) {
 				c.second->Mesh();
 				meshedCount++;
 			}
+		}
 	}
 
 	void ChunkManager::Draw()
@@ -83,13 +86,17 @@ namespace Engine {
 		glm::vec3 pos = m_Camera->GetTranslation();
 		int camZ = pos.z / SubChunk::SIZE;
 		int camX = pos.x / SubChunk::SIZE;
-		for (auto chunk : *m_Chunks) {
-			glm::vec2 minus = chunk.second->GetPosition() - glm::vec2(camX, camZ);
+		std::map<ChunkPos, std::shared_ptr<Chunk>>::iterator itr = (m_Chunks)->begin();
+		while (itr != m_Chunks->end()) {
+			glm::vec2 minus = itr->second->GetPosition() - glm::vec2(camX, camZ);
+
 			float dist = sqrt(minus.x * minus.x + minus.y * minus.y);
+
 			if (dist > RenderDistance * 2) {
-				//chunk.second = nullptr;
-				m_Chunks->erase(chunk.first);
-				return;
+				itr = m_Chunks->erase(itr);
+			}
+			else {
+				++itr;
 			}
 		}
 	}

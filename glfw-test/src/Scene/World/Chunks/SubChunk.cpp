@@ -86,8 +86,9 @@ namespace Engine {
 
 	SubChunk::~SubChunk() { // Delete the blocks
 		//delete m_Blocks;
+		glDeleteVertexArrays(1, &VAO);
 		glDeleteBuffers(1, &VBO);
-		glDeleteBuffers(1, &VAO);
+		//glDeleteBuffers(1, &VAO);
 	}
 
 
@@ -107,6 +108,7 @@ namespace Engine {
 		glBindVertexArray(VAO);
 		glBindBuffer(GL_ARRAY_BUFFER, VBO);
 		glBufferSubData(GL_ARRAY_BUFFER, 0, m_Mesh->size() * sizeof(QuadVertex), m_Mesh->data());
+		ChunkMesher::Clear();
 	}
 
 	// Push the mesh to the renderer 

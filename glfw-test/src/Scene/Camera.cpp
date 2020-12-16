@@ -67,8 +67,8 @@ namespace Engine {
 		}
 		else {
 
-			if (Input::IsKeyPressed(GLFW_KEY_D ))
-				Translation -= cameraRight * (Speed * ts);
+			//if (Input::IsKeyPressed(GLFW_KEY_D ))
+			Translation -= cameraRight * (Speed * ts);
 			if (Input::IsKeyPressed(GLFW_KEY_A))
 				Translation += cameraRight * (Speed * ts);
 

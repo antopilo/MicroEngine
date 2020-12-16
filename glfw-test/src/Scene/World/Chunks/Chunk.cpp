@@ -27,9 +27,10 @@ namespace Engine {
 
 	Chunk::~Chunk() {
 		for (int i = 0; i < SUBCHUNK_COUNT; i++) {
-			//delete m_Subchunks[i];
-			m_Subchunks.clear();
+			delete m_Subchunks[i];
+			
 		}
+		m_Subchunks.clear();
 	}
 
 	void Chunk::Draw() {

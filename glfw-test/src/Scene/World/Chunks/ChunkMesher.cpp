@@ -37,23 +37,23 @@ namespace Engine {
 
     glm::vec3 ChunkMesher::Position = glm::vec3(0, 0, 0);
 
-    std::vector<QuadVertex>* CurrentArray; 
+    std::vector<QuadVertex>* ChunkMesher::CurrentArray; 
 
     void ChunkMesher::Init() {
         CurrentArray = new std::vector<QuadVertex>();
         CurrentArray->reserve(100000);
     }
 
+    void ChunkMesher::Clear() {
+        delete CurrentArray;
+    }
+
     std::vector<QuadVertex>* ChunkMesher::MeshSubChunk(SubChunk* subchunk) 
 	{
-        if (CurrentArray != nullptr)
-            delete CurrentArray;
-
         CurrentArray = new std::vector<QuadVertex>();
         //if (SubChunk->GetCount() == 0)
         //    return std::vector<QuadVertex>();
-        CurrentArray->clear();
-        CurrentArray->shrink_to_fit();
+
         int type;
         for (int x = 0; x < SubChunk::SIZE; x++) {
             for (int y = 0; y < SubChunk::SIZE; y++) {
@@ -71,7 +71,7 @@ namespace Engine {
                 }
             }
         }
-        printf(( "mesh size: " + std::to_string(CurrentArray->size()) + "\n").c_str());
+
         return CurrentArray;
 	}
     void ChunkMesher::CreateBlock(int x, int y, int z, int type, SubChunk* chunk)

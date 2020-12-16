@@ -19,5 +19,15 @@ namespace Engine {
 			TexIndex = tex;
 			TilingFactor = tile;
 		}
+
+		QuadVertex& operator=(QuadVertex other)
+		{
+			std::swap(Position, other.Position);
+			std::swap(Color, other.Color);
+			std::swap(TexCoord, other.TexCoord);
+			std::swap(TexIndex, other.TexIndex);
+			std::swap(TilingFactor, other.TilingFactor);
+			return *this;
+		}
 	};
 }

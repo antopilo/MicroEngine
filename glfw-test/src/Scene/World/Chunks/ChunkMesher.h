@@ -11,7 +11,8 @@ namespace Engine {
 	public:
 		static void Init();
 		static std::vector<QuadVertex>* MeshSubChunk(SubChunk* subchunk);
-		
+		static std::vector<QuadVertex>* CurrentArray;
+		static void Clear();
 	private:
         const float CUBE_SIZE = 1.0f;
         const static glm::vec3 CUBE_VERTICES[];
