@@ -5,6 +5,7 @@
 #include <sstream>
 #include <memory>
 #include "../ChunkManager.h"
+#include "../Generation/BlockColorer.h"
 namespace Engine {
     
     const glm::vec3 ChunkMesher::CUBE_VERTICES[] =
@@ -104,12 +105,12 @@ namespace Engine {
         if (chunkIdx != Chunk::SUBCHUNK_COUNT - 1) {
             // TODO: Chunk count check.
             SubChunk& above = parent->GetSubChunk(chunkIdx + 1);
-            topChunk = Top = above.GetBlock(x, 0, z) == 0;
+            topChunk = above.GetBlock(x, 0, z) == 0;
         }
         if (chunkIdx != 0) {
             // TODO: Chunk count check.
             SubChunk& under = parent->GetSubChunk(chunkIdx - 1);
-            bottomChunk = Bottom = under.GetBlock(x, SubChunk::SIZE - 1, z) == 0;
+            bottomChunk = under.GetBlock(x, SubChunk::SIZE - 1, z) == 0;
         }
 
         bool topBorder    = y == SubChunk::SIZE - 1 ? topChunk :    Top;
@@ -318,36 +319,42 @@ namespace Engine {
             light = 0.9f;
         if (face == 5)
             light = 0.75f;
+
+        glm::vec4 color = BlockColorer::Darken(BlockColorer::GetBlockColor(1), light);
+       
         if (a00 + a11 < a01 + a10)
         {
             CurrentArray->push_back(QuadVertex{
               glm::vec3(float(x + CUBE_VERTICES[c1].x), float(y + CUBE_VERTICES[c1].y), float(z + CUBE_VERTICES[c1].z)),
               glm::vec3(0.0f, 1.0f, 0.0f),
-              glm::vec4(1.0f * light * a00, 1.0f * light * a00, 1.0f * light * a00, 1.0f),
+              BlockColorer::Darken(color, a00),
               glm::vec2(0.0f, 0.0f),
               1.0f,
               1.0f
             });
+
             CurrentArray->push_back(QuadVertex{
                glm::vec3(float(x + CUBE_VERTICES[c2].x), float(y + CUBE_VERTICES[c2].y), float(z + CUBE_VERTICES[c2].z)),
                glm::vec3(0.0f, 1.0f, 1.0f),
-               glm::vec4(1.0f * light * a10, 1.0f * light * a10, 1.0f * light * a10, 1.0f),
+               BlockColorer::Darken(color, a10),
                glm::vec2(1.0f, 0.0f),
                1.0f,
                1.0f
             });
+
             CurrentArray->push_back(QuadVertex{
                 glm::vec3(float(x + CUBE_VERTICES[c3].x), float(y + CUBE_VERTICES[c3].y), float(z + CUBE_VERTICES[c3].z)),
                 glm::vec3(0.0f, 1.0f, 0.0f),
-                glm::vec4(1.0f * light * a11 , 1.0f * light * a11, 1.0f * light * a11, 1.0f),
+                BlockColorer::Darken(color, a11),
                 glm::vec2(1.0f, 1.0f),
                 1.0f,
                 1.0f
             });
+
             CurrentArray->push_back(QuadVertex{
                 glm::vec3(float(x + CUBE_VERTICES[c4].x), float(y + CUBE_VERTICES[c4].y), float(z + CUBE_VERTICES[c4].z)),
                 glm::vec3(0.0f, 0.0f, 0.0f),
-                glm::vec4(1.0f * light * a01, 1.0f * light * a01, 1.0f * light * a01, 1.0f),
+                BlockColorer::Darken(color, a01),
                 glm::vec2(0.0f, 1.0f),
                 1.0f,
                 1.0f
@@ -360,39 +367,41 @@ namespace Engine {
             //PushTriangleAO(x, y, z, c1, c2, c4, color, a00, a10, a01, CurrentArray);
             //PushTriangleAO(x, y, z, c2, c3, c4, color, a10, a11, a01, CurrentArray);
 
-           
             CurrentArray->push_back(QuadVertex{
                glm::vec3(float(x + CUBE_VERTICES[c1].x), float(y + CUBE_VERTICES[c1].y), float(z + CUBE_VERTICES[c1].z)),
                glm::vec3(0.0f, 1.0f, 0.0f),
-               glm::vec4(1.0f * light * a00, 1.0f * light * a00, 1.0f * light * a00, 1.0f),
+               BlockColorer::Darken(color, a00),
                glm::vec2(0.0f, 0.0f),
                1.0f,
                1.0f
-                });
+            });
+
             CurrentArray->push_back(QuadVertex{
                glm::vec3(float(x + CUBE_VERTICES[c2].x), float(y + CUBE_VERTICES[c2].y), float(z + CUBE_VERTICES[c2].z)),
                glm::vec3(0.0f, 1.0f, 1.0f),
-               glm::vec4(1.0f * light * a10, 1.0f * light * a10, 1.0f * light * a10, 1.0f),
+               BlockColorer::Darken(color, a10),
                glm::vec2(1.0f, 0.0f),
                1.0f,
                1.0f
-                });
+            });
+
             CurrentArray->push_back(QuadVertex{
                 glm::vec3(float(x + CUBE_VERTICES[c3].x), float(y + CUBE_VERTICES[c3].y), float(z + CUBE_VERTICES[c3].z)),
                 glm::vec3(0.0f, 1.0f, 0.0f),
-                glm::vec4(1.0f * light * a11 , 1.0f * light * a11, 1.0f * light * a11, 1.0f),
+                BlockColorer::Darken(color, a11),
                 glm::vec2(1.0f, 1.0f),
                 1.0f,
                 1.0f
-                });
+            });
+
             CurrentArray->push_back(QuadVertex{
                glm::vec3(float(x + CUBE_VERTICES[c4].x), float(y + CUBE_VERTICES[c4].y), float(z + CUBE_VERTICES[c4].z)),
                glm::vec3(0.0f, 0.0f, 0.0f),
-               glm::vec4(1.0f * light * a01, 1.0f * light * a01, 1.0f * light * a01, 1.0f),
+               BlockColorer::Darken(color, a01),
                glm::vec2(0.0f, 1.0f),
                1.0f,
                1.0f
-                });
+            });
 
         }
 

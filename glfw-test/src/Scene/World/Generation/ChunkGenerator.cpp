@@ -2,10 +2,11 @@
 #include "ChunkGenerator.h"
 #include "../Chunks/SubChunk.h"
 #include "FastNoise.h"
+#include "Features/Boulder.h"
 
 namespace Engine {
 	void ChunkGenerator::GenerateHeightPass(Chunk* chunk) {
-
+		
 		FastNoiseLite noise;
 		float amplitude = 128;
 		noise.SetFractalOctaves(4);
@@ -42,6 +43,21 @@ namespace Engine {
 				for(auto i = height + 3; i > 1 && i > height; i --)
 					chunk->SetBlock(x, i, z, 1);
 
+				float boulderChange = rand() % 10000;
+
+				//if (boulderChange < 0.01f) {
+				//	Boulder boulder;
+				//
+				//	for (int x = 0; x < Boulder::MAX_SIZE; x++)
+				//		for (int y = 0; y < Boulder::MAX_SIZE; y++) {
+				//			for (int z = 0; z < Boulder::MAX_SIZE; z++) {
+				//				int block = (int)boulder.m_Blocks[x][y][z];
+				//				if(block != 0)
+				//					chunk->SetBlock(x, (height - 5) + y, z, block);
+				//			}
+				//		}
+				//}
+
 				//bool touchedGround = false;
 				//int offset = 0;
 				//for (auto y = height; y < SubChunk::SIZE * Chunk::SUBCHUNK_COUNT; y++) {
@@ -60,5 +76,9 @@ namespace Engine {
 				//}
 			}
 		}
+
+		
+		
+
 	}
 }

@@ -130,9 +130,9 @@ namespace Engine {
 		//glEnable(GL_DEBUG_OUTPUT);
 		//glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
 		//glDebugMessageCallback(GLDebugMessageCallback, nullptr);
-		glClearColor(52.0/ 255.0f, 219.0f / 255.0f, 235.0f/255.0f, 1.0f);
+		glClearColor(0.019f, 0.501f, 1.0f, 1.0f);
 		glDepthFunc(GL_LEQUAL);
-
+		glEnable(GL_MULTISAMPLE);
 		// Texture shader
 		Shader* shader = new Shader("res/shaders/Basic.shader");
 		shader->Bind();
@@ -141,7 +141,7 @@ namespace Engine {
 
 		int samplers[2] = { 0, 1 };
 		TextureShader->SetUniform1iv("u_Textures", 2, samplers);
-		Texture* texture = new Texture("res/textures/test.png");
+		Texture* texture = new Texture("res/textures/grass.png");
 		texture->Bind(0);
 		Texture* texture2 = new Texture("res/textures/test2.png");
 		texture->Bind(1);

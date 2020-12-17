@@ -20,7 +20,7 @@ namespace Engine {
 
 	};
 	
-	int RenderDistance = 4;
+	int RenderDistance = 14;
 
 	std::map<ChunkPos, Chunk*> ChunkManager::m_Chunks;// = new std::map<ChunkPos, std::shared_ptr<Chunk>>();
 	std::vector<Chunk*> ChunkManager::m_GenerateChunk;
@@ -72,11 +72,11 @@ namespace Engine {
 	}
 
 	void ChunkManager::Generate() {
-		//for (auto c : m_GenerateChunk) {
-		//	ChunkGenerator::GenerateHeightPass(c);
-		//}
-		//m_GenerateChunk.clear();
-		//m_GenerateChunk.shrink_to_fit();
+		for (auto c : m_GenerateChunk) {
+			ChunkGenerator::GenerateHeightPass(c);
+		}
+		m_GenerateChunk.clear();
+		m_GenerateChunk.shrink_to_fit();
 	}
 
 	void ChunkManager::Mesh() {

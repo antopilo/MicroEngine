@@ -80,7 +80,24 @@ namespace Engine {
 		int maxY = SUBCHUNK_COUNT * SubChunk::SIZE;
 		int idx = (y / SubChunk::SIZE);
 		int localY = y - (idx * SubChunk::SIZE);
-
+		if (this == nullptr)
+			return;
+		if (x < 0) {
+			Left->SetBlock(x + SubChunk::SIZE, y, z, type);
+			return;
+		}
+		else if (x > SubChunk::SIZE) {
+			Right->SetBlock(x - SubChunk::SIZE, y, z, type);
+			return;
+		}
+		else if (z < 0) {
+			Back->SetBlock(x, y, z + SubChunk::SIZE, type);
+			return;
+		}
+		else if (z > SubChunk::SIZE) {
+			Front->SetBlock(x, y, z - SubChunk::SIZE, type);
+			return;
+		}
 		m_Subchunks[idx]->SetBlock(x, localY, z, type);
 	}
 

@@ -168,7 +168,9 @@
     <ClCompile Include="src\Scene\World\ChunkManager.cpp" />
     <ClCompile Include="src\Scene\World\Chunks\ChunkMesher.cpp" />
     <ClCompile Include="src\Scene\World\Chunks\SubChunk.cpp" />
+    <ClCompile Include="src\Scene\World\Generation\BlockColorer.cpp" />
     <ClCompile Include="src\Scene\World\Generation\ChunkGenerator.cpp" />
+    <ClCompile Include="src\Scene\World\Generation\Features\Boulder.cpp" />
     <ClCompile Include="src\Scene\World\World.cpp" />
     <ClCompile Include="src\Vendor\glm\detail\glm.cpp" />
     <ClCompile Include="src\Vendor\imgui\imgui.cpp" />
@@ -206,8 +208,10 @@
     <ClInclude Include="src\Scene\World\ChunkManager.h" />
     <ClInclude Include="src\Scene\World\Chunks\ChunkMesher.h" />
     <ClInclude Include="src\Scene\World\Chunks\SubChunk.h" />
+    <ClInclude Include="src\Scene\World\Generation\BlockColorer.h" />
     <ClInclude Include="src\Scene\World\Generation\ChunkGenerator.h" />
     <ClInclude Include="src\Scene\World\Generation\FastNoise.h" />
+    <ClInclude Include="src\Scene\World\Generation\Features\Boulder.h" />
     <ClInclude Include="src\Scene\World\World.h" />
     <ClInclude Include="src\Vendor\entt\config\config.h" />
     <ClInclude Include="src\Vendor\entt\config\version.h" />

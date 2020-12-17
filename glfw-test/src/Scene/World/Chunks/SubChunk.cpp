@@ -17,7 +17,7 @@ namespace Engine {
 		// Setup ref
 		m_Index = idx;
 		m_Parent = chunk;
-		memset(&m_Blocks, 1, SIZE * SIZE * SIZE);
+		memset(&m_Blocks, 0, SIZE * SIZE * SIZE);
 		//m_Blocks = new char * *[SIZE];
 		//for (int i = 0; i < SIZE; i++) {
 		//	m_Blocks[i] = new char* [SIZE];
@@ -120,6 +120,8 @@ namespace Engine {
 
 	// Push the mesh to the renderer 
 	void SubChunk::Draw() {
+		if (this == nullptr)
+			return;
 		if (m_IndexCount == 0 || !ChunkManager::GetCam()->IsChunkVisible(this))
 			return;
 

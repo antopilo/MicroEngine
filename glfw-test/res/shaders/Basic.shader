@@ -18,7 +18,7 @@ uniform mat4 u_Projection;
 uniform mat4 u_View;
 
 const float density = 0.003;
-const float gradient = 5.0;
+const float gradient = 10.0;
 
 void main()
 {
@@ -55,5 +55,5 @@ void main()
     int index = int(v_TexId);
     vec4 texColor = texture(u_Textures[index], v_TexCoord);
     color = texColor * v_TexColor;
-    color = mix(vec4(52.0 / 255.0f, 219.0f / 255.0f, 235.0f / 255.0f, 1.0f), color, v_Visibility);
+    color = mix(vec4(0.019f, 0.501f, 1, 1.0f), color, v_Visibility);
 }

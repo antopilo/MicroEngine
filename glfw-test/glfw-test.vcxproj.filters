@@ -99,6 +99,12 @@
     <ClCompile Include="src\Scene\World\Generation\ChunkGenerator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Scene\World\Generation\Features\Boulder.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Scene\World\Generation\BlockColorer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Window.h">
@@ -1224,6 +1230,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Scene\World\Generation\ChunkGenerator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Scene\World\Generation\Features\Boulder.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Scene\World\Generation\BlockColorer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
