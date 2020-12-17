@@ -25,9 +25,11 @@ namespace Engine {
 		noise3.SetFractalOctaves(8);
 		noise3.SetFrequency(0.01);
 
+		noise.SetDomainWarpAmp(0.1f);
+
 		float gx = chunk->GetPosition().x * SubChunk::SIZE;
 		float gz = chunk->GetPosition().y * SubChunk::SIZE;
-
+		float pathWidth = 10.0f;
 		float scale = 0.2f;
 		for (int x = 0; x < SubChunk::SIZE; x++) {
 			for (int z = 0; z < SubChunk::SIZE; z++) {
@@ -41,40 +43,44 @@ namespace Engine {
 				//noiseValue += ((noise3.GetNoise(noisex, noisez) + 1.0f) / 2.0f);
 				//noiseValue;
 				int height = (int)(result * (result)*amplitude);
-				for(auto i = height + 3; i > 1 && i > height; i --)
-					chunk->SetBlock(x, i, z, 1);
+				int depth = 6;
+				for (auto i = height + depth; i > 1 && i > height; i--) {
+					float dirtX = (gx + x) * 0.5f;
+					float dirtZ = (gz + z) * 0.5f;
+					noise.DomainWarp(dirtX, dirtZ);
 
-				float boulderChange = rand() % 10000;
+					float path2 = ((noise.GetNoise(dirtX, dirtZ) + 1.0f) / 2.0f);
+					float path1 = ((noise2.GetNoise(dirtX * 0.25f, dirtZ * 0.25f) + 1.0f) / 2.0f);;
 
-				//if (boulderChange < 0.01f) {
-				//	Boulder boulder;
-				//
-				//	for (int x = 0; x < Boulder::MAX_SIZE; x++)
-				//		for (int y = 0; y < Boulder::MAX_SIZE; y++) {
-				//			for (int z = 0; z < Boulder::MAX_SIZE; z++) {
-				//				int block = (int)boulder.m_Blocks[x][y][z];
-				//				if(block != 0)
-				//					chunk->SetBlock(x, (height - 5) + y, z, block);
-				//			}
-				//		}
-				//}
+					float pathResult = (path1 + (path2 * 0.2f) ) / 2.0f;
+					//float path2 = ((noise2.GetNoise((noisex + pathWidth) * 0.25f, (noisez) * 0.5f) + 1.0f) / 2.0f);;
+					if (i == height + depth) {
+						if (!(pathResult > 0.5f))
+							chunk->SetBlock(x, i, z, 1);
+					}
+					else
+						chunk->SetBlock(x, i, z, 2);
 
-				//bool touchedGround = false;
-				//int offset = 0;
-				//for (auto y = height; y < SubChunk::SIZE * Chunk::SUBCHUNK_COUNT; y++) {
-				//	float noise3d = (noise.GetNoise(noisex * 6.0f, (float)y, noisez * 6.0f) + 1.0f) / 2.0f;
-				//	float above = (noise.GetNoise(noisex * 6.0f, (float)y + 1, noisez * 6.0f) + 1.0f) / 2.0f;
-				//	float maxHeight = height * amplitude;
-				//	
-				//	if (noise3d > 0.8 && y < maxHeight && above + 0.01f > noise3d ) {
-				//		if (!touchedGround) {
-				//			offset = height - y;
-				//			touchedGround = true;
-				//		}
-				//			
-				//		chunk->SetBlock(x, y + offset, z, 1);
-				//	}
-				//}
+					
+				}
+				// Rivers
+				if (height - depth > 1) {
+					float dirtX = (gx + x) * 0.1f;
+					float dirtZ = (gz + z) * 0.1f;
+					noise.DomainWarp(dirtX, dirtZ);
+
+					float riverWiggle = ((noise3.GetNoise(dirtX, dirtZ) + 1.0f) / 2.0f) * 0.1f;
+					float river1 = ((noise2.GetNoise(dirtX * 0.2f, dirtZ * 0.2f) + 1.0f) / 2.0f) + riverWiggle;
+					if (river1 < 0.55 && river1 > 0.5) {
+						for (int i = height + depth; i > 0 && i > height - 2; i--) {
+							if (i == height || i == height + 1)
+								chunk->SetBlock(x, i, z, 4);
+							else
+								chunk->SetBlock(x, i, z, 0);
+						}
+					}
+				}
+				
 			}
 		}
 

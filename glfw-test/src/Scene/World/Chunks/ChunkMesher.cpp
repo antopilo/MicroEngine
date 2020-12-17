@@ -116,19 +116,36 @@ namespace Engine {
         bool topBorder    = y == SubChunk::SIZE - 1 ? topChunk :    Top;
         bool bottomBorder = y == 0                  ? bottomChunk : Bottom;
 
-        // Todo Block texture and type.
-        if (topBorder || gy + 1 == SubChunk::SIZE * Chunk::SUBCHUNK_COUNT)
-            PushQuadAO(0, gx, gy, gz, 4, 5, 6, 7, type);
-        if (bottomBorder)
-            PushQuadAO(1, gx, gy, gz, 3, 2, 1, 0, type);
-        if (Left)
-            PushQuadAO(2, gx, gy, gz, 0, 4, 7, 3, type);
-        if (Right)
-            PushQuadAO(3, gx, gy, gz, 1, 2, 6, 5, type);
-        if (Front)
-            PushQuadAO(4, gx, gy, gz, 2, 3, 7, 6, type);
-        if (Back)
-            PushQuadAO(5, gx, gy, gz, 5, 4, 0, 1, type);
+        if (type == 4) {
+            // Todo Block texture and type.
+            if (topBorder || gy + 1 == SubChunk::SIZE * Chunk::SUBCHUNK_COUNT)
+                PushQuad(0, gx, gy, gz, 4, 5, 6, 7, type);
+            if (bottomBorder)
+                PushQuad(1, gx, gy, gz, 3, 2, 1, 0, type);
+            if (Left)
+                PushQuad(2, gx, gy, gz, 0, 4, 7, 3, type);
+            if (Right)
+                PushQuad(3, gx, gy, gz, 1, 2, 6, 5, type);
+            if (Front)
+                PushQuad(4, gx, gy, gz, 2, 3, 7, 6, type);
+            if (Back)
+                PushQuad(5, gx, gy, gz, 5, 4, 0, 1, type);
+        }
+        else {
+            if (topBorder || gy + 1 == SubChunk::SIZE * Chunk::SUBCHUNK_COUNT)
+                PushQuadAO(0, gx, gy, gz, 4, 5, 6, 7, type);
+            if (bottomBorder)
+                PushQuadAO(1, gx, gy, gz, 3, 2, 1, 0, type);
+            if (Left)
+                PushQuadAO(2, gx, gy, gz, 0, 4, 7, 3, type);
+            if (Right)
+                PushQuadAO(3, gx, gy, gz, 1, 2, 6, 5, type);
+            if (Front)
+                PushQuadAO(4, gx, gy, gz, 2, 3, 7, 6, type);
+            if (Back)
+                PushQuadAO(5, gx, gy, gz, 5, 4, 0, 1, type);
+        }
+       
 
     }
 
@@ -407,7 +424,7 @@ namespace Engine {
 
     }
 
-    void ChunkMesher::PushQuad(int face, int x, int y, int z, int c1, int c2, int c3, int c4)
+    void ChunkMesher::PushQuad(int face, int x, int y, int z, int c1, int c2, int c3, int c4, int type)
     {
         float light;
         if (face == 0)
@@ -422,21 +439,23 @@ namespace Engine {
             light =0.9f;
         if (face == 5)
             light = 0.75f;
+
+        glm::vec4 color = BlockColorer::GetBlockColor(type);
         CurrentArray->push_back(QuadVertex{
             glm::vec3(float(x + CUBE_VERTICES[c1].x), float(y + CUBE_VERTICES[c1].y), float(z + CUBE_VERTICES[c1].z)),
             glm::vec3(0.0f, 1.0f, 0.0f),
-            glm::vec4(1.0f * light, 1.0f * light, 1.0f * light, 1.0f),
+            color,
             glm::vec2(0.0f, 0.0f),
-            1.0f,
+            0.0f,
             1.0f
             });
 
         CurrentArray->push_back(QuadVertex{
             glm::vec3(float(x + CUBE_VERTICES[c2].x), float(y + CUBE_VERTICES[c2].y), float(z + CUBE_VERTICES[c2].z)),
             glm::vec3(0.0f, 1.0f, 1.0f),
-            glm::vec4(1.0f * light, 1.0f * light, 1.0f * light, 1.0f),
+            color,
             glm::vec2(1.0f, 0.0f),
-            1.0f,
+            0.0f,
             1.0f
             });
 
@@ -444,18 +463,18 @@ namespace Engine {
         CurrentArray->push_back(QuadVertex{
             glm::vec3(float(x + CUBE_VERTICES[c3].x), float(y + CUBE_VERTICES[c3].y), float(z + CUBE_VERTICES[c3].z)),
             glm::vec3(0.0f, 1.0f, 0.0f),
-            glm::vec4(1.0f * light, 1.0f * light, 1.0f * light, 1.0f),
+            color,
             glm::vec2(1.0f, 1.0f),
-            1.0f,
+            0.0f,
             1.0f
             });
 
         CurrentArray->push_back(QuadVertex{
             glm::vec3(float(x + CUBE_VERTICES[c4].x), float(y + CUBE_VERTICES[c4].y), float(z + CUBE_VERTICES[c4].z)),
             glm::vec3(0.0f, 0.0f, 0.0f),
-            glm::vec4(1.0f * light, 1.0f * light, 1.0f * light, 1.0f),
+            color,
             glm::vec2(0.0f, 1.0f),
-            1.0f,
+            0.0f,
             1.0f
             });
     }
