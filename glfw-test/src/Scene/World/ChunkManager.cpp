@@ -20,7 +20,7 @@ namespace Engine {
 
 	};
 	
-	int RenderDistance = 14;
+	int RenderDistance = 7;
 
 	std::map<ChunkPos, Chunk*> ChunkManager::m_Chunks;// = new std::map<ChunkPos, std::shared_ptr<Chunk>>();
 	std::vector<Chunk*> ChunkManager::m_GenerateChunk;
@@ -84,9 +84,22 @@ namespace Engine {
 		for (auto c : m_Chunks) {
 			if (meshedCount > 8)
 				return;
-			if (!c.second->isMeshed && c.second->isSurrounded) {
+			if (!c.second->isMeshed && c.second->isSurrounded && c.second->isGenerated) {
 				c.second->Mesh();
 				meshedCount++;
+			}
+		}
+	}
+
+	void ChunkManager::EndGenerate() {
+		int decorated = 0;
+		for (auto c : m_Chunks) {
+			if (decorated > 8)
+				return;
+
+			if (!c.second->isMeshed && c.second->isSurrounded && !c.second->isGenerated) {
+				ChunkGenerator::GenerateDecoration(c.second);
+				decorated++;
 			}
 		}
 	}
@@ -102,6 +115,7 @@ namespace Engine {
 			CheckForLoad();
 			Generate();
 			CheckSurrounded();
+			EndGenerate();
 			Mesh();
 			CheckForUnload();
 			

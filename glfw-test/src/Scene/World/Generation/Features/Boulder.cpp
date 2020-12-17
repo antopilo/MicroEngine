@@ -28,13 +28,13 @@ namespace Engine {
 					glm::vec2 sub = glm::vec2(x2 - (MAX_SIZE / 2), z2 - (MAX_SIZE / 2));
 					float distanceFromCenter = sqrt(sub.x * sub.x + sub.y * sub.y);
 
-					float newSize = size + noise.GetNoise(x2 + offsetX, (float)y, z2 + offsetZ) * 5.0f;
+					float newSize = size + noise.GetNoise(x2 + offsetX, (float)y, z2 + offsetZ) * 10.0f;
 					if (distanceFromCenter < newSize) 
 					{ 
 						float value = (noise.GetNoise(x2 + offsetX, z2 + offsetZ) + 1.0f) / 2.0f;
 
-						if (y < value * MAX_SIZE) {
-							if (y + 1 >= value * MAX_SIZE)
+						if (y < Height + value * 10) {
+							if (y + 1 >= Height + value * 10)
 								m_Blocks[x][y][z] = 1;
 							else
 								m_Blocks[x][y][z] = 2;

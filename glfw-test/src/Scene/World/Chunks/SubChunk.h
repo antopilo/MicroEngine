@@ -6,7 +6,7 @@ namespace Engine {
 
 	class SubChunk {
 	public:
-		const static int SIZE = 32;
+		const static int SIZE = 64;
 		SubChunk(int idx, Chunk* chunk);
 
 		void Generate();

@@ -8,6 +8,8 @@ namespace Engine {
 	public:
 		static void GenerateHeightPass(Chunk* chunk);
 
+		static void GenerateDecoration(Chunk* chunk);
+
 
 	};
 }

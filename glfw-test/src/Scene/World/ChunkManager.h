@@ -36,6 +36,8 @@ namespace Engine {
 		static void Generate();
 
 		static void Mesh();
+
+		static void EndGenerate();
 		
 		static void Draw();
 

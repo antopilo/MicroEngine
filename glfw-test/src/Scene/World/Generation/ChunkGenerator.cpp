@@ -81,4 +81,30 @@ namespace Engine {
 		
 
 	}
+
+	void ChunkGenerator::GenerateDecoration(Chunk* chunk) {
+		float boulderChange = rand() % 100;
+
+		if (boulderChange < 5) {
+			Boulder boulder;
+			float height = 0;
+			// find height
+			for (auto i = Chunk::SUBCHUNK_COUNT * SubChunk::SIZE - 1; i > 0; i--) {
+				if (chunk->GetBlock(0, i, 0) != 0) {
+					height = i;
+					break;
+				}
+			}
+			for (int x = 0; x < Boulder::MAX_SIZE; x++)
+				for (int y = 0; y < Boulder::MAX_SIZE; y++) {
+					for (int z = 0; z < Boulder::MAX_SIZE; z++) {
+						int block = (int)boulder.m_Blocks[x][y][z];
+						if(block != 0)
+							chunk->SetBlock(x, (height - 5) + y, z, block);
+					}
+				}
+		}
+
+		chunk->isGenerated = true;
+	}
 }
