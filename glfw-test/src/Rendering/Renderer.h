@@ -7,7 +7,7 @@ namespace Engine {
 	class Texture;
 	class Camera;
 	class VertexBuffer;
-	const size_t MaxQuadCount = 20000;
+	const size_t MaxQuadCount = 25000;
 	const size_t MaxVertexCount = MaxQuadCount * 4;
 	const size_t MaxIndexCount = MaxQuadCount * 6;
 	struct Renderer2DData;

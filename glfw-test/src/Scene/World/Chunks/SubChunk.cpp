@@ -31,7 +31,7 @@ namespace Engine {
 		glGenVertexArrays(1, &VAO);
 		glBindVertexArray(VAO);
 		//glBindBuffer(GL_VERTEX_ARRAY, VAO);
-		unsigned int size = sizeof(QuadVertex) * 100000;
+		unsigned int size = sizeof(QuadVertex) * 140000;
 
 		glGenBuffers(1, &VBO);
 		glBindBuffer(GL_ARRAY_BUFFER, VBO);

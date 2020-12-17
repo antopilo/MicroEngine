@@ -9,6 +9,10 @@ namespace Engine {
 		case 2: // dirt
 			return glm::vec4(1.0f, 0.831f, 0.141f, 1.0f);
 			break;
+		case 3: // stone
+			return glm::vec4(0.427f, 0.427f, 0.435f, 1.0f);
+			break;
+
 		}
 	}
 

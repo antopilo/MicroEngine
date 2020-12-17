@@ -118,17 +118,17 @@ namespace Engine {
 
         // Todo Block texture and type.
         if (topBorder || gy + 1 == SubChunk::SIZE * Chunk::SUBCHUNK_COUNT)
-            PushQuadAO(0, gx, gy, gz, 4, 5, 6, 7);
+            PushQuadAO(0, gx, gy, gz, 4, 5, 6, 7, type);
         if (bottomBorder)
-            PushQuadAO(1, gx, gy, gz, 3, 2, 1, 0);
+            PushQuadAO(1, gx, gy, gz, 3, 2, 1, 0, type);
         if (Left)
-            PushQuadAO(2, gx, gy, gz, 0, 4, 7, 3);
+            PushQuadAO(2, gx, gy, gz, 0, 4, 7, 3, type);
         if (Right)
-            PushQuadAO(3, gx, gy, gz, 1, 2, 6, 5);
+            PushQuadAO(3, gx, gy, gz, 1, 2, 6, 5, type);
         if (Front)
-            PushQuadAO(4, gx, gy, gz, 2, 3, 7, 6);
+            PushQuadAO(4, gx, gy, gz, 2, 3, 7, 6, type);
         if (Back)
-            PushQuadAO(5, gx, gy, gz, 5, 4, 0, 1);
+            PushQuadAO(5, gx, gy, gz, 5, 4, 0, 1, type);
 
     }
 
@@ -301,7 +301,7 @@ namespace Engine {
         return 0.0f;
     }
 
-    void ChunkMesher::PushQuadAO(int face, int x, int y, int z, int c1, int c2, int c3, int c4) {
+    void ChunkMesher::PushQuadAO(int face, int x, int y, int z, int c1, int c2, int c3, int c4, int type) {
         float a00 =  1.0f - (AOLookUp(face, x, y, z, c1) * .2f);
         float a10 =  1.0f - (AOLookUp(face, x, y, z, c2) * .2f);
         float a11 =  1.0f - (AOLookUp(face, x, y, z, c3) * .2f);
@@ -320,7 +320,7 @@ namespace Engine {
         if (face == 5)
             light = 0.75f;
 
-        glm::vec4 color = BlockColorer::Darken(BlockColorer::GetBlockColor(1), light);
+        glm::vec4 color = BlockColorer::Darken(BlockColorer::GetBlockColor(type), light);
        
         if (a00 + a11 < a01 + a10)
         {

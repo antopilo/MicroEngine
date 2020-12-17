@@ -4,7 +4,7 @@ namespace Engine {
 	class Boulder
 	{
 	public:
-		static const int MAX_SIZE = 64;
+		static const int MAX_SIZE = 32;
 
 		int Height = 0;
 		

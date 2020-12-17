@@ -31,7 +31,7 @@ namespace Engine {
 
 		static void CreateBlock(int x, int y, int z, int type, SubChunk* chunk);
 
-		static void PushQuadAO(int face, int x, int y, int z, int c1, int c2, int c3, int c4);
+		static void PushQuadAO(int face, int x, int y, int z, int c1, int c2, int c3, int c4, int type);
 
 		static float AOLookUp(int face,int x, int y, int z, int c1);
 
