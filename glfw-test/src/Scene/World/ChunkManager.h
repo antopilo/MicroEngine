@@ -35,6 +35,8 @@ namespace Engine {
 
 		static void Generate();
 
+		static void UpdateBuffers();
+
 		static void Mesh();
 
 		static void EndGenerate();
@@ -42,6 +44,8 @@ namespace Engine {
 		static void Draw();
 
 		static void Update(Timestep ts);
+
+		static void ThreadedUpdate();
 
 		static void CheckForUnload();
 

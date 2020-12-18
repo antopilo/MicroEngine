@@ -34,7 +34,7 @@ namespace Engine {
 						float value = (noise.GetNoise(x2 + offsetX, z2 + offsetZ) + 1.0f) / 2.0f;
 
 						if (y < Height + value * 10) {
-							if (y + 1 >= Height + value * 10)
+							if (y + 1 >= Height + value * 10) // if the block above doesnt pass the check, place grass
 								m_Blocks[x][y][z] = 1;
 							else
 								m_Blocks[x][y][z] = 2;

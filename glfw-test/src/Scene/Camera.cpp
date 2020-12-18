@@ -6,9 +6,6 @@
 #include "../Scene/World/Chunks/SubChunk.h"
 #include "../Scene/World/Chunks/Chunk.h"
 namespace Engine {
-
-
-
 	Camera::Camera(CAMERA_TYPE type) {
 		m_Type = PERSPECTIVE;
 		

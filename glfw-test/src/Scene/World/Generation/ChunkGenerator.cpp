@@ -4,6 +4,7 @@
 #include "FastNoise.h"
 #include "Features/Boulder.h"
 #include "Features/Plateau.h"
+#include "Features/SimpleTree.h"
 
 namespace Engine {
 	void ChunkGenerator::GenerateHeightPass(Chunk* chunk) {
@@ -36,7 +37,7 @@ namespace Engine {
 				float noisex = (gx + x) * scale;
 				float noisez = (gz + z) * scale;
 				noise.DomainWarp(noisex, noisez);
-				float noiseValue = ((noise.GetNoise(noisex * 0.2f, noisez * 0.2f) + 1.0f) / 2.0f);
+				float noiseValue = ((noise.GetNoise(noisex * 0.5f, noisez * 0.5f) + 1.0f) / 2.0f);
 				float noiseValue2 = ((noise2.GetNoise(noisex, noisez ) + 1.0f) / 2.0f);
 				float noiseValue3 = ((noise3.GetNoise(noisex * 0.5f, noisez * 0.5f) + 1.0f) / 2.0f);
 				float result = (noiseValue + (noiseValue2 * 0.2f) + (noiseValue3 * 3)) / 3.0f;
@@ -44,6 +45,18 @@ namespace Engine {
 				//noiseValue;
 				int height = (int)(result * (result)*amplitude);
 				int depth = 6;
+
+				float riverX = (gx + x) * 0.1f;
+				float riverZ = (gz + z) * 0.1f;
+				noise.DomainWarp(riverX, riverZ);
+				float riverWiggle = ((noise3.GetNoise(riverX, riverZ) + 1.0f) / 2.0f) * 0.1f;
+				float river1 = ((noise2.GetNoise(riverX * 0.2f, riverZ * 0.2f) + 1.0f) / 2.0f) + riverWiggle;
+				//iver1 < 0.55 && river1 > 0.5
+				if (river1 > 0.45 && river1 < 0.6f) {
+					float distFromRiver = abs((0.525f - river1)) / (0.525f - 1.16f);
+					height -= (distFromRiver ) * 5.0f;
+				}
+				
 				for (auto i = height + depth; i > 1 && i > height; i--) {
 					float dirtX = (gx + x) * 0.5f;
 					float dirtZ = (gz + z) * 0.5f;
@@ -65,12 +78,6 @@ namespace Engine {
 				}
 				// Rivers
 				if (height - depth > 1) {
-					float dirtX = (gx + x) * 0.1f;
-					float dirtZ = (gz + z) * 0.1f;
-					noise.DomainWarp(dirtX, dirtZ);
-
-					float riverWiggle = ((noise3.GetNoise(dirtX, dirtZ) + 1.0f) / 2.0f) * 0.1f;
-					float river1 = ((noise2.GetNoise(dirtX * 0.2f, dirtZ * 0.2f) + 1.0f) / 2.0f) + riverWiggle;
 					if (river1 < 0.55 && river1 > 0.5) {
 						for (int i = height + depth; i > 0 && i > height - 2; i--) {
 							if (i == height || i == height + 1)
@@ -83,15 +90,10 @@ namespace Engine {
 				
 			}
 		}
-
-		
-		
-
 	}
 
 	void ChunkGenerator::GenerateDecoration(Chunk* chunk) {
 		float plateauChance = rand() % 100;
-
 		if (plateauChance < 5) {
 			Plateau plateau;
 			float height = Chunk::SUBCHUNK_COUNT * SubChunk::SIZE - 1;
@@ -117,10 +119,7 @@ namespace Engine {
 				}
 		}
 
-
-
 		float boulderChange = rand() % 100;
-
 		if (boulderChange < 10) {
 			Boulder boulder;
 			float height = 0;
@@ -140,6 +139,37 @@ namespace Engine {
 							chunk->SetBlock(x, localY, z, block);
 					}
 				}
+		}
+
+		float treeChance = rand() % 100;
+		if (treeChance < 96) {
+
+			int amount = rand() % 3;
+
+			for (int i = 0; i < 1; i++) {
+				int randomx = rand() % 8 + 4;
+				int randomz = rand() % 8 + 4;
+				SimpleTree tree;
+				float height = 0;
+
+				// find height
+				for (auto i = Chunk::SUBCHUNK_COUNT * SubChunk::SIZE - 1; i > 0; i--) {
+					if (chunk->GetBlock(randomx, i, randomz) != 0) {
+						height = i;
+						break;
+					}
+				}
+				for (int x = 0; x < SimpleTree::MAX_SIZE; x++)
+					for (int y = 0; y < SimpleTree::MAX_SIZE; y++) {
+						for (int z = 0; z < SimpleTree::MAX_SIZE; z++) {
+							int block = (int)tree.m_Blocks[x][y][z];
+							int localY = (height)+y;
+							if (block != 0 && localY > 0)
+								chunk->SetBlock(x + randomx, localY, z + randomz, block);
+						}
+					}
+			}
+			
 		}
 
 		chunk->isGenerated = true;

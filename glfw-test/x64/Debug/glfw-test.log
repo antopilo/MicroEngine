@@ -1,6 +1,22 @@
-﻿  Boulder.cpp
-F:\Desktop\repos\MicroEngine\glfw-test\src\Scene\World\Generation\Features\Boulder.cpp(18,17): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-F:\Desktop\repos\MicroEngine\glfw-test\src\Scene\World\Generation\Features\Boulder.cpp(19,17): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-F:\Desktop\repos\MicroEngine\glfw-test\src\Scene\World\Generation\Features\Boulder.cpp(26,15): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-F:\Desktop\repos\MicroEngine\glfw-test\src\Scene\World\Generation\Features\Boulder.cpp(27,15): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+﻿  ChunkManager.cpp
+F:\Desktop\repos\MicroEngine\glfw-test\src\Scene\World\ChunkManager.cpp(151,12): warning C4244: 'initializing': conversion from 'T' to 'int', possible loss of data
+          with
+          [
+              T=float
+          ]
+F:\Desktop\repos\MicroEngine\glfw-test\src\Scene\World\ChunkManager.cpp(152,12): warning C4244: 'initializing': conversion from 'T' to 'int', possible loss of data
+          with
+          [
+              T=float
+          ]
+F:\Desktop\repos\MicroEngine\glfw-test\src\Scene\World\ChunkManager.cpp(171,12): warning C4244: 'initializing': conversion from 'T' to 'int', possible loss of data
+          with
+          [
+              T=float
+          ]
+F:\Desktop\repos\MicroEngine\glfw-test\src\Scene\World\ChunkManager.cpp(172,12): warning C4244: 'initializing': conversion from 'T' to 'int', possible loss of data
+          with
+          [
+              T=float
+          ]
   glfw-test.vcxproj -> F:\Desktop\repos\MicroEngine\x64\Debug\glfw-test.exe

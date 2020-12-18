@@ -1,9 +1,19 @@
-﻿  BlockColorer.cpp
+﻿  ChunkGenerator.cpp
+F:\Desktop\repos\MicroEngine\glfw-test\src\Scene\World\Generation\ChunkGenerator.cpp(27,27): warning C4305: 'argument': truncation from 'double' to 'float'
+F:\Desktop\repos\MicroEngine\glfw-test\src\Scene\World\Generation\ChunkGenerator.cpp(57,39): warning C4244: '-=': conversion from 'float' to 'int', possible loss of data
+F:\Desktop\repos\MicroEngine\glfw-test\src\Scene\World\Generation\ChunkGenerator.cpp(96,23): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+F:\Desktop\repos\MicroEngine\glfw-test\src\Scene\World\Generation\ChunkGenerator.cpp(105,17): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+F:\Desktop\repos\MicroEngine\glfw-test\src\Scene\World\Generation\ChunkGenerator.cpp(115,18): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+F:\Desktop\repos\MicroEngine\glfw-test\src\Scene\World\Generation\ChunkGenerator.cpp(122,23): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+F:\Desktop\repos\MicroEngine\glfw-test\src\Scene\World\Generation\ChunkGenerator.cpp(129,15): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+F:\Desktop\repos\MicroEngine\glfw-test\src\Scene\World\Generation\ChunkGenerator.cpp(137,18): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+F:\Desktop\repos\MicroEngine\glfw-test\src\Scene\World\Generation\ChunkGenerator.cpp(144,20): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+F:\Desktop\repos\MicroEngine\glfw-test\src\Scene\World\Generation\ChunkGenerator.cpp(158,16): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+F:\Desktop\repos\MicroEngine\glfw-test\src\Scene\World\Generation\ChunkGenerator.cpp(166,19): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
 LINK : warning LNK4098: defaultlib 'LIBCMT' conflicts with use of other libs; use /NODEFAULTLIB:library
   Generating code
-F:\Desktop\repos\MicroEngine\glfw-test\src\Scene\World\Generation\BlockColorer.cpp(20): warning C4715: 'Engine::BlockColorer::GetBlockColor': not all control paths return a value
-  4 of 2277 functions ( 0.2%) were compiled, the rest were copied from previous compilation.
-    1 functions were new in current compilation
+  8 of 2286 functions ( 0.3%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
     25 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
 glew32s.lib(glew.obj) : warning LNK4099: PDB 'vc120.pdb' was not found with 'glew32s.lib(glew.obj)' or at 'F:\Desktop\repos\MicroEngine\x64\Release\vc120.pdb'; linking object as if no debug info

@@ -16,6 +16,8 @@ namespace Engine {
 
 		void Mesh();
 
+		void UpdateBuffer();
+
 		void Draw();
 
 		Chunk* GetParent();
@@ -23,6 +25,7 @@ namespace Engine {
 		int GetIndex();
 
 		~SubChunk();
+		bool MeshChanged = false;
 	private:
 		char m_Blocks[SIZE][SIZE][SIZE];
 		int m_Index;
@@ -32,5 +35,6 @@ namespace Engine {
 		unsigned int VAO;
 		std::vector<QuadVertex>* m_Mesh;
 		int m_IndexCount = 0;
+		
 	};
 }

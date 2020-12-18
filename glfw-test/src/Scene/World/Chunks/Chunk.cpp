@@ -21,6 +21,14 @@ namespace Engine {
 		isMeshed = true;
 	}
 
+	void Chunk::UpdateBuffers() {
+		for (int i = 0; i < SUBCHUNK_COUNT; i++) {
+			if (m_Subchunks[i]->MeshChanged)
+				m_Subchunks[i]->UpdateBuffer();
+		}
+		MeshChanged = false;
+	}
+
 	SubChunk& Chunk::GetSubChunk(int idx)
 	{
 		return *m_Subchunks[idx];
@@ -30,11 +38,15 @@ namespace Engine {
 
 	void Chunk::CheckIfSurrounded() {
 		bool leftIsLoaded  = ChunkManager::IsChunkLoaded(m_Position.x - 1, m_Position.y);
+		bool leftFrontIsLoaded = ChunkManager::IsChunkLoaded(m_Position.x - 1, m_Position.y + 1);
+		bool leftBackIsLoaded = ChunkManager::IsChunkLoaded(m_Position.x - 1, m_Position.y - 1);
 		bool rightIsLoaded = ChunkManager::IsChunkLoaded(m_Position.x + 1, m_Position.y);
+		bool rightFrontIsLoaded = ChunkManager::IsChunkLoaded(m_Position.x + 1, m_Position.y + 1);
+		bool rightBackIsLoaded = ChunkManager::IsChunkLoaded(m_Position.x + 1, m_Position.y - 1);
 		bool frontIsLoaded = ChunkManager::IsChunkLoaded(m_Position.x,     m_Position.y + 1);
 		bool backIsLoaded  = ChunkManager::IsChunkLoaded(m_Position.x,     m_Position.y - 1);
 
-		if (!leftIsLoaded || !rightIsLoaded || !frontIsLoaded || !backIsLoaded)
+		if (!leftIsLoaded || !rightIsLoaded || !frontIsLoaded || !backIsLoaded || !leftFrontIsLoaded || !leftBackIsLoaded || !rightFrontIsLoaded || !rightBackIsLoaded)
 			isSurrounded = false;
 
 		if (leftIsLoaded)
@@ -42,10 +54,30 @@ namespace Engine {
 		else
 			Left = nullptr;
 
+		if (leftFrontIsLoaded)
+			LeftFront = ChunkManager::GetChunk(m_Position.x - 1, m_Position.y + 1);
+		else
+			LeftFront = nullptr;
+
+		if (leftBackIsLoaded)
+			LeftBack = ChunkManager::GetChunk(m_Position.x - 1, m_Position.y - 1);
+		else
+			LeftBack = nullptr;
+
 		if (rightIsLoaded)
 			Right = ChunkManager::GetChunk(m_Position.x + 1, m_Position.y);
 		else
 			Right = nullptr;
+
+		if (rightFrontIsLoaded)
+			RightFront = ChunkManager::GetChunk(m_Position.x + 1, m_Position.y + 1);
+		else
+			RightFront = nullptr;
+
+		if (rightBackIsLoaded)
+			RightBack = ChunkManager::GetChunk(m_Position.x + 1, m_Position.y - 1);
+		else
+			RightBack = nullptr;
 
 		if (frontIsLoaded)
 			Front = ChunkManager::GetChunk(m_Position.x, m_Position.y + 1);

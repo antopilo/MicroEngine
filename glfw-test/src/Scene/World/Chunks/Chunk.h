@@ -27,18 +27,27 @@ namespace Engine {
 
 		void Mesh();
 
+		void UpdateBuffers();
+
 		void Render();
 
 		Chunk* Left = nullptr;
+		Chunk* LeftFront = nullptr;
+		Chunk* LeftBack = nullptr;
 		Chunk* Front = nullptr;
 		Chunk* Right = nullptr;
+		Chunk* RightFront = nullptr;
+		Chunk* RightBack = nullptr;
 		Chunk* Back = nullptr;
+
+
 
 		glm::vec2 GetPosition();
 		void CheckIfSurrounded();
 		bool isMeshed = false;
 		bool isGenerated = false;
 		bool isSurrounded = false;
+		bool MeshChanged = false;
 
 		~Chunk();
 		void Draw();

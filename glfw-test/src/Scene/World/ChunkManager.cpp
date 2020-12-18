@@ -5,6 +5,7 @@
 #include "Generation/ChunkGenerator.h"
 #include "Chunks/Chunk.h"
 #include "Chunks/SubChunk.h"
+#include <thread>
 namespace Engine {
 	struct ChunkPos {
 		int x;
@@ -36,12 +37,16 @@ namespace Engine {
 		return m_Camera;
 	}
 
+
+
 	void ChunkManager::Init() {
 		
 		//LoadChunk(0, 0);
 		//LoadChunk(1, 0);
 		//LoadChunk(0, 1);
 		//LoadChunk(1, 1);
+
+		//std::thread* tread  = new std::thread(ThreadedUpdate);
 	}
 
 	bool ChunkManager::IsChunkLoaded(int x, int z) {
@@ -77,6 +82,14 @@ namespace Engine {
 		}
 		m_GenerateChunk.clear();
 		m_GenerateChunk.shrink_to_fit();
+	}
+
+	void ChunkManager::UpdateBuffers() {
+		for (auto c : m_Chunks) {
+			if (!c.second->isMeshed && c.second->isSurrounded && c.second->isGenerated && c.second->MeshChanged) {
+				c.second->UpdateBuffers();
+			}
+		}
 	}
 
 	void ChunkManager::Mesh() {
@@ -117,8 +130,20 @@ namespace Engine {
 			CheckSurrounded();
 			EndGenerate();
 			Mesh();
+			UpdateBuffers();
 			CheckForUnload();
 			
+	}
+
+	void ChunkManager::ThreadedUpdate() {
+		while (true) {
+			CheckForLoad();
+			Generate();
+			CheckSurrounded();
+			EndGenerate();
+			Mesh();
+			CheckForUnload();
+		}
 	}
 
 	void ChunkManager::CheckForUnload() {

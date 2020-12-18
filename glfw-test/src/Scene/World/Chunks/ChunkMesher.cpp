@@ -6,6 +6,8 @@
 #include <memory>
 #include "../ChunkManager.h"
 #include "../Generation/BlockColorer.h"
+#include "../Generation/FastNoise.h"
+
 namespace Engine {
     
     const glm::vec3 ChunkMesher::CUBE_VERTICES[] =
@@ -336,9 +338,14 @@ namespace Engine {
             light = 0.9f;
         if (face == 5)
             light = 0.75f;
-
+        FastNoiseLite noise;
+        float value = (noise.GetNoise((float)x, (float)y, (float)z) + 1.0f) / 2.0f;
         glm::vec4 color = BlockColorer::Darken(BlockColorer::GetBlockColor(type), light);
+        color = BlockColorer::Darken(color, (value * 0.2) + 0.8f);
        
+        
+
+
         if (a00 + a11 < a01 + a10)
         {
             CurrentArray->push_back(QuadVertex{

@@ -106,16 +106,31 @@ namespace Engine {
 
 	// Creates a mesh with the blocks inside the chunk.
 	void SubChunk::Mesh() {
-		//if (m_Count == 0)
-		//	return;
-
+		if (m_Count == 0)
+			return;
 		this->m_Mesh = ChunkMesher::MeshSubChunk(this);
+		MeshChanged = true;
+		this->m_Parent->MeshChanged = true;
 		this->m_IndexCount = m_Mesh->size() * 1.5;
 		unsigned int indices = m_IndexCount * sizeof(QuadVertex);
 		glBindVertexArray(VAO);
 		glBindBuffer(GL_ARRAY_BUFFER, VBO);
 		glBufferSubData(GL_ARRAY_BUFFER, 0, m_Mesh->size() * sizeof(QuadVertex), m_Mesh->data());
 		ChunkMesher::Clear();
+	}
+
+	void SubChunk::UpdateBuffer() {
+		//if (!MeshChanged)
+		//	return;
+		//
+		//this->m_IndexCount = m_Mesh.size() * 1.5;
+		//unsigned int indices = m_IndexCount * sizeof(QuadVertex);
+		//glBindVertexArray(VAO);
+		//glBindBuffer(GL_ARRAY_BUFFER, VBO);
+		//glBufferSubData(GL_ARRAY_BUFFER, 0, m_Mesh.size() * sizeof(QuadVertex), m_Mesh.data());
+		//m_Mesh.clear();
+		//m_Mesh.shrink_to_fit();
+		//MeshChanged = false;
 	}
 
 	// Push the mesh to the renderer 

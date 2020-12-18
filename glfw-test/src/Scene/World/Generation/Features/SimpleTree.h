@@ -10,6 +10,8 @@ namespace Engine {
 
 		SimpleTree();
 
+		void GenerateLeafBall(int x, int y, int z, int leafType);
+
 		void* GetData();
 		char m_Blocks[MAX_SIZE][MAX_SIZE][MAX_SIZE];
 	private:

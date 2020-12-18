@@ -15,9 +15,22 @@ namespace Engine {
 		case 4: // water
 			return glm::vec4(0, 0.443f, 0.858f, 1.0f);
 			break;
+		case 5: // wood
+			return glm::vec4(0.521, 0.247, 0, 1.0f);
+			break;
+		case 6: // leaf 1
+			return glm::vec4(1, 0.258, 0.894, 1.0f);
+			break;
+		case 7: // leaf 2
+			return glm::vec4(0.823, 0.141, 1, 1.0f);
+			break;
+		case 8: // leaf 3
+			return glm::vec4(0.721, 1, 0.141, 1.0f);
+			break;
 
 		}
 	}
+
 
 	glm::vec4 BlockColorer::MixColor(glm::vec4 input, float value, float amount) {
 		return glm::vec4((input.x + value) / 2.0f, (input.y + value) / 2.0f, (input.z + value) / 2.0f, 1.0f);
