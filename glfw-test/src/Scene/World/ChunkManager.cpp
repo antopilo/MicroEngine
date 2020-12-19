@@ -6,6 +6,7 @@
 #include "Chunks/Chunk.h"
 #include "Chunks/SubChunk.h"
 #include <thread>
+#include "Generation/FeatureGenerator.h"
 namespace Engine {
 	struct ChunkPos {
 		int x;
@@ -31,6 +32,7 @@ namespace Engine {
 
 	void ChunkManager::SetCam(Camera* cam) {
 		m_Camera = cam;
+		FeatureGenerator::SetCam(cam);
 	}
 
 	Camera* ChunkManager::GetCam() {
@@ -45,7 +47,7 @@ namespace Engine {
 		//LoadChunk(1, 0);
 		//LoadChunk(0, 1);
 		//LoadChunk(1, 1);
-
+		FeatureGenerator::Init();
 		//std::thread* tread  = new std::thread(ThreadedUpdate);
 	}
 
@@ -125,13 +127,15 @@ namespace Engine {
 
 	void ChunkManager::Update(Timestep ts)
 	{
-			CheckForLoad();
-			Generate();
-			CheckSurrounded();
-			EndGenerate();
-			Mesh();
-			UpdateBuffers();
-			CheckForUnload();
+		FeatureGenerator::CheckLoadStructure();
+		//FeatureGenerator::CheckLoadStructure();
+		CheckForLoad();
+		Generate();
+		CheckSurrounded();
+		EndGenerate();
+		Mesh();
+		UpdateBuffers();
+		CheckForUnload();
 			
 	}
 

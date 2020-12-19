@@ -1,4 +1,5 @@
 #pragma once
+#include "FeatureGenerator.h"
 #include "ChunkGenerator.h"
 #include "../Chunks/SubChunk.h"
 #include "FastNoise.h"
@@ -6,6 +7,7 @@
 #include "Features/Plateau.h"
 #include "Features/SimpleTree.h"
 
+#include "../Scene/Camera.h"
 namespace Engine {
 	void ChunkGenerator::GenerateHeightPass(Chunk* chunk) {
 		
@@ -90,9 +92,17 @@ namespace Engine {
 				
 			}
 		}
+
+		FeatureGenerator::GetChunkStructure(chunk);
 	}
 
 	void ChunkGenerator::GenerateDecoration(Chunk* chunk) {
+		if (chunk->HasStructure) {
+			chunk->isGenerated = true;
+
+			return;
+		}
+
 		float plateauChance = rand() % 100;
 		if (plateauChance < 5) {
 			Plateau plateau;

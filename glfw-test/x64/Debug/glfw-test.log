@@ -1,20 +1,15 @@
-﻿  ChunkManager.cpp
-F:\Desktop\repos\MicroEngine\glfw-test\src\Scene\World\ChunkManager.cpp(151,12): warning C4244: 'initializing': conversion from 'T' to 'int', possible loss of data
+﻿  FeatureGenerator.cpp
+F:\Desktop\repos\MicroEngine\glfw-test\src\Scene\World\Generation\FeatureGenerator.cpp(38,13): warning C4244: 'initializing': conversion from 'T' to 'int', possible loss of data
           with
           [
               T=float
           ]
-F:\Desktop\repos\MicroEngine\glfw-test\src\Scene\World\ChunkManager.cpp(152,12): warning C4244: 'initializing': conversion from 'T' to 'int', possible loss of data
+F:\Desktop\repos\MicroEngine\glfw-test\src\Scene\World\Generation\FeatureGenerator.cpp(39,13): warning C4244: 'initializing': conversion from 'T' to 'int', possible loss of data
           with
           [
               T=float
           ]
-F:\Desktop\repos\MicroEngine\glfw-test\src\Scene\World\ChunkManager.cpp(171,12): warning C4244: 'initializing': conversion from 'T' to 'int', possible loss of data
-          with
-          [
-              T=float
-          ]
-F:\Desktop\repos\MicroEngine\glfw-test\src\Scene\World\ChunkManager.cpp(172,12): warning C4244: 'initializing': conversion from 'T' to 'int', possible loss of data
+F:\Desktop\repos\MicroEngine\glfw-test\src\Scene\World\Generation\FeatureGenerator.cpp(42,18): warning C4244: '=': conversion from 'T' to 'int', possible loss of data
           with
           [
               T=float

@@ -6,7 +6,6 @@
 
 namespace Engine {
 	class SubChunk;
-
 	class Chunk
 	{
 	private:
@@ -30,6 +29,8 @@ namespace Engine {
 		void UpdateBuffers();
 
 		void Render();
+
+		bool HasStructure = false;
 
 		Chunk* Left = nullptr;
 		Chunk* LeftFront = nullptr;
